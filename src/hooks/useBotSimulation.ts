@@ -86,6 +86,11 @@ function makeBot(id: number, pair: string, strategy: string, sl: string, tp: str
 
 const INITIAL_BALANCE = 10000;
 
+export interface BalancePoint {
+  time: number;
+  balance: number;
+}
+
 export function useBotSimulation() {
   const [bots, setBots] = useState<Bot[]>([
     makeBot(1, "BTC/USDT", "Scalp", "2%", "4%", true, 500),
@@ -94,6 +99,7 @@ export function useBotSimulation() {
   ]);
   const [tradeLog, setTradeLog] = useState<Trade[]>([]);
   const [balance, setBalance] = useState(INITIAL_BALANCE);
+  const [balanceHistory, setBalanceHistory] = useState<BalancePoint[]>([{ time: Date.now(), balance: INITIAL_BALANCE }]);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const tradeIdRef = useRef(1);
 
@@ -173,7 +179,11 @@ export function useBotSimulation() {
             updated.trades += 1;
             updated.wins += win ? 1 : 0;
 
-            setBalance((prev) => prev + tradePnl);
+            setBalance((prev) => {
+              const newBal = prev + tradePnl;
+              setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+              return newBal;
+            });
 
             const trade: Trade = {
               id: tradeIdRef.current++,
@@ -222,12 +232,20 @@ export function useBotSimulation() {
   }, []);
 
   const deposit = useCallback((amount: number) => {
-    if (amount > 0) setBalance((prev) => prev + amount);
+    if (amount > 0) setBalance((prev) => {
+      const newBal = prev + amount;
+      setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+      return newBal;
+    });
   }, []);
 
   const withdraw = useCallback((amount: number) => {
     setBalance((prev) => {
-      if (amount > 0 && amount <= prev) return prev - amount;
+      if (amount > 0 && amount <= prev) {
+        const newBal = prev - amount;
+        setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+        return newBal;
+      }
       return prev;
     });
   }, []);
@@ -240,7 +258,7 @@ export function useBotSimulation() {
   return {
     bots, tradeLog, toggleBot, createBot, deleteBot,
     totalPnl, totalTrades, winRate,
-    balance, deposit, withdraw,
+    balance, balanceHistory, deposit, withdraw,
     soundEnabled, setSoundEnabled,
   };
 }

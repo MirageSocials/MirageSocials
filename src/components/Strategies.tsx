@@ -9,27 +9,27 @@ const bots = [
 
 const Strategies = () => {
   return (
-    <section id="performance" className="py-24 bg-secondary">
+    <section id="performance" className="py-24 bg-secondary/50">
       <div className="container">
         <FadeIn>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-3 text-center">Performance</p>
-          <h2 className="text-3xl font-bold tracking-tight text-foreground text-center mb-4">
-            Live bot results
+          <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3 text-center">Performance</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground text-center mb-4 font-display">
+            Real results, real time
           </h2>
           <p className="text-muted-foreground text-center max-w-md mx-auto mb-14">
-            Real configurations running on the platform right now.
+            Live configurations running on the platform right now.
           </p>
         </FadeIn>
 
         <div className="max-w-2xl mx-auto">
-          <div className="bg-background rounded-2xl border border-border overflow-hidden divide-y divide-border">
+          <div className="bg-card rounded-2xl border border-border overflow-hidden divide-y divide-border">
             {bots.map((s, i) => (
               <FadeIn key={s.name} delay={i * 0.08}>
-                <div className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-secondary/30 transition-colors">
+                <div className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-accent/50 transition-colors">
                   <div className="flex items-center gap-3 min-w-0">
                     <span className="text-sm font-semibold text-foreground whitespace-nowrap">{s.name}</span>
                     <span className="text-xs text-muted-foreground bg-secondary px-2 py-0.5 rounded-md">{s.pair}</span>
-                    <span className="text-xs text-foreground bg-accent px-2 py-0.5 rounded-md">{s.strategy}</span>
+                    <span className="text-xs text-primary bg-primary/5 px-2 py-0.5 rounded-md font-medium">{s.strategy}</span>
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="text-right hidden sm:block">

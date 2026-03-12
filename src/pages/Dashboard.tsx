@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Play, Pause, Plus, Trash2, Activity,
   Volume2, VolumeX, Wallet, ArrowDownToLine, ArrowUpFromLine,
-  Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap,
+  Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap, LogOut,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
+import { useAuth } from "@/hooks/useAuth";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
 import CandlestickChart from "@/components/CandlestickChart";
+import EquityCurve from "@/components/EquityCurve";
 
 const pairs = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "ARB/USDT", "DOGE/USDT", "AVAX/USDT", "OP/USDT", "MATIC/USDT"];
 const strategies = ["Scalp", "Swing", "Trend", "News-Based"];
@@ -28,9 +30,10 @@ const Dashboard = () => {
   const {
     bots, tradeLog, toggleBot, createBot, deleteBot,
     totalPnl, totalTrades, winRate,
-    balance, deposit, withdraw,
+    balance, balanceHistory, deposit, withdraw,
     soundEnabled, setSoundEnabled,
   } = useBotSimulation();
+  const { signOut, user } = useAuth();
 
   const [selectedBotId, setSelectedBotId] = useState<number | null>(bots[0]?.id ?? null);
   const [showCreate, setShowCreate] = useState(false);
@@ -90,6 +93,13 @@ const Dashboard = () => {
               className="p-1.5 rounded-md text-muted-foreground hover:text-foreground transition-colors"
             >
               {soundEnabled ? <Volume2 className="h-3.5 w-3.5" /> : <VolumeX className="h-3.5 w-3.5" />}
+            </button>
+            <button
+              onClick={signOut}
+              className="p-1.5 rounded-md text-muted-foreground hover:text-negative transition-colors"
+              title="Sign out"
+            >
+              <LogOut className="h-3.5 w-3.5" />
             </button>
           </div>
 
@@ -370,6 +380,11 @@ const Dashboard = () => {
                   )}
                 </div>
                 <CandlestickChart candles={selectedBot.candles} pair={selectedBot.pair} height={200} />
+              </div>
+
+              {/* Equity Curve */}
+              <div className="mb-6">
+                <EquityCurve balanceHistory={balanceHistory} />
               </div>
 
               {/* Trade Log for this bot */}

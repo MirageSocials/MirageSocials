@@ -8,13 +8,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container flex h-16 items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="text-lg font-bold tracking-tight text-foreground"
+          className="text-lg font-bold tracking-tight font-display text-foreground"
         >
-          perp<span className="text-muted-foreground font-normal">bot</span>
+          Perp<span className="text-primary">Bot</span>
         </button>
 
         <div className="hidden md:flex items-center gap-8">
@@ -35,14 +35,14 @@ const Navbar = () => {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate("/dashboard")}
-            className="text-sm font-medium text-foreground hover:text-muted-foreground transition-colors"
+            onClick={() => navigate("/auth")}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
             Log in
           </button>
           <button
-            onClick={() => navigate("/dashboard")}
-            className="text-sm font-medium bg-foreground text-background px-5 py-2 rounded-full hover:bg-foreground/90 transition-all active:scale-95"
+            onClick={() => navigate("/auth")}
+            className="text-sm font-medium bg-primary text-primary-foreground px-5 py-2 rounded-full hover:bg-primary/90 transition-all active:scale-95"
           >
             Start Trading
           </button>

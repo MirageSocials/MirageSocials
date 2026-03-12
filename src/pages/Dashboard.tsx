@@ -382,6 +382,11 @@ const Dashboard = () => {
                 <CandlestickChart candles={selectedBot.candles} pair={selectedBot.pair} height={200} />
               </div>
 
+              {/* Equity Curve */}
+              <div className="mb-6">
+                <EquityCurve balanceHistory={balanceHistory} />
+              </div>
+
               {/* Trade Log for this bot */}
               <div>
                 <div className="flex items-center gap-2 mb-3">

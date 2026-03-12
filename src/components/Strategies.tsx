@@ -7,37 +7,32 @@ const strategies = [
 
 const Strategies = () => {
   return (
-    <section id="strategies" className="py-24">
+    <section id="strategies" className="py-20">
       <div className="container">
-        <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">03 · Strategies</span>
-          <h2 className="font-mono text-4xl font-bold mt-3">
-            Active <span className="text-primary">bots</span>
-          </h2>
-          <p className="text-muted-foreground mt-4 max-w-lg">
-            Example configurations running on the platform. Deploy similar strategies in minutes.
-          </p>
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Active bots</h2>
+          <p className="text-muted-foreground mt-2">Example configurations running live on the platform.</p>
         </div>
-        <div className="space-y-3">
+        <div className="max-w-3xl mx-auto space-y-3">
           {strategies.map((s) => (
-            <div key={s.name} className="border border-border rounded-lg p-5 bg-card flex flex-wrap items-center justify-between gap-4 hover:border-primary/40 transition-colors">
-              <div className="flex items-center gap-4">
-                <span className="font-mono text-sm font-semibold text-foreground">{s.name}</span>
-                <span className="font-mono text-xs text-muted-foreground bg-muted px-2 py-1 rounded">{s.pair}</span>
-                <span className="font-mono text-xs text-accent bg-accent/10 px-2 py-1 rounded">{s.strategy}</span>
+            <div key={s.name} className="rounded-xl border border-border p-4 bg-card flex items-center justify-between gap-4 hover:shadow-sm transition-shadow">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-semibold text-foreground">{s.name}</span>
+                <span className="text-xs text-muted-foreground bg-accent px-2 py-0.5 rounded-md">{s.pair}</span>
+                <span className="text-xs text-primary bg-primary/8 px-2 py-0.5 rounded-md">{s.strategy}</span>
               </div>
-              <div className="flex items-center gap-6">
-                <div className="text-center">
-                  <div className="font-mono text-xs text-muted-foreground">Win Rate</div>
-                  <div className="font-mono text-sm font-semibold text-foreground">{s.winRate}</div>
+              <div className="flex items-center gap-5 text-center">
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase">Win</div>
+                  <div className="text-sm font-semibold text-foreground">{s.winRate}</div>
                 </div>
-                <div className="text-center">
-                  <div className="font-mono text-xs text-muted-foreground">Trades</div>
-                  <div className="font-mono text-sm font-semibold text-foreground">{s.trades}</div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase">Trades</div>
+                  <div className="text-sm font-semibold text-foreground">{s.trades}</div>
                 </div>
-                <div className="text-center">
-                  <div className="font-mono text-xs text-muted-foreground">P&L</div>
-                  <div className="font-mono text-sm font-semibold text-positive">{s.pnl}</div>
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase">P&L</div>
+                  <div className="text-sm font-semibold text-positive">{s.pnl}</div>
                 </div>
               </div>
             </div>

@@ -1,54 +1,28 @@
 import { TrendingUp, Crosshair, Newspaper, Shield, BarChart3, Bell } from "lucide-react";
 
 const features = [
-  {
-    icon: Crosshair,
-    title: "Scalping Mode",
-    desc: "Execute rapid trades on short timeframes. The bot identifies micro-trends and takes quick profits with tight stop-losses.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Swing & Long Hold",
-    desc: "Ride larger market moves. The bot identifies trend reversals and holds positions for hours or days for maximum gains.",
-  },
-  {
-    icon: Newspaper,
-    title: "News-Based Trading",
-    desc: "Reacts to market news and social signals. Detects sentiment shifts and enters positions before the crowd.",
-  },
-  {
-    icon: Shield,
-    title: "Smart SL / TP",
-    desc: "Dynamic stop-loss and take-profit that adjusts based on volatility and market conditions. Trailing stops included.",
-  },
-  {
-    icon: BarChart3,
-    title: "Multi-Exchange",
-    desc: "Trade perps on Binance, Bybit, dYdX, GMX, and more. Best execution routing across CEX and DEX platforms.",
-  },
-  {
-    icon: Bell,
-    title: "Real-Time Alerts",
-    desc: "Get notified on trade entries, exits, P&L thresholds, and strategy adjustments via Telegram or Discord.",
-  },
+  { icon: Crosshair, title: "Scalping Mode", desc: "Rapid trades on short timeframes with tight stop-losses for quick profits." },
+  { icon: TrendingUp, title: "Swing & Long Hold", desc: "Ride larger moves by identifying trend reversals and holding for days." },
+  { icon: Newspaper, title: "News-Based", desc: "Reacts to market news and sentiment shifts to enter positions early." },
+  { icon: Shield, title: "Smart SL / TP", desc: "Dynamic risk management that adjusts to volatility with trailing stops." },
+  { icon: BarChart3, title: "Multi-Exchange", desc: "Trade on Binance, Bybit, dYdX, GMX with best execution routing." },
+  { icon: Bell, title: "Real-Time Alerts", desc: "Get notified on trades, P&L thresholds, and adjustments via Telegram." },
 ];
 
 const Features = () => {
   return (
-    <section id="features" className="py-24 bg-muted/20">
+    <section id="features" className="py-20 bg-accent/30">
       <div className="container">
-        <div className="mb-12">
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">02 · Features</span>
-          <h2 className="font-mono text-4xl font-bold mt-3">
-            Built to <span className="text-primary">trade perps</span>
-          </h2>
+        <div className="text-center mb-14">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground">Built for perp traders</h2>
+          <p className="text-muted-foreground mt-2">Everything you need to automate perpetual futures.</p>
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature) => (
-            <div key={feature.title} className="border border-border rounded-lg p-6 bg-card hover:border-primary/40 transition-colors group">
-              <feature.icon className="h-8 w-8 text-primary mb-4 group-hover:scale-110 transition-transform" />
-              <h3 className="font-mono text-lg font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{feature.desc}</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {features.map((f) => (
+            <div key={f.title} className="rounded-xl border border-border p-6 bg-background hover:shadow-md transition-shadow">
+              <f.icon className="h-6 w-6 text-primary mb-3" />
+              <h3 className="text-base font-semibold mb-1 text-foreground">{f.title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
             </div>
           ))}
         </div>

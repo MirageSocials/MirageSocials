@@ -2,55 +2,42 @@ import Terminal from "./Terminal";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen pt-24 pb-8 overflow-hidden">
-      {/* Gradient bg */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-
-      <div className="container relative z-10">
-        {/* Stats */}
-        <div className="flex items-center gap-6 mb-8">
-          <span className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
-            ——— Autonomous Perp Trading
-          </span>
-        </div>
-        <div className="flex gap-8 mb-10">
-          {[
-            { value: "24/7", label: "Monitoring" },
-            { value: "5+", label: "Exchanges" },
-            { value: "< 50ms", label: "Execution" },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <div className="font-mono text-2xl font-bold text-foreground">{stat.value}</div>
-              <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
+    <section className="pt-28 pb-20">
+      <div className="container">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h1 className="font-mono text-5xl md:text-7xl font-bold leading-[0.95] mb-6">
-              Trade.<br />
-              <span className="text-primary glow-text">Perps.</span><br />
-              Automate.
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-primary bg-primary/8 border border-primary/15 rounded-full px-3 py-1 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              Autonomous Perp Trading
+            </div>
+            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground mb-4">
+              Trade perps on<br />
+              <span className="text-primary">autopilot</span>
             </h1>
-            <p className="text-secondary-foreground max-w-md mb-8 text-lg leading-relaxed">
-              Autonomous perpetual futures trading bot. Pick your crypto, choose a strategy — scalp, swing, or news-based — set your SL/TP, and let the bot trade 24/7.
+            <p className="text-muted-foreground text-lg leading-relaxed max-w-md mb-8">
+              Pick your crypto, choose a strategy, set SL/TP — the bot trades perpetual futures for you 24/7 across all major exchanges.
             </p>
-            <div className="flex gap-4">
-              <button className="font-mono text-sm uppercase tracking-widest bg-primary text-primary-foreground px-6 py-3 rounded hover:opacity-90 transition-opacity flex items-center gap-2">
-                ⚡ Launch Bot →
+            <div className="flex flex-wrap gap-3">
+              <button className="text-sm font-medium bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-opacity">
+                Launch Bot →
               </button>
-              <a href="#how" className="font-mono text-sm uppercase tracking-widest border border-border text-muted-foreground px-6 py-3 rounded hover:border-primary hover:text-primary transition-all flex items-center gap-2">
-                📖 Learn More
+              <a href="#how-it-works" className="text-sm font-medium border border-border text-foreground px-6 py-3 rounded-lg hover:bg-accent transition-colors">
+                Learn More
               </a>
             </div>
-            <div className="mt-10 font-mono text-xs text-muted-foreground uppercase tracking-widest">
-              — Scroll
+            <div className="flex gap-8 mt-10 pt-8 border-t border-border">
+              {[
+                { value: "24/7", label: "Monitoring" },
+                { value: "5+", label: "Exchanges" },
+                { value: "<50ms", label: "Execution" },
+              ].map((s) => (
+                <div key={s.label}>
+                  <div className="text-xl font-bold text-foreground">{s.value}</div>
+                  <div className="text-xs text-muted-foreground">{s.label}</div>
+                </div>
+              ))}
             </div>
           </div>
-
-          {/* Right - Terminal */}
           <div>
             <Terminal />
           </div>

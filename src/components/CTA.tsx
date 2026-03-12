@@ -1,21 +1,23 @@
 const CTA = () => {
   return (
-    <section className="py-24 border-t border-border">
-      <div className="container text-center">
-        <h2 className="font-mono text-4xl font-bold mb-4">
-          Ready to <span className="text-primary glow-text">trade?</span>
-        </h2>
-        <p className="text-muted-foreground max-w-md mx-auto mb-8">
-          Deploy your first perp trading bot in under 2 minutes. Choose your pair, pick a strategy, and let the bot handle the rest.
-        </p>
-        <button className="font-mono text-sm uppercase tracking-widest bg-primary text-primary-foreground px-8 py-4 rounded hover:opacity-90 transition-opacity glow-primary">
-          ⚡ Launch PerpBot →
-        </button>
-        <div className="mt-16 pt-8 border-t border-border flex flex-wrap justify-center gap-8 font-mono text-xs text-muted-foreground uppercase tracking-widest">
+    <section className="py-20">
+      <div className="container">
+        <div className="rounded-2xl bg-primary/5 border border-primary/10 p-12 text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-foreground mb-3">
+            Ready to automate?
+          </h2>
+          <p className="text-muted-foreground max-w-md mx-auto mb-6">
+            Deploy your first perp trading bot in under 2 minutes.
+          </p>
+          <button className="text-sm font-medium bg-primary text-primary-foreground px-8 py-3 rounded-lg hover:opacity-90 transition-opacity">
+            Launch PerpBot →
+          </button>
+        </div>
+        <div className="mt-12 pt-6 border-t border-border flex flex-wrap justify-center gap-6 text-xs text-muted-foreground">
           <span>© 2026 PerpBot</span>
-          <a href="#" className="hover:text-primary transition-colors">Docs</a>
-          <a href="#" className="hover:text-primary transition-colors">Twitter</a>
-          <a href="#" className="hover:text-primary transition-colors">Discord</a>
+          <a href="#" className="hover:text-foreground transition-colors">Docs</a>
+          <a href="#" className="hover:text-foreground transition-colors">Twitter</a>
+          <a href="#" className="hover:text-foreground transition-colors">Discord</a>
         </div>
       </div>
     </section>

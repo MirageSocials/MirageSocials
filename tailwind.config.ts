@@ -9,12 +9,12 @@ export default {
       center: true,
       padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        "2xl": "1200px",
       },
     },
     extend: {
       fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
+        sans: ["DM Sans", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
@@ -50,11 +50,6 @@ export default {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        terminal: {
-          bg: "hsl(var(--terminal-bg))",
-          border: "hsl(var(--terminal-border))",
-          header: "hsl(var(--terminal-header))",
         },
         positive: "hsl(var(--positive))",
         negative: "hsl(var(--negative))",

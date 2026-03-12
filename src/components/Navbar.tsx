@@ -1,52 +1,26 @@
 import { useNavigate } from "react-router-dom";
-import { Terminal } from "lucide-react";
+import { BookOpen, Users, Wallet } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
-      <div className="flex h-12 items-center justify-between bg-card/80 backdrop-blur-xl border border-border rounded-full px-6">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2 text-sm font-bold tracking-tight font-mono text-foreground"
-        >
-          <Terminal className="h-4 w-4 text-primary" />
-          perpbot
-        </button>
-
-        <div className="hidden md:flex items-center gap-6">
-          {[
-            { label: "HOW", id: "how-it-works" },
-            { label: "FEATURES", id: "features" },
-            { label: "AGENTS", id: "performance" },
-          ].map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(item.id)}
-              className="text-[10px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
-            >
-              {item.label}
-            </button>
-          ))}
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl">
+      <div className="flex h-11 items-center justify-between bg-card/60 backdrop-blur-xl border border-border rounded-full px-5">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] text-muted-foreground">◎</span>
+          <span className="text-xs font-mono tracking-wider text-foreground">perpbot</span>
         </div>
 
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/auth")}
-            className="text-[10px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
-          >
-            Log in
+        <div className="flex items-center gap-4">
+          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
+            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+          <button onClick={() => navigate("/auth")} className="text-muted-foreground hover:text-foreground transition-colors">
+            <Users className="h-3.5 w-3.5" />
           </button>
-          <button
-            onClick={() => navigate("/auth")}
-            className="text-[10px] font-bold tracking-widest uppercase bg-primary text-primary-foreground px-4 py-1.5 rounded-full hover:bg-primary/90 transition-all active:scale-95"
-          >
-            Launch App
+          <button onClick={() => navigate("/auth")} className="text-muted-foreground hover:text-foreground transition-colors">
+            <Wallet className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>

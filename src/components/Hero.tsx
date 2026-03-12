@@ -1,129 +1,112 @@
 import { useNavigate } from "react-router-dom";
 import { FadeIn } from "./FadeIn";
 import { useEffect, useState } from "react";
+import { BookOpen, LayoutDashboard } from "lucide-react";
 
 const terminalLines = [
-  { prefix: "$", text: "perpbot init --chain solana", color: "text-foreground" },
-  { prefix: "◉", text: "PerpBot v2.0.0", color: "text-primary" },
-  { prefix: "", text: "Generating agent wallet...", color: "text-muted-foreground" },
-  { prefix: "✓", text: "Wallet: 7xKXt...9fQm (Solana)", color: "text-primary" },
-  { prefix: "", text: "Loading strategy: Scalper", color: "text-muted-foreground" },
-  { prefix: "✓", text: "Agent deployed. Scanning markets...", color: "text-primary" },
-  { prefix: "", text: "LONG BTC/USDT @ $67,420 — size $500", color: "text-foreground" },
-  { prefix: "✓", text: "TP hit +4.2% → +$21.00", color: "text-primary" },
+  { prefix: "◉", text: "perpbot", color: "text-primary" },
 ];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const [visibleLines, setVisibleLines] = useState(0);
+  const [showCursor, setShowCursor] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setVisibleLines((prev) => {
-        if (prev >= terminalLines.length) return prev;
-        return prev + 1;
-      });
-    }, 600);
+    const interval = setInterval(() => setShowCursor((p) => !p), 530);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section className="pt-28 pb-20 min-h-screen flex items-center relative">
+    <section className="min-h-screen flex flex-col justify-center relative">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left — Logo + tagline */}
           <div>
             <FadeIn>
-              <div className="inline-flex items-center gap-2 text-[10px] tracking-widest uppercase text-primary border border-primary/20 rounded-full px-3 py-1 mb-8">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Now Live on Solana
-              </div>
+              {/* ASCII-style large logo */}
+              <pre className="text-primary font-mono text-[10px] sm:text-xs leading-tight mb-8 select-none" aria-hidden="true">
+{`
+ ██████╗ ███████╗██████╗ ██████╗ 
+ ██╔══██╗██╔════╝██╔══██╗██╔══██╗
+ ██████╔╝█████╗  ██████╔╝██████╔╝
+ ██╔═══╝ ██╔══╝  ██╔══██╗██╔═══╝ 
+ ██║     ███████╗██║  ██║██║     
+ ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝     
+                    ██████╗  ██████╗ ████████╗
+                    ██╔══██╗██╔═══██╗╚══██╔══╝
+                    ██████╔╝██║   ██║   ██║   
+                    ██╔══██╗██║   ██║   ██║   
+                    ██████╔╝╚██████╔╝   ██║   
+                    ╚═════╝  ╚═════╝    ╚═╝   
+`}
+              </pre>
             </FadeIn>
 
-            <FadeIn delay={0.1}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight text-foreground mb-6 font-display">
-                Autonomous
-                <br />
-                <span className="glow-green text-primary">Trading Agents</span>
-              </h1>
-            </FadeIn>
-
-            <FadeIn delay={0.2}>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-md mb-10">
-                Deploy AI-powered agents with their own Solana wallets. Each agent
-                trades perpetual futures 24/7 with configurable strategies and risk parameters.
+            <FadeIn delay={0.15}>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-8">
+                Autonomous AI trading infrastructure on Solana. Each agent gets its own wallet and trades perpetual futures 24/7.
               </p>
             </FadeIn>
 
-            <FadeIn delay={0.3}>
-              <div className="flex items-center gap-4">
+            <FadeIn delay={0.25}>
+              <div className="flex items-center gap-3">
                 <button
-                  onClick={() => navigate("/auth")}
-                  className="text-[10px] font-bold tracking-widest uppercase bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-95"
+                  onClick={() => document.getElementById("what-is")?.scrollIntoView({ behavior: "smooth" })}
+                  className="flex items-center gap-2 text-[11px] font-mono text-muted-foreground border border-border rounded-full px-4 py-2 hover:text-foreground hover:border-foreground/30 transition-all"
                 >
-                  Launch Platform
+                  <BookOpen className="h-3.5 w-3.5" /> Docs
                 </button>
                 <button
-                  onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
-                  className="text-[10px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => navigate("/auth")}
+                  className="flex items-center gap-2 text-[11px] font-mono text-primary-foreground bg-primary border border-primary rounded-full px-4 py-2 hover:bg-primary/90 transition-all active:scale-95"
                 >
-                  scroll ↓
+                  <LayoutDashboard className="h-3.5 w-3.5" /> Platform
                 </button>
               </div>
             </FadeIn>
           </div>
 
           {/* Right — Terminal */}
-          <FadeIn delay={0.2}>
-            <div className="relative">
-              <div className="bg-card border border-border rounded-xl overflow-hidden scanlines relative">
-                {/* Title bar */}
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
-                  <div className="flex items-center gap-1.5">
-                    <div className="w-2.5 h-2.5 rounded-full bg-negative" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-[hsl(40,80%,50%)]" />
-                    <div className="w-2.5 h-2.5 rounded-full bg-primary" />
-                  </div>
-                  <span className="text-[10px] text-muted-foreground tracking-wider">erl@perpbot</span>
+          <FadeIn delay={0.3}>
+            <div className="bg-[hsl(0_0%_7%)] border border-border rounded-xl overflow-hidden">
+              {/* Title bar */}
+              <div className="flex items-center justify-between px-4 py-2.5 border-b border-border">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-negative" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-[hsl(40,80%,50%)]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 </div>
+                <span className="text-[10px] text-muted-foreground tracking-wider font-mono">erl@perpbot</span>
+              </div>
 
-                {/* Terminal body */}
-                <div className="p-4 min-h-[280px] font-mono text-xs space-y-1.5">
-                  {terminalLines.slice(0, visibleLines).map((line, i) => (
-                    <div key={i} className={`${line.color} flex gap-2`}>
-                      {line.prefix && (
-                        <span className={line.prefix === "✓" ? "text-primary" : line.prefix === "◉" ? "text-primary" : "text-muted-foreground"}>
-                          {line.prefix}
-                        </span>
-                      )}
-                      <span>{line.text}</span>
-                    </div>
-                  ))}
-                  {visibleLines < terminalLines.length && (
-                    <span className="inline-block w-2 h-4 bg-primary terminal-cursor" />
-                  )}
+              {/* Terminal body */}
+              <div className="p-5 min-h-[260px] font-mono text-xs">
+                <div className="text-muted-foreground mb-4">$ perpbot init</div>
+                {terminalLines.map((line, i) => (
+                  <div key={i} className={`${line.color} flex gap-2 mb-1`}>
+                    <span>{line.prefix}</span>
+                    <span>{line.text}</span>
+                  </div>
+                ))}
+                <div className="mt-2 flex items-center gap-1">
+                  <span className={`inline-block w-2 h-4 bg-primary ${showCursor ? "opacity-100" : "opacity-0"}`} />
+                </div>
+                <div className="mt-8 text-muted-foreground/50 text-[10px]">
+                  Click to launch platform
                 </div>
               </div>
             </div>
           </FadeIn>
         </div>
-
-        {/* Stats bar */}
-        <FadeIn delay={0.5}>
-          <div className="flex justify-end gap-8 mt-16">
-            {[
-              { value: "2.4K", label: "AGENTS" },
-              { value: "$48M+", label: "VOLUME" },
-              { value: "99.9%", label: "UPTIME" },
-            ].map((s) => (
-              <div key={s.label} className="text-right">
-                <div className="text-lg font-bold text-foreground font-display">{s.value}</div>
-                <div className="text-[9px] tracking-widest text-muted-foreground uppercase">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
       </div>
+
+      {/* Scroll indicator */}
+      <FadeIn delay={0.6}>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+          <span className="text-[9px] tracking-[0.3em] uppercase text-muted-foreground font-mono">scroll</span>
+          <div className="w-px h-8 bg-border" />
+        </div>
+      </FadeIn>
     </section>
   );
 };

@@ -1,60 +1,68 @@
 import { FadeIn } from "./FadeIn";
-import { useNavigate } from "react-router-dom";
+import { User, Wallet, BarChart3, Zap, ArrowRight } from "lucide-react";
 
-const features = [
-  {
-    title: "Agent Network",
-    desc: "Explore the network of autonomous trading agents. Chat with any agent, view their strategies, and see live performance metrics.",
-    link: true,
-  },
-  {
-    title: "Trading Engine",
-    desc: "Agents analyze real-time market data to execute intelligent trades on Solana. Configurable risk levels and trading styles.",
-    link: false,
-  },
-  {
-    title: "Wallet Generation",
-    desc: "Each agent gets a unique Solana wallet on creation. Deposit, withdraw, and track balances — all verifiable on-chain.",
-    link: false,
-  },
-  {
-    title: "Documentation",
-    desc: "Comprehensive guides on architecture, trading strategies, agent customization, and wallet management.",
-    link: true,
-  },
+const steps = [
+  { icon: User, label: "agent", title: "Create Agent" },
+  { icon: Wallet, label: "◎", title: "Fund Wallet" },
+  { icon: BarChart3, label: "Analyze", title: "Analyze" },
+  { icon: Zap, label: "EXECUTE", title: "Execute" },
 ];
 
-const Features = () => {
-  const navigate = useNavigate();
+const actions = ["Buy", "Sell", "Hold"];
 
+const Features = () => {
   return (
-    <section id="features" className="py-24 border-t border-border">
-      <div className="container">
+    <section id="how-it-works" className="py-24 border-t border-border">
+      <div className="container max-w-3xl">
         <FadeIn>
-          <div className="text-center mb-16">
-            <p className="text-[10px] tracking-widest uppercase text-primary mb-3">Ecosystem</p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground font-display">
-              Our <em className="not-italic text-primary">ecosystem</em>
-            </h2>
-            <p className="text-xs text-muted-foreground mt-3">Tools and infrastructure for autonomous trading.</p>
+          <h2 className="text-xl font-bold tracking-tight text-foreground font-display mb-2">
+            How it <em className="not-italic text-primary">works</em>
+          </h2>
+        </FadeIn>
+
+        {/* Flow diagram */}
+        <FadeIn delay={0.1}>
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
+            {steps.map((step, i) => (
+              <div key={step.title} className="flex items-center gap-3">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="w-12 h-12 rounded-xl border border-border bg-card flex items-center justify-center">
+                    <step.icon className="h-5 w-5 text-primary" strokeWidth={1.5} />
+                  </div>
+                  <span className="text-[9px] tracking-widest uppercase text-muted-foreground font-mono">{step.title}</span>
+                </div>
+                {i < steps.length - 1 && (
+                  <ArrowRight className="h-3 w-3 text-border mt-[-16px]" />
+                )}
+              </div>
+            ))}
           </div>
         </FadeIn>
 
-        <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-          {features.map((f, i) => (
-            <FadeIn key={f.title} delay={i * 0.08}>
-              <div
-                onClick={f.link ? () => navigate("/auth") : undefined}
-                className={`bg-card border border-border rounded-xl p-6 h-full transition-all group ${
-                  f.link ? "cursor-pointer hover:border-primary/40 hover:bg-card/80" : "hover:border-border/80"
-                }`}
-              >
-                <h3 className="text-sm font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">{f.title}</h3>
-                <p className="text-xs text-muted-foreground leading-relaxed">{f.desc}</p>
-              </div>
-            </FadeIn>
-          ))}
-        </div>
+        {/* Trade actions */}
+        <FadeIn delay={0.2}>
+          <div className="mt-10 flex items-center justify-center gap-2">
+            {actions.map((a) => (
+              <span key={a} className="text-[9px] font-mono tracking-widest uppercase border border-border rounded-full px-3 py-1 text-muted-foreground">
+                {a}
+              </span>
+            ))}
+            <span className="text-[9px] font-mono tracking-widest uppercase text-primary border border-primary/30 rounded-full px-3 py-1">
+              ON-CHAIN
+            </span>
+            <span className="text-[9px] font-mono tracking-widest uppercase text-primary border border-primary/30 rounded-full px-3 py-1 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              LIVE
+            </span>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={0.3}>
+          <p className="text-xs text-muted-foreground leading-relaxed mt-8 max-w-lg">
+            Design your agent's unique trading strategy. Choose from Scalper, Swing Trader,
+            Long-term, or Degen styles. Each agent analyzes markets and executes trades autonomously.
+          </p>
+        </FadeIn>
       </div>
     </section>
   );

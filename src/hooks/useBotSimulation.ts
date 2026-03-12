@@ -179,7 +179,11 @@ export function useBotSimulation() {
             updated.trades += 1;
             updated.wins += win ? 1 : 0;
 
-            setBalance((prev) => prev + tradePnl);
+            setBalance((prev) => {
+              const newBal = prev + tradePnl;
+              setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+              return newBal;
+            });
 
             const trade: Trade = {
               id: tradeIdRef.current++,

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { playWinSound, playLossSound, playOpenSound } from "@/lib/sounds";
 
 export interface Trade {
   id: number;
@@ -9,6 +10,15 @@ export interface Trade {
   pnl: number | null;
   status: "open" | "closed";
   timestamp: number;
+  positionSize: number;
+}
+
+export interface Candle {
+  time: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
 }
 
 export interface Bot {
@@ -24,6 +34,8 @@ export interface Bot {
   currentPrice: number;
   entryPrice: number | null;
   direction: "LONG" | "SHORT" | null;
+  positionSize: number;
+  candles: Candle[];
 }
 
 const basePrices: Record<string, number> = {
@@ -45,19 +57,48 @@ function jitter(price: number, volatility = 0.002) {
   return price * (1 + (Math.random() - 0.5) * 2 * volatility);
 }
 
-const initialBots: Bot[] = [
-  { id: 1, pair: "BTC/USDT", strategy: "Scalp", sl: "2%", tp: "4%", active: true, pnl: 0, trades: 0, wins: 0, currentPrice: getBasePrice("BTC/USDT"), entryPrice: null, direction: null },
-  { id: 2, pair: "ETH/USDT", strategy: "Swing", sl: "5%", tp: "12%", active: true, pnl: 0, trades: 0, wins: 0, currentPrice: getBasePrice("ETH/USDT"), entryPrice: null, direction: null },
-  { id: 3, pair: "SOL/USDT", strategy: "Trend", sl: "3%", tp: "8%", active: false, pnl: 0, trades: 0, wins: 0, currentPrice: getBasePrice("SOL/USDT"), entryPrice: null, direction: null },
-];
+function generateInitialCandles(basePrice: number, count = 30): Candle[] {
+  const candles: Candle[] = [];
+  let price = basePrice * (1 + (Math.random() - 0.5) * 0.04);
+  const now = Date.now();
+  for (let i = count; i > 0; i--) {
+    const open = price;
+    const close = jitter(open, 0.003);
+    const high = Math.max(open, close) * (1 + Math.random() * 0.002);
+    const low = Math.min(open, close) * (1 - Math.random() * 0.002);
+    candles.push({ time: now - i * 5000, open, high, low, close });
+    price = close;
+  }
+  return candles;
+}
+
+function makeBot(id: number, pair: string, strategy: string, sl: string, tp: string, active: boolean, positionSize: number): Bot {
+  const base = getBasePrice(pair);
+  return {
+    id, pair, strategy, sl, tp, active,
+    pnl: 0, trades: 0, wins: 0,
+    currentPrice: base,
+    entryPrice: null, direction: null,
+    positionSize,
+    candles: generateInitialCandles(base),
+  };
+}
+
+const INITIAL_BALANCE = 10000;
 
 export function useBotSimulation() {
-  const [bots, setBots] = useState<Bot[]>(initialBots);
+  const [bots, setBots] = useState<Bot[]>([
+    makeBot(1, "BTC/USDT", "Scalp", "2%", "4%", true, 500),
+    makeBot(2, "ETH/USDT", "Swing", "5%", "12%", true, 500),
+    makeBot(3, "SOL/USDT", "Trend", "3%", "8%", false, 500),
+  ]);
   const [tradeLog, setTradeLog] = useState<Trade[]>([]);
+  const [balance, setBalance] = useState(INITIAL_BALANCE);
+  const [soundEnabled, setSoundEnabled] = useState(true);
   const tradeIdRef = useRef(1);
 
   const addTrade = useCallback((trade: Trade) => {
-    setTradeLog((prev) => [trade, ...prev].slice(0, 50));
+    setTradeLog((prev) => [trade, ...prev].slice(0, 80));
   }, []);
 
   // Simulation tick
@@ -65,18 +106,41 @@ export function useBotSimulation() {
     const interval = setInterval(() => {
       setBots((prev) =>
         prev.map((bot) => {
-          if (!bot.active) return bot;
+          const newPrice = bot.active ? jitter(bot.currentPrice) : bot.currentPrice;
 
-          const newPrice = jitter(bot.currentPrice);
+          // Update candles
+          const candles = [...bot.candles];
+          const lastCandle = candles[candles.length - 1];
+          const elapsed = Date.now() - (lastCandle?.time || 0);
+
+          if (elapsed > 5000) {
+            // New candle
+            candles.push({
+              time: Date.now(),
+              open: newPrice,
+              high: newPrice,
+              low: newPrice,
+              close: newPrice,
+            });
+            if (candles.length > 60) candles.shift();
+          } else if (lastCandle) {
+            const c = { ...lastCandle };
+            c.close = newPrice;
+            c.high = Math.max(c.high, newPrice);
+            c.low = Math.min(c.low, newPrice);
+            candles[candles.length - 1] = c;
+          }
+
+          if (!bot.active) return { ...bot, candles };
+
           const slPct = parseFloat(bot.sl) / 100;
           const tpPct = parseFloat(bot.tp) / 100;
-
-          let updated = { ...bot, currentPrice: newPrice };
+          let updated = { ...bot, currentPrice: newPrice, candles };
 
           // If no position, maybe open one
           if (!updated.entryPrice) {
             if (Math.random() < 0.08) {
-              const dir = Math.random() > 0.45 ? "LONG" : "SHORT";
+              const dir: "LONG" | "SHORT" = Math.random() > 0.45 ? "LONG" : "SHORT";
               updated.entryPrice = newPrice;
               updated.direction = dir;
               const trade: Trade = {
@@ -88,8 +152,10 @@ export function useBotSimulation() {
                 pnl: null,
                 status: "open",
                 timestamp: Date.now(),
+                positionSize: bot.positionSize,
               };
               addTrade(trade);
+              if (soundEnabled) playOpenSound();
             }
             return updated;
           }
@@ -101,11 +167,13 @@ export function useBotSimulation() {
               : (updated.entryPrice - newPrice) / updated.entryPrice;
 
           if (pctChange >= tpPct || pctChange <= -slPct) {
-            const tradePnl = pctChange * 1000; // simulated $1000 position
+            const tradePnl = pctChange * bot.positionSize;
             const win = pctChange > 0;
             updated.pnl += tradePnl;
             updated.trades += 1;
             updated.wins += win ? 1 : 0;
+
+            setBalance((prev) => prev + tradePnl);
 
             const trade: Trade = {
               id: tradeIdRef.current++,
@@ -116,8 +184,14 @@ export function useBotSimulation() {
               pnl: Math.round(tradePnl * 100) / 100,
               status: "closed",
               timestamp: Date.now(),
+              positionSize: bot.positionSize,
             };
             addTrade(trade);
+
+            if (soundEnabled) {
+              if (win) playWinSound();
+              else playLossSound();
+            }
 
             updated.entryPrice = null;
             updated.direction = null;
@@ -129,7 +203,7 @@ export function useBotSimulation() {
     }, 800);
 
     return () => clearInterval(interval);
-  }, [addTrade]);
+  }, [addTrade, soundEnabled]);
 
   const toggleBot = useCallback((id: number) => {
     setBots((prev) =>
@@ -139,26 +213,23 @@ export function useBotSimulation() {
     );
   }, []);
 
-  const createBot = useCallback((pair: string, strategy: string, sl: string, tp: string) => {
-    const newBot: Bot = {
-      id: Date.now(),
-      pair,
-      strategy,
-      sl,
-      tp,
-      active: true,
-      pnl: 0,
-      trades: 0,
-      wins: 0,
-      currentPrice: getBasePrice(pair),
-      entryPrice: null,
-      direction: null,
-    };
-    setBots((prev) => [newBot, ...prev]);
+  const createBot = useCallback((pair: string, strategy: string, sl: string, tp: string, positionSize: number) => {
+    setBots((prev) => [makeBot(Date.now(), pair, strategy, sl, tp, true, positionSize), ...prev]);
   }, []);
 
   const deleteBot = useCallback((id: number) => {
     setBots((prev) => prev.filter((b) => b.id !== id));
+  }, []);
+
+  const deposit = useCallback((amount: number) => {
+    if (amount > 0) setBalance((prev) => prev + amount);
+  }, []);
+
+  const withdraw = useCallback((amount: number) => {
+    setBalance((prev) => {
+      if (amount > 0 && amount <= prev) return prev - amount;
+      return prev;
+    });
   }, []);
 
   const totalPnl = bots.reduce((sum, b) => sum + b.pnl, 0);
@@ -166,5 +237,10 @@ export function useBotSimulation() {
   const totalWins = bots.reduce((sum, b) => sum + b.wins, 0);
   const winRate = totalTrades > 0 ? Math.round((totalWins / totalTrades) * 100) : 0;
 
-  return { bots, tradeLog, toggleBot, createBot, deleteBot, totalPnl, totalTrades, winRate };
+  return {
+    bots, tradeLog, toggleBot, createBot, deleteBot,
+    totalPnl, totalTrades, winRate,
+    balance, deposit, withdraw,
+    soundEnabled, setSoundEnabled,
+  };
 }

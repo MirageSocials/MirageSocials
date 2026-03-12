@@ -1,49 +1,57 @@
 import { FadeIn } from "./FadeIn";
+import { useNavigate } from "react-router-dom";
 
-const agents = [
-  { name: "BTC Scalper", pair: "BTC/USDT", style: "Scalper", winRate: "72%", pnl: "+$12,847", status: "LIVE" },
-  { name: "ETH Swing", pair: "ETH/USDT", style: "Swing", winRate: "65%", pnl: "+$8,412", status: "LIVE" },
-  { name: "SOL Trend", pair: "SOL/USDT", style: "Trend", winRate: "58%", pnl: "+$5,120", status: "LIVE" },
-  { name: "ARB Degen", pair: "ARB/USDT", style: "Degen", winRate: "61%", pnl: "+$3,300", status: "PAUSED" },
+const items = [
+  {
+    title: "Agent Network",
+    desc: "Explore the network of autonomous trading agents. Chat with any agent, view their strategies, and see live performance metrics across the Solana ecosystem.",
+    link: true,
+  },
+  {
+    title: "Trading Engine",
+    desc: "Agents analyze real-time market data from multiple sources to execute intelligent trades on Solana. Configurable risk levels and trading styles.",
+    link: false,
+  },
+  {
+    title: "Wallet System",
+    desc: "Each agent gets its own Solana wallet on creation. Deposit, withdraw, and track balances — every transaction verifiable on-chain.",
+    link: false,
+  },
+  {
+    title: "Documentation",
+    desc: "Comprehensive guides on perpbot architecture, trading strategies, agent customization, and wallet management.",
+    link: true,
+  },
 ];
 
 const Strategies = () => {
+  const navigate = useNavigate();
+
   return (
-    <section id="performance" className="py-24 border-t border-border">
-      <div className="container">
+    <section id="ecosystem" className="py-24 border-t border-border">
+      <div className="container max-w-3xl">
         <FadeIn>
-          <div className="text-center mb-14">
-            <p className="text-[10px] tracking-widest uppercase text-primary mb-3">Live agents</p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground font-display">
-              Active <em className="not-italic text-primary">agents</em>
-            </h2>
-          </div>
+          <h2 className="text-xl font-bold tracking-tight text-foreground font-display mb-2">
+            Our <em className="not-italic text-primary">ecosystem</em>
+          </h2>
+          <p className="text-xs text-muted-foreground mb-10">
+            Tools and infrastructure for autonomous trading.
+          </p>
         </FadeIn>
 
-        <div className="max-w-2xl mx-auto bg-card border border-border rounded-xl overflow-hidden">
-          {/* Header */}
-          <div className="grid grid-cols-5 gap-2 px-5 py-2.5 border-b border-border text-[9px] tracking-widest uppercase text-muted-foreground">
-            <span className="col-span-2">Agent</span>
-            <span className="text-center">Win</span>
-            <span className="text-right">P&L</span>
-            <span className="text-right">Status</span>
-          </div>
-
-          {agents.map((a, i) => (
-            <FadeIn key={a.name} delay={i * 0.06}>
-              <div className="grid grid-cols-5 gap-2 px-5 py-3 border-b border-border/50 hover:bg-accent/30 transition-colors items-center">
-                <div className="col-span-2 flex items-center gap-2">
-                  <span className="text-xs font-semibold text-foreground">{a.name}</span>
-                  <span className="text-[9px] text-muted-foreground bg-muted px-1.5 py-0.5 rounded">{a.pair}</span>
-                </div>
-                <span className="text-xs text-foreground text-center">{a.winRate}</span>
-                <span className="text-xs font-semibold text-primary text-right">{a.pnl}</span>
-                <div className="flex items-center justify-end gap-1.5">
-                  <div className={`w-1.5 h-1.5 rounded-full ${a.status === "LIVE" ? "bg-primary" : "bg-muted-foreground"}`} />
-                  <span className={`text-[9px] tracking-wider ${a.status === "LIVE" ? "text-primary" : "text-muted-foreground"}`}>
-                    {a.status}
-                  </span>
-                </div>
+        <div className="grid md:grid-cols-2 gap-3">
+          {items.map((item, i) => (
+            <FadeIn key={item.title} delay={i * 0.08}>
+              <div
+                onClick={item.link ? () => navigate("/auth") : undefined}
+                className={`bg-card border border-border rounded-xl p-5 h-full transition-all group ${
+                  item.link ? "cursor-pointer hover:border-primary/30" : ""
+                }`}
+              >
+                <h3 className="text-sm font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                  {item.title}
+                </h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">{item.desc}</p>
               </div>
             </FadeIn>
           ))}

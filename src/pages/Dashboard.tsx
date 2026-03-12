@@ -30,9 +30,10 @@ const Dashboard = () => {
   const {
     bots, tradeLog, toggleBot, createBot, deleteBot,
     totalPnl, totalTrades, winRate,
-    balance, deposit, withdraw,
+    balance, balanceHistory, deposit, withdraw,
     soundEnabled, setSoundEnabled,
   } = useBotSimulation();
+  const { signOut, user } = useAuth();
 
   const [selectedBotId, setSelectedBotId] = useState<number | null>(bots[0]?.id ?? null);
   const [showCreate, setShowCreate] = useState(false);

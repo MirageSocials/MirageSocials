@@ -113,6 +113,14 @@ const Dashboard = () => {
           </div>
 
           <button
+            onClick={() => navigate("/trade")}
+            className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors mb-2 px-1 py-1.5 rounded-lg hover:bg-primary/5"
+          >
+            <Zap className="h-3 w-3" />
+            Switch to Live Trading
+          </button>
+
+          <button
             onClick={() => setShowFunds(!showFunds)}
             className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors font-mono uppercase tracking-wider"
           >

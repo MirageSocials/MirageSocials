@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BookOpen, LayoutDashboard } from "lucide-react";
 
 const terminalLines = [
-  { prefix: "◉", text: "perpbot", color: "text-primary" },
+  { prefix: "◉", text: "luna agent", color: "text-primary" },
 ];
 
 const Hero = () => {
@@ -26,25 +26,19 @@ const Hero = () => {
               {/* ASCII-style large logo */}
               <pre className="text-primary font-mono text-[10px] sm:text-xs leading-tight mb-8 select-none" aria-hidden="true">
 {`
- ██████╗ ███████╗██████╗ ██████╗ 
- ██╔══██╗██╔════╝██╔══██╗██╔══██╗
- ██████╔╝█████╗  ██████╔╝██████╔╝
- ██╔═══╝ ██╔══╝  ██╔══██╗██╔═══╝ 
- ██║     ███████╗██║  ██║██║     
- ╚═╝     ╚══════╝╚═╝  ╚═╝╚═╝     
-                    ██████╗  ██████╗ ████████╗
-                    ██╔══██╗██╔═══██╗╚══██╔══╝
-                    ██████╔╝██║   ██║   ██║   
-                    ██╔══██╗██║   ██║   ██║   
-                    ██████╔╝╚██████╔╝   ██║   
-                    ╚═════╝  ╚═════╝    ╚═╝   
+ ██╗     ██╗   ██╗███╗   ██╗ █████╗ 
+ ██║     ██║   ██║████╗  ██║██╔══██╗
+ ██║     ██║   ██║██╔██╗ ██║███████║
+ ██║     ██║   ██║██║╚██╗██║██╔══██║
+ ███████╗╚██████╔╝██║ ╚████║██║  ██║
+ ╚══════╝ ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝
 `}
               </pre>
             </FadeIn>
 
             <FadeIn delay={0.15}>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-8">
-                Autonomous AI trading infrastructure on Solana. Each agent gets its own wallet and trades perpetual futures 24/7.
+                Autonomous AI trading infrastructure on Solana, built on Luna Agent.
               </p>
             </FadeIn>
 
@@ -76,12 +70,12 @@ const Hero = () => {
                   <div className="w-2.5 h-2.5 rounded-full bg-[hsl(40,80%,50%)]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 </div>
-                <span className="text-[10px] text-muted-foreground tracking-wider font-mono">erl@perpbot</span>
+                <span className="text-[10px] text-muted-foreground tracking-wider font-mono">erl@luna</span>
               </div>
 
               {/* Terminal body */}
               <div className="p-5 min-h-[260px] font-mono text-xs">
-                <div className="text-muted-foreground mb-4">$ perpbot init</div>
+                <div className="text-muted-foreground mb-4">$ luna init</div>
                 {terminalLines.map((line, i) => (
                   <div key={i} className={`${line.color} flex gap-2 mb-1`}>
                     <span>{line.prefix}</span>

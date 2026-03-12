@@ -9,7 +9,7 @@ const Navbar = () => {
       <div className="flex h-11 items-center justify-between bg-card/60 backdrop-blur-xl border border-border rounded-full px-5">
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted-foreground">◎</span>
-          <span className="text-xs font-mono tracking-wider text-foreground">perpbot</span>
+          <span className="text-xs font-mono tracking-wider text-foreground">luna agent</span>
         </div>
 
         <div className="flex items-center gap-4">

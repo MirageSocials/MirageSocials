@@ -19,7 +19,7 @@ const items = [
   },
   {
     title: "Documentation",
-    desc: "Comprehensive guides on perpbot architecture, trading strategies, agent customization, and wallet management.",
+    desc: "Comprehensive guides on Luna Agent architecture, trading strategies, agent customization, and wallet management.",
     link: true,
   },
 ];

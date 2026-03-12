@@ -45,7 +45,7 @@ const Hero = () => {
             <FadeIn delay={0.25}>
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => document.getElementById("what-is")?.scrollIntoView({ behavior: "smooth" })}
+                  onClick={() => navigate("/docs")}
                   className="flex items-center gap-2 text-[11px] font-mono text-muted-foreground border border-border rounded-full px-4 py-2 hover:text-foreground hover:border-foreground/30 transition-all"
                 >
                   <BookOpen className="h-3.5 w-3.5" /> Docs

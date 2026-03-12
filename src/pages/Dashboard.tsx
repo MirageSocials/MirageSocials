@@ -85,7 +85,7 @@ const Dashboard = () => {
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <span className="text-sm font-bold tracking-tight font-mono uppercase text-foreground">
-                luna<span className="text-muted-foreground font-normal"> agent</span>
+                luna<span className="text-muted-foreground font-normal"> demo</span>
               </span>
             </div>
             <button
@@ -111,6 +111,14 @@ const Dashboard = () => {
               {formatPnl(totalPnl)} all time
             </div>
           </div>
+
+          <button
+            onClick={() => navigate("/trade")}
+            className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors mb-2 px-1 py-1.5 rounded-lg hover:bg-primary/5"
+          >
+            <Zap className="h-3 w-3" />
+            Switch to Live Trading
+          </button>
 
           <button
             onClick={() => setShowFunds(!showFunds)}

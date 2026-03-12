@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { Keypair } from "@solana/web3.js";
 import { playWinSound, playLossSound, playOpenSound } from "@/lib/sounds";
 
 export interface Trade {
@@ -36,6 +37,8 @@ export interface Bot {
   direction: "LONG" | "SHORT" | null;
   positionSize: number;
   candles: Candle[];
+  walletAddress: string;
+  walletSecretKey: string;
 }
 
 const basePrices: Record<string, number> = {
@@ -72,8 +75,17 @@ function generateInitialCandles(basePrice: number, count = 30): Candle[] {
   return candles;
 }
 
+function generateWallet() {
+  const keypair = Keypair.generate();
+  return {
+    walletAddress: keypair.publicKey.toBase58(),
+    walletSecretKey: Buffer.from(keypair.secretKey).toString("hex"),
+  };
+}
+
 function makeBot(id: number, pair: string, strategy: string, sl: string, tp: string, active: boolean, positionSize: number): Bot {
   const base = getBasePrice(pair);
+  const wallet = generateWallet();
   return {
     id, pair, strategy, sl, tp, active,
     pnl: 0, trades: 0, wins: 0,
@@ -81,6 +93,7 @@ function makeBot(id: number, pair: string, strategy: string, sl: string, tp: str
     entryPrice: null, direction: null,
     positionSize,
     candles: generateInitialCandles(base),
+    ...wallet,
   };
 }
 
@@ -120,7 +133,6 @@ export function useBotSimulation() {
           const elapsed = Date.now() - (lastCandle?.time || 0);
 
           if (elapsed > 5000) {
-            // New candle
             candles.push({
               time: Date.now(),
               open: newPrice,

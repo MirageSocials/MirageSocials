@@ -241,7 +241,11 @@ export function useBotSimulation() {
 
   const withdraw = useCallback((amount: number) => {
     setBalance((prev) => {
-      if (amount > 0 && amount <= prev) return prev - amount;
+      if (amount > 0 && amount <= prev) {
+        const newBal = prev - amount;
+        setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+        return newBal;
+      }
       return prev;
     });
   }, []);

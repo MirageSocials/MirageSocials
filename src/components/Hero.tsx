@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BookOpen, LayoutDashboard } from "lucide-react";
 
 const terminalLines = [
-  { prefix: "◉", text: "perpbot", color: "text-primary" },
+  { prefix: "◉", text: "luna agent", color: "text-primary" },
 ];
 
 const Hero = () => {

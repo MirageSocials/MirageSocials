@@ -1,6 +1,10 @@
 import Terminal from "./Terminal";
 
 const Hero = () => {
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="pt-28 pb-20">
       <div className="container">
@@ -18,12 +22,18 @@ const Hero = () => {
               Pick your crypto, choose a strategy, set SL/TP — the bot trades perpetual futures for you 24/7 across all major exchanges.
             </p>
             <div className="flex flex-wrap gap-3">
-              <button className="text-sm font-medium bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-opacity">
+              <button
+                onClick={() => scrollTo("cta")}
+                className="text-sm font-medium bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-all active:scale-95"
+              >
                 Launch Bot →
               </button>
-              <a href="#how-it-works" className="text-sm font-medium border border-border text-foreground px-6 py-3 rounded-lg hover:bg-accent transition-colors">
+              <button
+                onClick={() => scrollTo("how-it-works")}
+                className="text-sm font-medium border border-border text-foreground px-6 py-3 rounded-lg hover:bg-accent transition-all active:scale-95"
+              >
                 Learn More
-              </a>
+              </button>
             </div>
             <div className="flex gap-8 mt-10 pt-8 border-t border-border">
               {[

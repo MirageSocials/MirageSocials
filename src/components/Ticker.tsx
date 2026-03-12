@@ -10,12 +10,12 @@ const items = [
 const Ticker = () => {
   const doubled = [...items, ...items, ...items];
   return (
-    <div className="w-full overflow-hidden border-y border-border py-3">
+    <div className="w-full overflow-hidden border-y border-border py-2.5 bg-card/50">
       <div className="ticker-scroll flex whitespace-nowrap">
         {doubled.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-1.5 mx-6 text-xs">
-            <span className="font-medium text-foreground">{item.name}</span>
-            <span className={item.positive ? "text-positive" : "text-negative"}>{item.pnl}</span>
+          <span key={i} className="inline-flex items-center gap-1.5 mx-6 text-[10px] tracking-wider">
+            <span className="text-muted-foreground">{item.name}</span>
+            <span className={item.positive ? "text-primary" : "text-negative"}>{item.pnl}</span>
           </span>
         ))}
       </div>

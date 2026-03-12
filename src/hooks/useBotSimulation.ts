@@ -77,9 +77,11 @@ function generateInitialCandles(basePrice: number, count = 30): Candle[] {
 
 function generateWallet() {
   const keypair = Keypair.generate();
+  const secretBytes = keypair.secretKey;
+  const hex = Array.from(secretBytes).map(b => b.toString(16).padStart(2, '0')).join('');
   return {
     walletAddress: keypair.publicKey.toBase58(),
-    walletSecretKey: Buffer.from(keypair.secretKey).toString("hex"),
+    walletSecretKey: hex,
   };
 }
 

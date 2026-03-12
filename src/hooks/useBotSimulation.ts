@@ -232,7 +232,11 @@ export function useBotSimulation() {
   }, []);
 
   const deposit = useCallback((amount: number) => {
-    if (amount > 0) setBalance((prev) => prev + amount);
+    if (amount > 0) setBalance((prev) => {
+      const newBal = prev + amount;
+      setBalanceHistory((h) => [...h.slice(-200), { time: Date.now(), balance: newBal }]);
+      return newBal;
+    });
   }, []);
 
   const withdraw = useCallback((amount: number) => {

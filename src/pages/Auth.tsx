@@ -29,7 +29,7 @@ const Auth = () => {
     } else {
       const { error } = await signUp(email, password, displayName);
       if (error) setError(error.message);
-      else setSuccess("Check your email to confirm your account!");
+      else navigate("/dashboard");
     }
 
     setLoading(false);

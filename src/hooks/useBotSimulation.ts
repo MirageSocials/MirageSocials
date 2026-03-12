@@ -86,6 +86,11 @@ function makeBot(id: number, pair: string, strategy: string, sl: string, tp: str
 
 const INITIAL_BALANCE = 10000;
 
+export interface BalancePoint {
+  time: number;
+  balance: number;
+}
+
 export function useBotSimulation() {
   const [bots, setBots] = useState<Bot[]>([
     makeBot(1, "BTC/USDT", "Scalp", "2%", "4%", true, 500),

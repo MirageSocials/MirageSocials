@@ -38,7 +38,7 @@ const Hero = () => {
 
             <FadeIn delay={0.15}>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-8">
-                Autonomous AI trading infrastructure on Solana. Each agent gets its own wallet and trades perpetual futures 24/7.
+                Autonomous AI trading infrastructure on Solana, built on Luna Agent.
               </p>
             </FadeIn>
 

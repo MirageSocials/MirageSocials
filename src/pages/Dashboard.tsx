@@ -308,7 +308,7 @@ const Dashboard = () => {
                   <span className="text-2xl">{strategyIcons[selectedBot.strategy] || "🤖"}</span>
                   <div>
                     <h1 className="text-lg font-bold text-foreground">{selectedBot.pair} <span className="text-muted-foreground font-normal">Agent</span></h1>
-                    <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                       <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{selectedBot.strategy}</span>
                       <div className="flex items-center gap-1">
                         <div className={`w-1.5 h-1.5 rounded-full ${selectedBot.active ? "bg-positive" : "bg-border"}`} />
@@ -316,6 +316,21 @@ const Dashboard = () => {
                           {selectedBot.active ? "RUNNING" : "PAUSED"}
                         </span>
                       </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="text-[9px] font-mono text-muted-foreground">◎ Wallet:</span>
+                      <span className="text-[9px] font-mono text-primary">
+                        {selectedBot.walletAddress.slice(0, 6)}...{selectedBot.walletAddress.slice(-4)}
+                      </span>
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(selectedBot.walletAddress);
+                        }}
+                        className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors"
+                        title="Copy full address"
+                      >
+                        [copy]
+                      </button>
                     </div>
                   </div>
                 </div>

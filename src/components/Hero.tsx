@@ -75,7 +75,7 @@ const Hero = () => {
 
               {/* Terminal body */}
               <div className="p-5 min-h-[260px] font-mono text-xs">
-                <div className="text-muted-foreground mb-4">$ perpbot init</div>
+                <div className="text-muted-foreground mb-4">$ luna init</div>
                 {terminalLines.map((line, i) => (
                   <div key={i} className={`${line.color} flex gap-2 mb-1`}>
                     <span>{line.prefix}</span>

@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight, Search, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DocSection {
   id: string;

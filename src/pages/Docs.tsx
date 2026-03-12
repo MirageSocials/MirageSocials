@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight, Search, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DocSection {
   id: string;
@@ -44,9 +44,30 @@ const sidebarNav = [
   },
 ];
 
+const allItems = sidebarNav.flatMap((g) => g.items);
+
 const Docs = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("overview");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const filteredNav = useMemo(() => {
+    if (!searchQuery.trim()) return sidebarNav;
+    const q = searchQuery.toLowerCase();
+    return sidebarNav
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => item.label.toLowerCase().includes(q) || item.id.toLowerCase().includes(q)),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [searchQuery]);
+
+  const handleSelectSection = (id: string) => {
+    setActiveSection(id);
+    setMobileOpen(false);
+    setSearchQuery("");
+  };
 
   const sections: Record<string, DocSection> = {
     overview: {
@@ -368,10 +389,62 @@ const Docs = () => {
 
   const currentSection = sections[activeSection] || sections.overview;
 
+  const sidebarContent = (
+    <>
+      {/* Search */}
+      <div className="p-3 border-b border-border">
+        <div className="relative">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search docs..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full text-xs font-mono bg-accent/50 border border-border rounded-lg pl-8 pr-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/30 focus:border-primary/30 transition-all"
+          />
+        </div>
+      </div>
+
+      <nav className="p-3 space-y-5 flex-1 overflow-y-auto">
+        {filteredNav.map((group) => (
+          <div key={group.group}>
+            <div className="text-[9px] tracking-widest uppercase text-muted-foreground font-mono mb-2 px-2">
+              {group.group}
+            </div>
+            <div className="space-y-0.5">
+              {group.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleSelectSection(item.id)}
+                  className={`w-full text-left text-xs px-2 py-1.5 rounded-md transition-colors ${
+                    activeSection === item.id
+                      ? "text-foreground bg-accent"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+        {filteredNav.length === 0 && (
+          <p className="text-[10px] text-muted-foreground text-center py-4 font-mono">No results found</p>
+        )}
+      </nav>
+
+      <div className="p-4 border-t border-border">
+        <a href="https://x.com/LunaOnperp" target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors font-mono">
+          Twitter ↗
+        </a>
+      </div>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <aside className="w-56 border-r border-border bg-background fixed top-0 left-0 h-screen overflow-y-auto">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-56 border-r border-border bg-background fixed top-0 left-0 h-screen flex-col">
         <div className="p-4 border-b border-border">
           <button onClick={() => navigate("/")} className="flex items-center gap-2 text-xs font-mono text-foreground">
             <span className="text-muted-foreground">◎</span>
@@ -379,42 +452,48 @@ const Docs = () => {
             <span className="text-muted-foreground font-normal">Docs</span>
           </button>
         </div>
-
-        <nav className="p-3 space-y-5">
-          {sidebarNav.map((group) => (
-            <div key={group.group}>
-              <div className="text-[9px] tracking-widest uppercase text-muted-foreground font-mono mb-2 px-2">
-                {group.group}
-              </div>
-              <div className="space-y-0.5">
-                {group.items.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full text-left text-xs px-2 py-1.5 rounded-md transition-colors ${
-                      activeSection === item.id
-                        ? "text-foreground bg-accent"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </nav>
-
-        <div className="p-4 border-t border-border mt-4">
-          <a href="https://x.com/LunaOnperp" target="_blank" rel="noopener noreferrer" className="text-[10px] text-muted-foreground hover:text-foreground transition-colors font-mono">
-            Twitter ↗
-          </a>
-        </div>
+        {sidebarContent}
       </aside>
 
+      {/* Mobile header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-12 bg-background/90 backdrop-blur-lg border-b border-border flex items-center justify-between px-4">
+        <button onClick={() => navigate("/")} className="flex items-center gap-2 text-xs font-mono text-foreground">
+          <span className="text-muted-foreground">◎</span>
+          <span className="font-bold">luna</span>
+          <span className="text-muted-foreground font-normal">Docs</span>
+        </button>
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
+      </div>
+
+      {/* Mobile sidebar overlay */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileOpen(false)}
+              className="md:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
+            />
+            <motion.aside
+              initial={{ x: -256 }}
+              animate={{ x: 0 }}
+              exit={{ x: -256 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="md:hidden fixed top-12 left-0 bottom-0 z-50 w-64 bg-background border-r border-border flex flex-col"
+            >
+              {sidebarContent}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Main content */}
-      <main className="flex-1 ml-56">
-        <div className="max-w-2xl mx-auto px-8 py-8">
+      <main className="flex-1 md:ml-56 pt-12 md:pt-0">
+        <div className="max-w-2xl mx-auto px-6 md:px-8 py-8">
           <button
             onClick={() => navigate("/")}
             className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors mb-8"

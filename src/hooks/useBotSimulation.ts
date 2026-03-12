@@ -258,7 +258,7 @@ export function useBotSimulation() {
   return {
     bots, tradeLog, toggleBot, createBot, deleteBot,
     totalPnl, totalTrades, winRate,
-    balance, deposit, withdraw,
+    balance, balanceHistory, deposit, withdraw,
     soundEnabled, setSoundEnabled,
   };
 }

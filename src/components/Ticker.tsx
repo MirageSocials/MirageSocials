@@ -1,20 +1,20 @@
 const items = [
-  { name: "BTC-SCALP", pnl: "+$2,847", positive: true },
-  { name: "ETH-SWING", pnl: "-$412", positive: false },
-  { name: "SOL-TREND", pnl: "+$5,120", positive: true },
-  { name: "ARB-NEWS", pnl: "+$1,300", positive: true },
-  { name: "DOGE-SCALP", pnl: "+$890", positive: true },
-  { name: "AVAX-HOLD", pnl: "-$201", positive: false },
+  { name: "BTC/USDT", pnl: "+2.4%", positive: true },
+  { name: "ETH/USDT", pnl: "-0.8%", positive: false },
+  { name: "SOL/USDT", pnl: "+5.1%", positive: true },
+  { name: "ARB/USDT", pnl: "+1.3%", positive: true },
+  { name: "DOGE/USDT", pnl: "+0.9%", positive: true },
+  { name: "AVAX/USDT", pnl: "-0.2%", positive: false },
 ];
 
 const Ticker = () => {
   const doubled = [...items, ...items, ...items];
   return (
-    <div className="w-full overflow-hidden border-y border-border bg-accent/30 py-2.5">
+    <div className="w-full overflow-hidden border-y border-border py-3">
       <div className="ticker-scroll flex whitespace-nowrap">
         {doubled.map((item, i) => (
-          <span key={i} className="inline-flex items-center gap-1.5 mx-5 text-xs font-medium">
-            <span className="text-muted-foreground">{item.name}</span>
+          <span key={i} className="inline-flex items-center gap-1.5 mx-6 text-xs">
+            <span className="font-medium text-foreground">{item.name}</span>
             <span className={item.positive ? "text-positive" : "text-negative"}>{item.pnl}</span>
           </span>
         ))}

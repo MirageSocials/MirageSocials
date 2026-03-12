@@ -1,56 +1,64 @@
-import Terminal from "./Terminal";
+import { useNavigate } from "react-router-dom";
+import { FadeIn } from "./FadeIn";
 
 const Hero = () => {
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+  const navigate = useNavigate();
 
   return (
-    <section className="pt-28 pb-20">
+    <section className="pt-32 pb-24">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 text-xs font-medium text-primary bg-primary/8 border border-primary/15 rounded-full px-3 py-1 mb-6">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-              Autonomous Perp Trading
+        <div className="max-w-2xl mx-auto text-center">
+          <FadeIn>
+            <div className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground bg-secondary border border-border rounded-full px-4 py-1.5 mb-8">
+              <span className="w-1.5 h-1.5 rounded-full bg-positive animate-pulse" />
+              Live on 5+ exchanges
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-foreground mb-4">
-              Trade perps on<br />
-              <span className="text-primary">autopilot</span>
+          </FadeIn>
+
+          <FadeIn delay={0.1}>
+            <h1 className="text-5xl md:text-6xl font-bold leading-[1.1] tracking-tight text-foreground mb-6">
+              Perpetual futures,<br />
+              fully automated.
             </h1>
-            <p className="text-muted-foreground text-lg leading-relaxed max-w-md mb-8">
-              Pick your crypto, choose a strategy, set SL/TP — the bot trades perpetual futures for you 24/7 across all major exchanges.
+          </FadeIn>
+
+          <FadeIn delay={0.2}>
+            <p className="text-lg text-muted-foreground leading-relaxed max-w-lg mx-auto mb-10">
+              Select a pair, pick your strategy, set your risk — PerpBot handles the rest. 24/7 execution across every major exchange.
             </p>
-            <div className="flex flex-wrap gap-3">
+          </FadeIn>
+
+          <FadeIn delay={0.3}>
+            <div className="flex items-center justify-center gap-4">
               <button
-                onClick={() => scrollTo("cta")}
-                className="text-sm font-medium bg-primary text-primary-foreground px-6 py-3 rounded-lg hover:opacity-90 transition-all active:scale-95"
+                onClick={() => navigate("/dashboard")}
+                className="text-sm font-medium bg-foreground text-background px-8 py-3.5 rounded-full hover:bg-foreground/90 transition-all active:scale-95"
               >
-                Launch Bot →
+                Open Dashboard
               </button>
               <button
-                onClick={() => scrollTo("how-it-works")}
-                className="text-sm font-medium border border-border text-foreground px-6 py-3 rounded-lg hover:bg-accent transition-all active:scale-95"
+                onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                Learn More
+                How it works ↓
               </button>
             </div>
-            <div className="flex gap-8 mt-10 pt-8 border-t border-border">
+          </FadeIn>
+
+          <FadeIn delay={0.4}>
+            <div className="flex justify-center gap-12 mt-16 pt-8 border-t border-border">
               {[
-                { value: "24/7", label: "Monitoring" },
-                { value: "5+", label: "Exchanges" },
-                { value: "<50ms", label: "Execution" },
+                { value: "$48M+", label: "Volume Traded" },
+                { value: "2,400+", label: "Active Bots" },
+                { value: "67%", label: "Avg. Win Rate" },
               ].map((s) => (
-                <div key={s.label}>
-                  <div className="text-xl font-bold text-foreground">{s.value}</div>
-                  <div className="text-xs text-muted-foreground">{s.label}</div>
+                <div key={s.label} className="text-center">
+                  <div className="text-2xl font-bold text-foreground">{s.value}</div>
+                  <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
                 </div>
               ))}
             </div>
-          </div>
-          <div>
-            <Terminal />
-          </div>
+          </FadeIn>
         </div>
       </div>
     </section>

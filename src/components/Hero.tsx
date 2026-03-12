@@ -70,7 +70,7 @@ const Hero = () => {
                   <div className="w-2.5 h-2.5 rounded-full bg-[hsl(40,80%,50%)]" />
                   <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                 </div>
-                <span className="text-[10px] text-muted-foreground tracking-wider font-mono">erl@perpbot</span>
+                <span className="text-[10px] text-muted-foreground tracking-wider font-mono">erl@luna</span>
               </div>
 
               {/* Terminal body */}

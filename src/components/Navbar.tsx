@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { Terminal } from "lucide-react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -8,25 +9,26 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-      <div className="container flex h-16 items-center justify-between">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
+      <div className="flex h-12 items-center justify-between bg-card/80 backdrop-blur-xl border border-border rounded-full px-6">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="text-lg font-bold tracking-tight font-display text-foreground"
+          className="flex items-center gap-2 text-sm font-bold tracking-tight font-mono text-foreground"
         >
-          Perp<span className="text-primary">Bot</span>
+          <Terminal className="h-4 w-4 text-primary" />
+          perpbot
         </button>
 
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {[
-            { label: "How it works", id: "how-it-works" },
-            { label: "Features", id: "features" },
-            { label: "Performance", id: "performance" },
+            { label: "HOW", id: "how-it-works" },
+            { label: "FEATURES", id: "features" },
+            { label: "AGENTS", id: "performance" },
           ].map((item) => (
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-[10px] tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors"
             >
               {item.label}
             </button>
@@ -36,15 +38,15 @@ const Navbar = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => navigate("/auth")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-[10px] tracking-widest uppercase text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
           >
             Log in
           </button>
           <button
             onClick={() => navigate("/auth")}
-            className="text-sm font-medium bg-primary text-primary-foreground px-5 py-2 rounded-full hover:bg-primary/90 transition-all active:scale-95"
+            className="text-[10px] font-bold tracking-widest uppercase bg-primary text-primary-foreground px-4 py-1.5 rounded-full hover:bg-primary/90 transition-all active:scale-95"
           >
-            Start Trading
+            Launch App
           </button>
         </div>
       </div>

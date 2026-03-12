@@ -44,9 +44,30 @@ const sidebarNav = [
   },
 ];
 
+const allItems = sidebarNav.flatMap((g) => g.items);
+
 const Docs = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState("overview");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const filteredNav = useMemo(() => {
+    if (!searchQuery.trim()) return sidebarNav;
+    const q = searchQuery.toLowerCase();
+    return sidebarNav
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((item) => item.label.toLowerCase().includes(q) || item.id.toLowerCase().includes(q)),
+      }))
+      .filter((group) => group.items.length > 0);
+  }, [searchQuery]);
+
+  const handleSelectSection = (id: string) => {
+    setActiveSection(id);
+    setMobileOpen(false);
+    setSearchQuery("");
+  };
 
   const sections: Record<string, DocSection> = {
     overview: {

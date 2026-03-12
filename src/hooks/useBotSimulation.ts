@@ -99,6 +99,7 @@ export function useBotSimulation() {
   ]);
   const [tradeLog, setTradeLog] = useState<Trade[]>([]);
   const [balance, setBalance] = useState(INITIAL_BALANCE);
+  const [balanceHistory, setBalanceHistory] = useState<BalancePoint[]>([{ time: Date.now(), balance: INITIAL_BALANCE }]);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const tradeIdRef = useRef(1);
 

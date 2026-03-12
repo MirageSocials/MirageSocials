@@ -53,7 +53,7 @@ const Auth = () => {
             {isLogin ? "Welcome back" : "Create account"}
           </h1>
           <p className="text-muted-foreground mt-1 text-sm">
-            {isLogin ? "Sign in to your PerpBot dashboard" : "Start trading on autopilot"}
+            {isLogin ? "Sign in to your Luna Agent dashboard" : "Start trading on autopilot"}
           </p>
         </div>
 

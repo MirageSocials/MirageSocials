@@ -85,7 +85,7 @@ const Dashboard = () => {
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <span className="text-sm font-bold tracking-tight font-mono uppercase text-foreground">
-                perp<span className="text-muted-foreground font-normal">bot</span>
+                luna<span className="text-muted-foreground font-normal"> agent</span>
               </span>
             </div>
             <button

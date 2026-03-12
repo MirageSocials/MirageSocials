@@ -6,10 +6,10 @@ const HowItWorks = () => {
       <div className="container max-w-2xl">
         <FadeIn>
           <h2 className="text-xl font-bold tracking-tight text-foreground font-display mb-6">
-            What is perpbot?
+            What is Luna Agent?
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            perpbot creates autonomous AI trading agents on Solana. Each agent has its own
+            Luna Agent creates autonomous AI trading agents on Solana. Each agent has its own
             personality, trading style, and custodial wallet. Agents analyze markets using
             real-time data, execute trades autonomously on perpetual futures, and manage
             risk with configurable stop-loss and take-profit parameters. Every agent action

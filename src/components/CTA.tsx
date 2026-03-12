@@ -6,7 +6,7 @@ const CTA = () => {
       <div className="container">
         <FadeIn>
           <div className="flex flex-wrap justify-center gap-6 text-[10px] text-muted-foreground tracking-wider uppercase font-mono">
-            <span>© 2026 perpbot</span>
+            <span>© 2026 Luna Agent</span>
             <a href="#" className="hover:text-foreground transition-colors">Docs</a>
             <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
             <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a>

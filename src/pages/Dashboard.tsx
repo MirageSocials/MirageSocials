@@ -82,6 +82,8 @@ const Dashboard = () => {
     setWalletConnected(false);
     setWalletAddress("");
   }, []);
+  const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
+  const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);
 
   const handleCreate = () => {
     const size = parseFloat(posSize) || 500;

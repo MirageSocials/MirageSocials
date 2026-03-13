@@ -202,108 +202,235 @@ const Dashboard = () => {
             </div>
           )}
 
-          <button
-            onClick={() => setShowFunds(!showFunds)}
-            className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors font-mono uppercase tracking-wider"
-          >
-            <Wallet className="h-3 w-3" />
-            Manage Funds
-          </button>
-
-          <AnimatePresence>
-            {showFunds && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                <div className="pt-3 space-y-2">
-                  <input
-                    type="number" value={fundAmount} onChange={(e) => setFundAmount(e.target.value)}
-                    placeholder="Amount"
-                    className="w-full text-xs bg-background border border-border rounded-lg px-3 py-2 text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-foreground/20"
-                  />
-                  <div className="flex gap-2">
-                    <button onClick={handleDeposit}
-                      className="flex-1 text-[10px] font-mono uppercase tracking-wider bg-foreground text-background py-2 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 flex items-center justify-center gap-1">
-                      <ArrowDownToLine className="h-3 w-3" /> Deposit
-                    </button>
-                    <button onClick={handleWithdraw}
-                      disabled={parseFloat(fundAmount) > balance}
-                      className="flex-1 text-[10px] font-mono uppercase tracking-wider border border-border text-foreground py-2 rounded-lg hover:bg-accent transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1">
-                      <ArrowUpFromLine className="h-3 w-3" /> Withdraw
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Agent Bot List */}
-        <div className="p-4 flex-1 overflow-y-auto">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Agent Bots</span>
-            <button
-              onClick={() => setShowCreate(!showCreate)}
-              className="p-1.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-all active:scale-95"
-            >
-              <Plus className="h-3 w-3" />
-            </button>
-          </div>
-
-          <div className="space-y-1.5">
-            {bots.map((bot) => (
+          {mode === "demo" && (
+            <>
               <button
-                key={bot.id}
-                onClick={() => setSelectedBotId(bot.id)}
-                className={`w-full text-left rounded-xl p-3 transition-all ${
-                  selectedBotId === bot.id
-                    ? "bg-background border border-border shadow-sm"
-                    : "hover:bg-background/60 border border-transparent"
-                }`}
+                onClick={() => setShowFunds(!showFunds)}
+                className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors font-mono uppercase tracking-wider"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{strategyIcons[bot.strategy] || "🤖"}</span>
-                    <div>
-                      <div className="text-xs font-semibold text-foreground">{bot.pair}</div>
-                      <div className="text-[10px] text-muted-foreground font-mono">{bot.strategy}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <div className={`w-1.5 h-1.5 rounded-full ${bot.active ? "bg-positive" : "bg-border"}`} />
-                      {bot.active && <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-positive animate-ping opacity-40" />}
-                    </div>
-                    {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
-                  </div>
-                </div>
-                <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
-                  {formatPnl(bot.pnl)}
-                </div>
+                <Wallet className="h-3 w-3" />
+                Manage Funds
               </button>
-            ))}
-          </div>
 
-          {bots.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground text-xs font-mono">
-              No agents yet
+              <AnimatePresence>
+                {showFunds && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                    <div className="pt-3 space-y-2">
+                      <input
+                        type="number" value={fundAmount} onChange={(e) => setFundAmount(e.target.value)}
+                        placeholder="Amount"
+                        className="w-full text-xs bg-background border border-border rounded-lg px-3 py-2 text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                      />
+                      <div className="flex gap-2">
+                        <button onClick={handleDeposit}
+                          className="flex-1 text-[10px] font-mono uppercase tracking-wider bg-foreground text-background py-2 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 flex items-center justify-center gap-1">
+                          <ArrowDownToLine className="h-3 w-3" /> Deposit
+                        </button>
+                        <button onClick={handleWithdraw}
+                          disabled={parseFloat(fundAmount) > balance}
+                          className="flex-1 text-[10px] font-mono uppercase tracking-wider border border-border text-foreground py-2 rounded-lg hover:bg-accent transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1">
+                          <ArrowUpFromLine className="h-3 w-3" /> Withdraw
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+
+          {mode === "live" && (
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Trading Pair</span>
+              <div className="space-y-1">
+                {livePairs.map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={() => setLivePair(p)}
+                    className={`w-full text-left text-[10px] font-mono px-3 py-2 rounded-lg border transition-all ${
+                      livePair.label === p.label
+                        ? "bg-foreground text-background border-foreground"
+                        : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Sidebar Stats */}
-        <div className="p-4 border-t border-border">
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: "Bots", value: bots.filter((b) => b.active).length.toString() },
-              { label: "Trades", value: totalTrades.toString() },
-              { label: "Win %", value: totalTrades > 0 ? `${winRate}%` : "—" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-[9px] text-muted-foreground uppercase font-mono tracking-wider">{s.label}</div>
-                <div className="text-xs font-bold text-foreground font-mono">{s.value}</div>
+        {/* Agent Bot List - demo only */}
+        {mode === "demo" && (
+          <div className="p-4 flex-1 overflow-y-auto">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Agent Bots</span>
+              <button
+                onClick={() => setShowCreate(!showCreate)}
+                className="p-1.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-all active:scale-95"
+              >
+                <Plus className="h-3 w-3" />
+              </button>
+            </div>
+
+            <div className="space-y-1.5">
+              {bots.map((bot) => (
+                <button
+                  key={bot.id}
+                  onClick={() => setSelectedBotId(bot.id)}
+                  className={`w-full text-left rounded-xl p-3 transition-all ${
+                    selectedBotId === bot.id
+                      ? "bg-background border border-border shadow-sm"
+                      : "hover:bg-background/60 border border-transparent"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{strategyIcons[bot.strategy] || "🤖"}</span>
+                      <div>
+                        <div className="text-xs font-semibold text-foreground">{bot.pair}</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{bot.strategy}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <div className={`w-1.5 h-1.5 rounded-full ${bot.active ? "bg-positive" : "bg-border"}`} />
+                        {bot.active && <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-positive animate-ping opacity-40" />}
+                      </div>
+                      {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                    </div>
+                  </div>
+                  <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
+                    {formatPnl(bot.pnl)}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {bots.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground text-xs font-mono">
+                No agents yet
               </div>
-            ))}
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Live order panel in sidebar */}
+        {mode === "live" && (
+          <div className="p-4 flex-1 overflow-y-auto space-y-4">
+            {/* Direction */}
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                onClick={() => setLiveDirection("LONG")}
+                className={`py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                  liveDirection === "LONG"
+                    ? "bg-positive text-background font-bold"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <TrendingUp className="h-3 w-3" /> Long
+              </button>
+              <button
+                onClick={() => setLiveDirection("SHORT")}
+                className={`py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                  liveDirection === "SHORT"
+                    ? "bg-negative text-background font-bold"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <TrendingDown className="h-3 w-3" /> Short
+              </button>
+            </div>
+
+            {/* Size */}
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-1.5">Size (USD)</label>
+              <input
+                type="number"
+                value={liveSize}
+                onChange={(e) => setLiveSize(e.target.value)}
+                className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                min="10" step="10"
+              />
+            </div>
+
+            {/* Leverage */}
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-1.5">
+                Leverage: <span className="text-foreground">{liveLeverage}x</span>
+              </label>
+              <input
+                type="range" min="1" max="100" value={liveLeverage}
+                onChange={(e) => setLiveLeverage(e.target.value)}
+                className="w-full accent-primary"
+              />
+              <div className="flex justify-between text-[8px] font-mono text-muted-foreground mt-1">
+                <span>1x</span><span>25x</span><span>50x</span><span>100x</span>
+              </div>
+            </div>
+
+            {/* Summary */}
+            <div className="rounded-xl border border-border bg-card p-3 space-y-1.5">
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-muted-foreground">Direction</span>
+                <span className={liveDirection === "LONG" ? "text-positive" : "text-negative"}>{liveDirection}</span>
+              </div>
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-muted-foreground">Notional</span>
+                <span className="text-foreground font-bold">${(parseFloat(liveSize || "0") * parseFloat(liveLeverage || "1")).toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Execute */}
+            {walletConnected ? (
+              <button
+                onClick={() => window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank")}
+                className={`w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 font-bold ${
+                  liveDirection === "LONG"
+                    ? "bg-positive text-background hover:bg-positive/90"
+                    : "bg-negative text-background hover:bg-negative/90"
+                }`}
+              >
+                <Zap className="h-3 w-3" /> {liveDirection} on Jupiter <ExternalLink className="h-2.5 w-2.5" />
+              </button>
+            ) : (
+              <button
+                onClick={connectWallet}
+                className="w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
+              >
+                <Wallet className="h-3 w-3" /> Connect Wallet
+              </button>
+            )}
+
+            <a
+              href="https://jup.ag/perps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1"
+            >
+              <Shield className="h-3 w-3" /> Powered by Jupiter Perps <ExternalLink className="h-2.5 w-2.5" />
+            </a>
+          </div>
+        )}
+
+        {/* Sidebar Stats - demo only */}
+        {mode === "demo" && (
+          <div className="p-4 border-t border-border">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Bots", value: bots.filter((b) => b.active).length.toString() },
+                { label: "Trades", value: totalTrades.toString() },
+                { label: "Win %", value: totalTrades > 0 ? `${winRate}%` : "—" },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="text-[9px] text-muted-foreground uppercase font-mono tracking-wider">{s.label}</div>
+                  <div className="text-xs font-bold text-foreground font-mono">{s.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}

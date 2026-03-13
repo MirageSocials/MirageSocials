@@ -87,6 +87,14 @@ const Dashboard = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [solBalance, setSolBalance] = useState<number | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const [withdrawAddress, setWithdrawAddress] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [txHistory, setTxHistory] = useState<Array<{
+    signature: string; type: "in" | "out"; amount: number; timestamp: number; otherAddress: string;
+  }>>([]);
+  const [txLoading, setTxLoading] = useState(false);
   const [livePositions, setLivePositions] = useState<Array<{
     id: string; pair: string; direction: "LONG" | "SHORT";
     size: number; leverage: number; entry_price: number; created_at: string;

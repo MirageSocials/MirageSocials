@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
+import { Keypair } from "@solana/web3.js";
 import { useAuth } from "@/hooks/useAuth";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
 import CandlestickChart from "@/components/CandlestickChart";

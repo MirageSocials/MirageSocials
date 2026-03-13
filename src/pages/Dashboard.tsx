@@ -807,6 +807,74 @@ const Dashboard = () => {
                   </div>
                 )}
               </div>
+
+              {/* Transaction History */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Wallet className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Transaction History</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">({txHistory.length})</span>
+                  </div>
+                  <button
+                    onClick={fetchTxHistory}
+                    disabled={txLoading}
+                    className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+                    title="Refresh transactions"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${txLoading ? "animate-spin" : ""}`} />
+                  </button>
+                </div>
+
+                {txLoading && txHistory.length === 0 ? (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    Loading transactions...
+                  </div>
+                ) : txHistory.length > 0 ? (
+                  <div className="rounded-xl border border-border overflow-hidden divide-y divide-border max-h-[300px] overflow-y-auto">
+                    {txHistory.map((tx) => (
+                      <div
+                        key={tx.signature}
+                        className="px-4 py-3 flex items-center justify-between bg-background"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                            tx.type === "in" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                          }`}>
+                            {tx.type === "in" ? "IN" : "OUT"}
+                          </span>
+                          <div>
+                            <div className="text-xs font-mono font-semibold text-foreground">
+                              {tx.type === "in" ? "+" : "-"}{tx.amount.toFixed(6)} SOL
+                            </div>
+                            <div className="text-[9px] font-mono text-muted-foreground">
+                              {tx.type === "in" ? "From" : "To"}: {tx.otherAddress.slice(0, 6)}...{tx.otherAddress.slice(-4)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-muted-foreground">
+                            {tx.timestamp > 0 ? new Date(tx.timestamp).toLocaleString() : "Pending"}
+                          </span>
+                          <a
+                            href={`https://solscan.io/tx/${tx.signature}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            title="View on Solscan"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    No transactions yet — send SOL to your wallet to get started
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

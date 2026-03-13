@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Play, Pause, Plus, Trash2, Activity,
   Volume2, VolumeX, Wallet, ArrowDownToLine, ArrowUpFromLine,
   Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap, LogOut,
+  Shield, ExternalLink, AlertTriangle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
@@ -11,6 +12,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
 import CandlestickChart from "@/components/CandlestickChart";
 import EquityCurve from "@/components/EquityCurve";
+import TradingViewWidget from "@/components/TradingViewWidget";
 
 const pairs = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "ARB/USDT", "DOGE/USDT", "AVAX/USDT", "OP/USDT", "MATIC/USDT"];
 const strategies = ["Scalp", "Swing", "Trend", "News-Based"];

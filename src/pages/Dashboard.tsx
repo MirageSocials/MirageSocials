@@ -491,7 +491,7 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen">
-        {/* Live Mode - TradingView + Risk Warning */}
+        {/* Live Mode - TradingView + Positions */}
         {mode === "live" && (
           <div className="flex-1 flex flex-col">
             <div className="bg-negative/10 border-b border-negative/20 px-4 py-2">
@@ -502,8 +502,58 @@ const Dashboard = () => {
                 </span>
               </div>
             </div>
-            <div className="flex-1 p-4">
-              <TradingViewWidget symbol={livePair.tv} height={580} />
+            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+              <TradingViewWidget symbol={livePair.tv} height={420} />
+
+              {/* Positions Tracker */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Open Positions</span>
+                  <span className="text-[10px] font-mono text-muted-foreground">({livePositions.length})</span>
+                </div>
+
+                {livePositions.length > 0 ? (
+                  <div className="rounded-xl border border-border overflow-hidden divide-y divide-border">
+                    <AnimatePresence initial={false}>
+                      {livePositions.map((pos) => (
+                        <motion.div
+                          key={pos.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="px-4 py-3 flex items-center justify-between bg-background"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                              pos.direction === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                            }`}>
+                              {pos.direction}
+                            </span>
+                            <span className="text-xs font-mono font-semibold text-foreground">{pos.pair}</span>
+                            <span className="text-[10px] font-mono text-muted-foreground">${pos.size} × {pos.leverage}x</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-muted-foreground">
+                              {new Date(pos.timestamp).toLocaleTimeString()}
+                            </span>
+                            <button
+                              onClick={() => closePosition(pos.id)}
+                              className="text-[9px] font-mono text-negative hover:text-negative/80 transition-colors px-2 py-1 rounded border border-negative/20 hover:bg-negative/10"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    No open positions — place a trade via Jupiter Perps
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

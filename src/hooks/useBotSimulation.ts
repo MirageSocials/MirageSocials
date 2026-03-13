@@ -185,10 +185,18 @@ export function useBotSimulation() {
           const tpPct = parseFloat(bot.tp) / 100;
           let updated = { ...bot, currentPrice: newPrice, candles };
 
-          // If no position, maybe open one
+          // If no position, maybe open one based on sentiment
           if (!updated.entryPrice) {
+            // Periodically shift sentiment
+            if (Math.random() < 0.02) {
+              const newSent = randomSentiment();
+              updated = { ...updated, ...newSent };
+            }
+
             if (Math.random() < 0.08) {
-              const dir: "LONG" | "SHORT" = Math.random() > 0.45 ? "LONG" : "SHORT";
+              // Sentiment-driven direction bias
+              const longBias = (updated.sentimentScore + 100) / 200; // 0 to 1
+              const dir: "LONG" | "SHORT" = Math.random() < longBias ? "LONG" : "SHORT";
               updated.entryPrice = newPrice;
               updated.direction = dir;
               const trade: Trade = {

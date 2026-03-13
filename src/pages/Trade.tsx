@@ -12,6 +12,9 @@ const tradingPairs = [
   { label: "SOL/USD", tv: "BINANCE:SOLUSDT", jup: "SOL" },
   { label: "BTC/USD", tv: "BINANCE:BTCUSDT", jup: "BTC" },
   { label: "ETH/USD", tv: "BINANCE:ETHUSDT", jup: "ETH" },
+  { label: "BONK/USD", tv: "BINANCE:BONKUSDT", jup: "BONK" },
+  { label: "WIF/USD", tv: "BYBIT:WIFUSDT", jup: "WIF" },
+  { label: "JTO/USD", tv: "BYBIT:JTOUSDT", jup: "JTO" },
 ];
 
 const Trade = () => {

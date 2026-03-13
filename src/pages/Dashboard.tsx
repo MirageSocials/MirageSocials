@@ -441,6 +441,59 @@ const Dashboard = () => {
                       </button>
                     </div>
                   )}
+
+                  {/* Withdraw Section */}
+                  <div className="mt-2">
+                    <button
+                      onClick={() => setShowWithdraw(!showWithdraw)}
+                      className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
+                    >
+                      <ArrowUpFromLine className="h-3 w-3" /> {showWithdraw ? "Hide Withdraw" : "Withdraw SOL"}
+                    </button>
+                    <AnimatePresence>
+                      {showWithdraw && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                          <div className="mt-2 space-y-2">
+                            <input
+                              type="text"
+                              value={withdrawAddress}
+                              onChange={(e) => setWithdrawAddress(e.target.value)}
+                              placeholder="Recipient address"
+                              className="w-full text-[10px] font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                            />
+                            <input
+                              type="number"
+                              value={withdrawAmount}
+                              onChange={(e) => setWithdrawAmount(e.target.value)}
+                              placeholder="Amount (SOL)"
+                              className="w-full text-[10px] font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                              min="0.001" step="0.001"
+                            />
+                            {solBalance !== null && (
+                              <button
+                                onClick={() => setWithdrawAmount(Math.max(0, solBalance - 0.002).toFixed(6))}
+                                className="text-[8px] font-mono text-primary hover:text-primary/80 transition-colors"
+                              >
+                                Max: {Math.max(0, solBalance - 0.002).toFixed(6)} SOL
+                              </button>
+                            )}
+                            <button
+                              onClick={handleWithdrawSol}
+                              disabled={withdrawing || !withdrawAddress || !withdrawAmount}
+                              className="w-full text-[10px] font-mono uppercase tracking-wider bg-negative text-background py-2 rounded-lg hover:bg-negative/90 transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1"
+                            >
+                              {withdrawing ? (
+                                <RefreshCw className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <ArrowUpFromLine className="h-3 w-3" />
+                              )}
+                              {withdrawing ? "Sending..." : "Send SOL"}
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               ) : (
                 <button

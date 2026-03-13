@@ -628,7 +628,7 @@ const Dashboard = () => {
                           </div>
                           <div className="flex items-center gap-3">
                             <span className="text-[10px] font-mono text-muted-foreground">
-                              {new Date(pos.timestamp).toLocaleTimeString()}
+                              {new Date(pos.created_at).toLocaleTimeString()}
                             </span>
                             <button
                               onClick={() => closePosition(pos.id)}

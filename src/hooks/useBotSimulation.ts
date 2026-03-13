@@ -90,9 +90,31 @@ function generateWallet() {
   };
 }
 
+const sentimentReasons: Record<string, string[]> = {
+  Bullish: ["RSI oversold bounce", "Volume breakout detected", "Support level held", "Bullish engulfing pattern"],
+  Bearish: ["Resistance rejection", "Volume declining", "Death cross forming", "Bearish divergence on RSI"],
+  Neutral: ["Consolidating in range", "Awaiting catalyst", "Mixed signals", "Low volatility regime"],
+  "Extremely Bullish": ["Strong momentum + volume surge", "Multiple timeframe breakout", "Whale accumulation detected"],
+  "Extremely Bearish": ["Breakdown below key support", "Liquidation cascade risk", "Funding rate extreme negative"],
+};
+
+function randomSentiment(): { sentiment: Sentiment; sentimentScore: number; sentimentReason: string } {
+  const r = Math.random();
+  let sentiment: Sentiment;
+  let score: number;
+  if (r < 0.1) { sentiment = "Extremely Bullish"; score = 75 + Math.floor(Math.random() * 25); }
+  else if (r < 0.4) { sentiment = "Bullish"; score = 25 + Math.floor(Math.random() * 50); }
+  else if (r < 0.6) { sentiment = "Neutral"; score = -15 + Math.floor(Math.random() * 30); }
+  else if (r < 0.9) { sentiment = "Bearish"; score = -(25 + Math.floor(Math.random() * 50)); }
+  else { sentiment = "Extremely Bearish"; score = -(75 + Math.floor(Math.random() * 25)); }
+  const reasons = sentimentReasons[sentiment];
+  return { sentiment, sentimentScore: score, sentimentReason: reasons[Math.floor(Math.random() * reasons.length)] };
+}
+
 function makeBot(id: number, pair: string, strategy: string, sl: string, tp: string, active: boolean, positionSize: number): Bot {
   const base = getBasePrice(pair);
   const wallet = generateWallet();
+  const sent = randomSentiment();
   return {
     id, pair, strategy, sl, tp, active,
     pnl: 0, trades: 0, wins: 0,
@@ -101,6 +123,7 @@ function makeBot(id: number, pair: string, strategy: string, sl: string, tp: str
     positionSize,
     candles: generateInitialCandles(base),
     ...wallet,
+    ...sent,
   };
 }
 

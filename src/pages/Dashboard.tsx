@@ -712,6 +712,43 @@ const Dashboard = () => {
                     </div>
                   </div>
 
+                  {/* Sentiment Card */}
+                  <div className={`rounded-xl border p-3 mb-4 ${sentimentBg[selectedBot.sentiment]}`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">Agent Sentiment</div>
+                        <div className={`text-sm font-bold font-mono mt-0.5 ${sentimentColors[selectedBot.sentiment]}`}>
+                          {selectedBot.sentiment}
+                          <span className="text-[10px] font-normal ml-2">
+                            ({selectedBot.sentimentScore > 0 ? "+" : ""}{selectedBot.sentimentScore})
+                          </span>
+                        </div>
+                        <div className="text-[9px] font-mono text-muted-foreground mt-1">
+                          "{selectedBot.sentimentReason}"
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[9px] font-mono text-muted-foreground">Bias</div>
+                        <div className={`text-xs font-bold font-mono ${selectedBot.sentimentScore >= 0 ? "text-positive" : "text-negative"}`}>
+                          {selectedBot.sentimentScore >= 50 ? "STRONG LONG" :
+                           selectedBot.sentimentScore >= 15 ? "LONG" :
+                           selectedBot.sentimentScore >= -15 ? "NEUTRAL" :
+                           selectedBot.sentimentScore >= -50 ? "SHORT" : "STRONG SHORT"}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Sentiment bar */}
+                    <div className="mt-2 h-1.5 rounded-full bg-secondary overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${selectedBot.sentimentScore >= 0 ? "bg-positive" : "bg-negative"}`}
+                        style={{ width: `${Math.abs(selectedBot.sentimentScore)}%`, marginLeft: selectedBot.sentimentScore >= 0 ? "50%" : `${50 - Math.abs(selectedBot.sentimentScore)}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] font-mono text-muted-foreground mt-1">
+                      <span>Bearish</span><span>Neutral</span><span>Bullish</span>
+                    </div>
+                  </div>
+
                   {/* Stats Row */}
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
                     {[

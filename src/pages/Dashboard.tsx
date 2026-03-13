@@ -111,7 +111,6 @@ const Dashboard = () => {
   const closePosition = useCallback((id: number) => {
     setLivePositions(prev => prev.filter(p => p.id !== id));
   }, []);
-  }, []);
   const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
   const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);
 

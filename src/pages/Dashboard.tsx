@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Play, Pause, Plus, Trash2, Activity,
   Volume2, VolumeX, Wallet, ArrowDownToLine, ArrowUpFromLine,
   Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap, LogOut,
+  Shield, ExternalLink, AlertTriangle,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
@@ -11,9 +12,16 @@ import { useAuth } from "@/hooks/useAuth";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
 import CandlestickChart from "@/components/CandlestickChart";
 import EquityCurve from "@/components/EquityCurve";
+import TradingViewWidget from "@/components/TradingViewWidget";
 
 const pairs = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "ARB/USDT", "DOGE/USDT", "AVAX/USDT", "OP/USDT", "MATIC/USDT"];
 const strategies = ["Scalp", "Swing", "Trend", "News-Based"];
+
+const livePairs = [
+  { label: "SOL/USD", tv: "BINANCE:SOLUSDT", jup: "SOL" },
+  { label: "BTC/USD", tv: "BINANCE:BTCUSDT", jup: "BTC" },
+  { label: "ETH/USD", tv: "BINANCE:ETHUSDT", jup: "ETH" },
+];
 
 const formatPnl = (v: number) => `${v >= 0 ? "+" : ""}$${Math.abs(v).toFixed(2)}`;
 const formatPrice = (p: number) => (p >= 1000 ? p.toFixed(2) : p >= 1 ? p.toFixed(3) : p.toFixed(5));
@@ -35,6 +43,7 @@ const Dashboard = () => {
   } = useBotSimulation();
   const { signOut, user } = useAuth();
 
+  const [mode, setMode] = useState<"demo" | "live">("demo");
   const [selectedBotId, setSelectedBotId] = useState<number | null>(bots[0]?.id ?? null);
   const [showCreate, setShowCreate] = useState(false);
   const [showFunds, setShowFunds] = useState(false);
@@ -45,6 +54,34 @@ const Dashboard = () => {
   const [posSize, setPosSize] = useState("500");
   const [fundAmount, setFundAmount] = useState("");
 
+  // Live trading state
+  const [livePair, setLivePair] = useState(livePairs[0]);
+  const [liveDirection, setLiveDirection] = useState<"LONG" | "SHORT">("LONG");
+  const [liveSize, setLiveSize] = useState("100");
+  const [liveLeverage, setLiveLeverage] = useState("5");
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+
+  const connectWallet = useCallback(async () => {
+    try {
+      const solana = (window as any).solana;
+      if (!solana?.isPhantom) {
+        window.open("https://phantom.app/", "_blank");
+        return;
+      }
+      const resp = await solana.connect();
+      setWalletAddress(resp.publicKey.toString());
+      setWalletConnected(true);
+    } catch (err) {
+      console.error("Wallet connection failed:", err);
+    }
+  }, []);
+
+  const disconnectWallet = useCallback(() => {
+    try { (window as any).solana?.disconnect(); } catch {}
+    setWalletConnected(false);
+    setWalletAddress("");
+  }, []);
   const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
   const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);
 
@@ -85,7 +122,7 @@ const Dashboard = () => {
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <span className="text-sm font-bold tracking-tight font-mono uppercase text-foreground">
-                luna<span className="text-muted-foreground font-normal"> demo</span>
+                luna<span className="text-muted-foreground font-normal"> agent</span>
               </span>
             </div>
             <button
@@ -103,389 +140,581 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {/* Balance card */}
-          <div className="rounded-xl bg-background border border-border p-3 mb-3">
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">Balance</div>
-            <div className="text-lg font-bold text-foreground font-mono">${balance.toFixed(2)}</div>
-            <div className={`text-xs font-mono ${totalPnl >= 0 ? "text-positive" : "text-negative"}`}>
-              {formatPnl(totalPnl)} all time
-            </div>
-          </div>
-
-          <button
-            onClick={() => navigate("/trade")}
-            className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors mb-2 px-1 py-1.5 rounded-lg hover:bg-primary/5"
-          >
-            <Zap className="h-3 w-3" />
-            Switch to Live Trading
-          </button>
-
-          <button
-            onClick={() => setShowFunds(!showFunds)}
-            className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors font-mono uppercase tracking-wider"
-          >
-            <Wallet className="h-3 w-3" />
-            Manage Funds
-          </button>
-
-          <AnimatePresence>
-            {showFunds && (
-              <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-                <div className="pt-3 space-y-2">
-                  <input
-                    type="number" value={fundAmount} onChange={(e) => setFundAmount(e.target.value)}
-                    placeholder="Amount"
-                    className="w-full text-xs bg-background border border-border rounded-lg px-3 py-2 text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-foreground/20"
-                  />
-                  <div className="flex gap-2">
-                    <button onClick={handleDeposit}
-                      className="flex-1 text-[10px] font-mono uppercase tracking-wider bg-foreground text-background py-2 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 flex items-center justify-center gap-1">
-                      <ArrowDownToLine className="h-3 w-3" /> Deposit
-                    </button>
-                    <button onClick={handleWithdraw}
-                      disabled={parseFloat(fundAmount) > balance}
-                      className="flex-1 text-[10px] font-mono uppercase tracking-wider border border-border text-foreground py-2 rounded-lg hover:bg-accent transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1">
-                      <ArrowUpFromLine className="h-3 w-3" /> Withdraw
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-
-        {/* Agent Bot List */}
-        <div className="p-4 flex-1 overflow-y-auto">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Agent Bots</span>
+          {/* Mode Toggle */}
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-background border border-border mb-3">
             <button
-              onClick={() => setShowCreate(!showCreate)}
-              className="p-1.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-all active:scale-95"
+              onClick={() => setMode("demo")}
+              className={`text-[10px] font-mono uppercase tracking-wider py-2 rounded-lg transition-all ${
+                mode === "demo"
+                  ? "bg-foreground text-background font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
-              <Plus className="h-3 w-3" />
+              Demo
+            </button>
+            <button
+              onClick={() => setMode("live")}
+              className={`text-[10px] font-mono uppercase tracking-wider py-2 rounded-lg transition-all flex items-center justify-center gap-1 ${
+                mode === "live"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Zap className="h-3 w-3" /> Live
             </button>
           </div>
 
-          <div className="space-y-1.5">
-            {bots.map((bot) => (
-              <button
-                key={bot.id}
-                onClick={() => setSelectedBotId(bot.id)}
-                className={`w-full text-left rounded-xl p-3 transition-all ${
-                  selectedBotId === bot.id
-                    ? "bg-background border border-border shadow-sm"
-                    : "hover:bg-background/60 border border-transparent"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm">{strategyIcons[bot.strategy] || "🤖"}</span>
-                    <div>
-                      <div className="text-xs font-semibold text-foreground">{bot.pair}</div>
-                      <div className="text-[10px] text-muted-foreground font-mono">{bot.strategy}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <div className={`w-1.5 h-1.5 rounded-full ${bot.active ? "bg-positive" : "bg-border"}`} />
-                      {bot.active && <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-positive animate-ping opacity-40" />}
-                    </div>
-                    {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
-                  </div>
-                </div>
-                <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
-                  {formatPnl(bot.pnl)}
-                </div>
-              </button>
-            ))}
-          </div>
+          {/* Balance card - demo only */}
+          {mode === "demo" && (
+            <div className="rounded-xl bg-background border border-border p-3 mb-3">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">Demo Balance</div>
+              <div className="text-lg font-bold text-foreground font-mono">${balance.toFixed(2)}</div>
+              <div className={`text-xs font-mono ${totalPnl >= 0 ? "text-positive" : "text-negative"}`}>
+                {formatPnl(totalPnl)} all time
+              </div>
+            </div>
+          )}
 
-          {bots.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground text-xs font-mono">
-              No agents yet
+          {/* Wallet card - live only */}
+          {mode === "live" && (
+            <div className="rounded-xl bg-background border border-border p-3 mb-3">
+              {walletConnected ? (
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Wallet</div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-positive" />
+                    <span className="text-xs font-mono text-foreground">
+                      {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                    </span>
+                  </div>
+                  <button onClick={disconnectWallet} className="text-[9px] font-mono text-muted-foreground hover:text-negative mt-1 transition-colors">
+                    Disconnect
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={connectWallet}
+                  className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
+                >
+                  <Wallet className="h-3 w-3" /> Connect Phantom Wallet
+                </button>
+              )}
+            </div>
+          )}
+
+          {mode === "demo" && (
+            <>
+              <button
+                onClick={() => setShowFunds(!showFunds)}
+                className="w-full text-xs text-muted-foreground hover:text-foreground flex items-center gap-1.5 transition-colors font-mono uppercase tracking-wider"
+              >
+                <Wallet className="h-3 w-3" />
+                Manage Funds
+              </button>
+
+              <AnimatePresence>
+                {showFunds && (
+                  <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                    <div className="pt-3 space-y-2">
+                      <input
+                        type="number" value={fundAmount} onChange={(e) => setFundAmount(e.target.value)}
+                        placeholder="Amount"
+                        className="w-full text-xs bg-background border border-border rounded-lg px-3 py-2 text-foreground font-mono focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                      />
+                      <div className="flex gap-2">
+                        <button onClick={handleDeposit}
+                          className="flex-1 text-[10px] font-mono uppercase tracking-wider bg-foreground text-background py-2 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 flex items-center justify-center gap-1">
+                          <ArrowDownToLine className="h-3 w-3" /> Deposit
+                        </button>
+                        <button onClick={handleWithdraw}
+                          disabled={parseFloat(fundAmount) > balance}
+                          className="flex-1 text-[10px] font-mono uppercase tracking-wider border border-border text-foreground py-2 rounded-lg hover:bg-accent transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1">
+                          <ArrowUpFromLine className="h-3 w-3" /> Withdraw
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </>
+          )}
+
+          {mode === "live" && (
+            <div className="space-y-2">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Trading Pair</span>
+              <div className="space-y-1">
+                {livePairs.map((p) => (
+                  <button
+                    key={p.label}
+                    onClick={() => setLivePair(p)}
+                    className={`w-full text-left text-[10px] font-mono px-3 py-2 rounded-lg border transition-all ${
+                      livePair.label === p.label
+                        ? "bg-foreground text-background border-foreground"
+                        : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Sidebar Stats */}
-        <div className="p-4 border-t border-border">
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { label: "Bots", value: bots.filter((b) => b.active).length.toString() },
-              { label: "Trades", value: totalTrades.toString() },
-              { label: "Win %", value: totalTrades > 0 ? `${winRate}%` : "—" },
-            ].map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-[9px] text-muted-foreground uppercase font-mono tracking-wider">{s.label}</div>
-                <div className="text-xs font-bold text-foreground font-mono">{s.value}</div>
+        {/* Agent Bot List - demo only */}
+        {mode === "demo" && (
+          <div className="p-4 flex-1 overflow-y-auto">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Agent Bots</span>
+              <button
+                onClick={() => setShowCreate(!showCreate)}
+                className="p-1.5 rounded-md bg-foreground text-background hover:bg-foreground/90 transition-all active:scale-95"
+              >
+                <Plus className="h-3 w-3" />
+              </button>
+            </div>
+
+            <div className="space-y-1.5">
+              {bots.map((bot) => (
+                <button
+                  key={bot.id}
+                  onClick={() => setSelectedBotId(bot.id)}
+                  className={`w-full text-left rounded-xl p-3 transition-all ${
+                    selectedBotId === bot.id
+                      ? "bg-background border border-border shadow-sm"
+                      : "hover:bg-background/60 border border-transparent"
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{strategyIcons[bot.strategy] || "🤖"}</span>
+                      <div>
+                        <div className="text-xs font-semibold text-foreground">{bot.pair}</div>
+                        <div className="text-[10px] text-muted-foreground font-mono">{bot.strategy}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="relative">
+                        <div className={`w-1.5 h-1.5 rounded-full ${bot.active ? "bg-positive" : "bg-border"}`} />
+                        {bot.active && <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-positive animate-ping opacity-40" />}
+                      </div>
+                      {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
+                    </div>
+                  </div>
+                  <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
+                    {formatPnl(bot.pnl)}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            {bots.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground text-xs font-mono">
+                No agents yet
               </div>
-            ))}
+            )}
           </div>
-        </div>
+        )}
+
+        {/* Live order panel in sidebar */}
+        {mode === "live" && (
+          <div className="p-4 flex-1 overflow-y-auto space-y-4">
+            {/* Direction */}
+            <div className="grid grid-cols-2 gap-1.5">
+              <button
+                onClick={() => setLiveDirection("LONG")}
+                className={`py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                  liveDirection === "LONG"
+                    ? "bg-positive text-background font-bold"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <TrendingUp className="h-3 w-3" /> Long
+              </button>
+              <button
+                onClick={() => setLiveDirection("SHORT")}
+                className={`py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-wider transition-all flex items-center justify-center gap-1.5 ${
+                  liveDirection === "SHORT"
+                    ? "bg-negative text-background font-bold"
+                    : "bg-secondary text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <TrendingDown className="h-3 w-3" /> Short
+              </button>
+            </div>
+
+            {/* Size */}
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-1.5">Size (USD)</label>
+              <input
+                type="number"
+                value={liveSize}
+                onChange={(e) => setLiveSize(e.target.value)}
+                className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                min="10" step="10"
+              />
+            </div>
+
+            {/* Leverage */}
+            <div>
+              <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-1.5">
+                Leverage: <span className="text-foreground">{liveLeverage}x</span>
+              </label>
+              <input
+                type="range" min="1" max="100" value={liveLeverage}
+                onChange={(e) => setLiveLeverage(e.target.value)}
+                className="w-full accent-primary"
+              />
+              <div className="flex justify-between text-[8px] font-mono text-muted-foreground mt-1">
+                <span>1x</span><span>25x</span><span>50x</span><span>100x</span>
+              </div>
+            </div>
+
+            {/* Summary */}
+            <div className="rounded-xl border border-border bg-card p-3 space-y-1.5">
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-muted-foreground">Direction</span>
+                <span className={liveDirection === "LONG" ? "text-positive" : "text-negative"}>{liveDirection}</span>
+              </div>
+              <div className="flex justify-between text-[10px] font-mono">
+                <span className="text-muted-foreground">Notional</span>
+                <span className="text-foreground font-bold">${(parseFloat(liveSize || "0") * parseFloat(liveLeverage || "1")).toLocaleString()}</span>
+              </div>
+            </div>
+
+            {/* Execute */}
+            {walletConnected ? (
+              <button
+                onClick={() => window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank")}
+                className={`w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 font-bold ${
+                  liveDirection === "LONG"
+                    ? "bg-positive text-background hover:bg-positive/90"
+                    : "bg-negative text-background hover:bg-negative/90"
+                }`}
+              >
+                <Zap className="h-3 w-3" /> {liveDirection} on Jupiter <ExternalLink className="h-2.5 w-2.5" />
+              </button>
+            ) : (
+              <button
+                onClick={connectWallet}
+                className="w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
+              >
+                <Wallet className="h-3 w-3" /> Connect Wallet
+              </button>
+            )}
+
+            <a
+              href="https://jup.ag/perps"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center gap-1"
+            >
+              <Shield className="h-3 w-3" /> Powered by Jupiter Perps <ExternalLink className="h-2.5 w-2.5" />
+            </a>
+          </div>
+        )}
+
+        {/* Sidebar Stats - demo only */}
+        {mode === "demo" && (
+          <div className="p-4 border-t border-border">
+            <div className="grid grid-cols-3 gap-2">
+              {[
+                { label: "Bots", value: bots.filter((b) => b.active).length.toString() },
+                { label: "Trades", value: totalTrades.toString() },
+                { label: "Win %", value: totalTrades > 0 ? `${winRate}%` : "—" },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="text-[9px] text-muted-foreground uppercase font-mono tracking-wider">{s.label}</div>
+                  <div className="text-xs font-bold text-foreground font-mono">{s.value}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen">
-        {/* Create Bot Panel */}
-        <AnimatePresence>
-          {showCreate && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="overflow-hidden border-b border-border"
-            >
-              <div className="p-6 bg-secondary/30">
-                <div className="max-w-2xl mx-auto">
-                  <h3 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">Deploy New Agent</h3>
-
-                  <div className="grid md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Trading Pair</label>
-                      <div className="flex flex-wrap gap-1.5">
-                        {pairs.map((p) => (
-                          <button key={p} onClick={() => setSelectedPair(p)}
-                            className={`text-[10px] font-mono px-2.5 py-1.5 rounded-lg border transition-all ${
-                              selectedPair === p
-                                ? "bg-foreground text-background border-foreground"
-                                : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                            }`}>{p}</button>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Strategy</label>
-                      <div className="flex flex-wrap gap-1.5">
-                        {strategies.map((s) => (
-                          <button key={s} onClick={() => setSelectedStrategy(s)}
-                            className={`text-[10px] font-mono px-2.5 py-1.5 rounded-lg border transition-all ${
-                              selectedStrategy === s
-                                ? "bg-foreground text-background border-foreground"
-                                : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                            }`}>{strategyIcons[s]} {s}</button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-3 mb-4">
-                    <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Stop Loss %</label>
-                      <input type="number" value={sl} onChange={(e) => setSl(e.target.value)}
-                        className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="0.1" step="0.1" />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Take Profit %</label>
-                      <input type="number" value={tp} onChange={(e) => setTp(e.target.value)}
-                        className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="0.1" step="0.1" />
-                    </div>
-                    <div>
-                      <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Position $</label>
-                      <input type="number" value={posSize} onChange={(e) => setPosSize(e.target.value)}
-                        className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="10" step="50" />
-                    </div>
-                  </div>
-
-                  {parseFloat(posSize) > balance && (
-                    <p className="text-[10px] font-mono text-negative mb-3">Insufficient balance</p>
-                  )}
-
-                  <div className="flex gap-3">
-                    <button onClick={handleCreate} disabled={parseFloat(posSize) > balance}
-                      className="text-[10px] font-mono uppercase tracking-widest bg-foreground text-background px-6 py-2.5 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 disabled:opacity-40 flex items-center gap-2">
-                      <Zap className="h-3 w-3" /> Deploy Agent
-                    </button>
-                    <button onClick={() => setShowCreate(false)}
-                      className="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
+        {/* Live Mode - TradingView + Risk Warning */}
+        {mode === "live" && (
+          <div className="flex-1 flex flex-col">
+            <div className="bg-negative/10 border-b border-negative/20 px-4 py-2">
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="h-3.5 w-3.5 text-negative shrink-0" />
+                <span className="text-[10px] font-mono text-negative">
+                  REAL MONEY — You are trading with real funds on Jupiter Perps. Trade responsibly.
+                </span>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </div>
+            <div className="flex-1 p-4">
+              <TradingViewWidget symbol={livePair.tv} height={580} />
+            </div>
+          </div>
+        )}
 
-        {/* Selected Bot View */}
-        {selectedBot ? (
-          <div className="flex-1 p-6 overflow-y-auto">
-            <div className="max-w-3xl mx-auto">
-              {/* Bot Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{strategyIcons[selectedBot.strategy] || "🤖"}</span>
-                  <div>
-                    <h1 className="text-lg font-bold text-foreground">{selectedBot.pair} <span className="text-muted-foreground font-normal">Agent</span></h1>
-                <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{selectedBot.strategy}</span>
-                      <div className="flex items-center gap-1">
-                        <div className={`w-1.5 h-1.5 rounded-full ${selectedBot.active ? "bg-positive" : "bg-border"}`} />
-                        <span className={`text-[10px] font-mono ${selectedBot.active ? "text-positive" : "text-muted-foreground"}`}>
-                          {selectedBot.active ? "RUNNING" : "PAUSED"}
-                        </span>
+        {/* Demo Mode - Existing bot UI */}
+        {mode === "demo" && (
+          <>
+            {/* Create Bot Panel */}
+            <AnimatePresence>
+              {showCreate && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="overflow-hidden border-b border-border"
+                >
+                  <div className="p-6 bg-secondary/30">
+                    <div className="max-w-2xl mx-auto">
+                      <h3 className="text-xs font-mono uppercase tracking-widest text-muted-foreground mb-4">Deploy New Agent</h3>
+
+                      <div className="grid md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Trading Pair</label>
+                          <div className="flex flex-wrap gap-1.5">
+                            {pairs.map((p) => (
+                              <button key={p} onClick={() => setSelectedPair(p)}
+                                className={`text-[10px] font-mono px-2.5 py-1.5 rounded-lg border transition-all ${
+                                  selectedPair === p
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                                }`}>{p}</button>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Strategy</label>
+                          <div className="flex flex-wrap gap-1.5">
+                            {strategies.map((s) => (
+                              <button key={s} onClick={() => setSelectedStrategy(s)}
+                                className={`text-[10px] font-mono px-2.5 py-1.5 rounded-lg border transition-all ${
+                                  selectedStrategy === s
+                                    ? "bg-foreground text-background border-foreground"
+                                    : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/30"
+                                }`}>{strategyIcons[s]} {s}</button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-3 gap-3 mb-4">
+                        <div>
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Stop Loss %</label>
+                          <input type="number" value={sl} onChange={(e) => setSl(e.target.value)}
+                            className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="0.1" step="0.1" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Take Profit %</label>
+                          <input type="number" value={tp} onChange={(e) => setTp(e.target.value)}
+                            className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="0.1" step="0.1" />
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground block mb-2">Position $</label>
+                          <input type="number" value={posSize} onChange={(e) => setPosSize(e.target.value)}
+                            className="w-full text-xs font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-foreground/20" min="10" step="50" />
+                        </div>
+                      </div>
+
+                      {parseFloat(posSize) > balance && (
+                        <p className="text-[10px] font-mono text-negative mb-3">Insufficient balance</p>
+                      )}
+
+                      <div className="flex gap-3">
+                        <button onClick={handleCreate} disabled={parseFloat(posSize) > balance}
+                          className="text-[10px] font-mono uppercase tracking-widest bg-foreground text-background px-6 py-2.5 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 disabled:opacity-40 flex items-center gap-2">
+                          <Zap className="h-3 w-3" /> Deploy Agent
+                        </button>
+                        <button onClick={() => setShowCreate(false)}
+                          className="text-[10px] font-mono text-muted-foreground hover:text-foreground transition-colors">
+                          Cancel
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 mt-1">
-                      <span className="text-[9px] font-mono text-muted-foreground">◎ Wallet:</span>
-                      <span className="text-[9px] font-mono text-primary">
-                        {selectedBot.walletAddress.slice(0, 6)}...{selectedBot.walletAddress.slice(-4)}
-                      </span>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(selectedBot.walletAddress);
-                        }}
-                        className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors"
-                        title="Copy full address"
-                      >
-                        [copy]
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Selected Bot View */}
+            {selectedBot ? (
+              <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-3xl mx-auto">
+                  {/* Bot Header */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{strategyIcons[selectedBot.strategy] || "🤖"}</span>
+                      <div>
+                        <h1 className="text-lg font-bold text-foreground">{selectedBot.pair} <span className="text-muted-foreground font-normal">Agent</span></h1>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-muted-foreground">{selectedBot.strategy}</span>
+                          <div className="flex items-center gap-1">
+                            <div className={`w-1.5 h-1.5 rounded-full ${selectedBot.active ? "bg-positive" : "bg-border"}`} />
+                            <span className={`text-[10px] font-mono ${selectedBot.active ? "text-positive" : "text-muted-foreground"}`}>
+                              {selectedBot.active ? "RUNNING" : "PAUSED"}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className="text-[9px] font-mono text-muted-foreground">◎ Wallet:</span>
+                          <span className="text-[9px] font-mono text-primary">
+                            {selectedBot.walletAddress.slice(0, 6)}...{selectedBot.walletAddress.slice(-4)}
+                          </span>
+                          <button
+                            onClick={() => navigator.clipboard.writeText(selectedBot.walletAddress)}
+                            className="text-[9px] font-mono text-muted-foreground hover:text-foreground transition-colors"
+                            title="Copy full address"
+                          >
+                            [copy]
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => toggleBot(selectedBot.id)}
+                        className={`px-4 py-2 rounded-lg text-[10px] font-mono uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2 ${
+                          selectedBot.active
+                            ? "bg-foreground text-background hover:bg-foreground/80"
+                            : "bg-secondary text-muted-foreground hover:bg-accent"
+                        }`}>
+                        {selectedBot.active ? <><Pause className="h-3 w-3" /> Pause</> : <><Play className="h-3 w-3" /> Start</>}
+                      </button>
+                      <button onClick={() => { deleteBot(selectedBot.id); setSelectedBotId(bots[0]?.id ?? null); }}
+                        className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-negative hover:bg-negative/10 transition-all">
+                        <Trash2 className="h-3.5 w-3.5" />
                       </button>
                     </div>
                   </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => toggleBot(selectedBot.id)}
-                    className={`px-4 py-2 rounded-lg text-[10px] font-mono uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2 ${
-                      selectedBot.active
-                        ? "bg-foreground text-background hover:bg-foreground/80"
-                        : "bg-secondary text-muted-foreground hover:bg-accent"
-                    }`}>
-                    {selectedBot.active ? <><Pause className="h-3 w-3" /> Pause</> : <><Play className="h-3 w-3" /> Start</>}
-                  </button>
-                  <button onClick={() => { deleteBot(selectedBot.id); setSelectedBotId(bots[0]?.id ?? null); }}
-                    className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-negative hover:bg-negative/10 transition-all">
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
-                {[
-                  { label: "P&L", value: formatPnl(selectedBot.pnl), color: selectedBot.pnl >= 0 ? "text-positive" : "text-negative" },
-                  { label: "Trades", value: selectedBot.trades.toString(), color: "text-foreground" },
-                  { label: "Win Rate", value: selectedBot.trades > 0 ? `${Math.round((selectedBot.wins / selectedBot.trades) * 100)}%` : "—", color: "text-foreground" },
-                  { label: "Position", value: `$${selectedBot.positionSize}`, color: "text-foreground" },
-                  { label: "SL / TP", value: `${selectedBot.sl} / ${selectedBot.tp}`, color: "text-foreground" },
-                ].map((s) => (
-                  <div key={s.label} className="rounded-xl border border-border p-3 bg-background">
-                    <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</div>
-                    <div className={`text-sm font-bold font-mono mt-0.5 ${s.color}`}>{s.value}</div>
+                  {/* Stats Row */}
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+                    {[
+                      { label: "P&L", value: formatPnl(selectedBot.pnl), color: selectedBot.pnl >= 0 ? "text-positive" : "text-negative" },
+                      { label: "Trades", value: selectedBot.trades.toString(), color: "text-foreground" },
+                      { label: "Win Rate", value: selectedBot.trades > 0 ? `${Math.round((selectedBot.wins / selectedBot.trades) * 100)}%` : "—", color: "text-foreground" },
+                      { label: "Position", value: `$${selectedBot.positionSize}`, color: "text-foreground" },
+                      { label: "SL / TP", value: `${selectedBot.sl} / ${selectedBot.tp}`, color: "text-foreground" },
+                    ].map((s) => (
+                      <div key={s.label} className="rounded-xl border border-border p-3 bg-background">
+                        <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">{s.label}</div>
+                        <div className={`text-sm font-bold font-mono mt-0.5 ${s.color}`}>{s.value}</div>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
 
-              {/* Live Price + Chart */}
-              <div className="mb-6">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Live Chart</span>
-                    <span className="text-sm font-mono font-bold text-foreground">{formatPrice(selectedBot.currentPrice)}</span>
-                  </div>
-                  {selectedBot.direction && (
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded ${
-                        selectedBot.direction === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
-                      }`}>
-                        {selectedBot.direction} @ {formatPrice(selectedBot.entryPrice!)}
-                      </span>
-                      {(() => {
-                        const pct = selectedBot.direction === "LONG"
-                          ? (selectedBot.currentPrice - selectedBot.entryPrice!) / selectedBot.entryPrice!
-                          : (selectedBot.entryPrice! - selectedBot.currentPrice) / selectedBot.entryPrice!;
-                        const uPnl = pct * selectedBot.positionSize;
-                        return (
-                          <span className={`text-[10px] font-mono font-bold ${uPnl >= 0 ? "text-positive" : "text-negative"}`}>
-                            {formatPnl(uPnl)}
+                  {/* Live Price + Chart */}
+                  <div className="mb-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Live Chart</span>
+                        <span className="text-sm font-mono font-bold text-foreground">{formatPrice(selectedBot.currentPrice)}</span>
+                      </div>
+                      {selectedBot.direction && (
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[10px] font-mono font-bold px-2 py-1 rounded ${
+                            selectedBot.direction === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                          }`}>
+                            {selectedBot.direction} @ {formatPrice(selectedBot.entryPrice!)}
                           </span>
-                        );
-                      })()}
+                          {(() => {
+                            const pct = selectedBot.direction === "LONG"
+                              ? (selectedBot.currentPrice - selectedBot.entryPrice!) / selectedBot.entryPrice!
+                              : (selectedBot.entryPrice! - selectedBot.currentPrice) / selectedBot.entryPrice!;
+                            const uPnl = pct * selectedBot.positionSize;
+                            return (
+                              <span className={`text-[10px] font-mono font-bold ${uPnl >= 0 ? "text-positive" : "text-negative"}`}>
+                                {formatPnl(uPnl)}
+                              </span>
+                            );
+                          })()}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-                <CandlestickChart candles={selectedBot.candles} pair={selectedBot.pair} height={200} />
-              </div>
-
-              {/* Equity Curve */}
-              <div className="mb-6">
-                <EquityCurve balanceHistory={balanceHistory} />
-              </div>
-
-              {/* Trade Log for this bot */}
-              <div>
-                <div className="flex items-center gap-2 mb-3">
-                  <Activity className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Trade History</span>
-                  <span className="text-[10px] font-mono text-muted-foreground">({botTrades.length})</span>
-                </div>
-
-                {botTrades.length > 0 ? (
-                  <div className="rounded-xl border border-border overflow-hidden divide-y divide-border max-h-[280px] overflow-y-auto">
-                    <AnimatePresence initial={false}>
-                      {botTrades.map((trade) => (
-                        <motion.div
-                          key={trade.id}
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          className="px-4 py-2.5 flex items-center justify-between gap-3 bg-background text-xs"
-                        >
-                          <div className="flex items-center gap-3">
-                            <span className={`font-bold font-mono text-[10px] px-1.5 py-0.5 rounded ${
-                              trade.type === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
-                            }`}>
-                              {trade.type}
-                            </span>
-                            <span className="text-muted-foreground font-mono text-[10px]">@ {formatPrice(trade.entry)}</span>
-                            {trade.exit && (
-                              <>
-                                <span className="text-muted-foreground">→</span>
-                                <span className="text-muted-foreground font-mono text-[10px]">{formatPrice(trade.exit)}</span>
-                              </>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-3">
-                            {trade.status === "open" ? (
-                              <span className="text-muted-foreground flex items-center gap-1 font-mono text-[10px]">
-                                <div className="w-1.5 h-1.5 rounded-full bg-positive animate-pulse" />
-                                OPEN
-                              </span>
-                            ) : (
-                              <span className={`font-bold font-mono text-[10px] ${(trade.pnl ?? 0) >= 0 ? "text-positive" : "text-negative"}`}>
-                                {formatPnl(trade.pnl ?? 0)}
-                              </span>
-                            )}
-                            <span className="text-[10px] text-muted-foreground font-mono">
-                              {new Date(trade.timestamp).toLocaleTimeString()}
-                            </span>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
+                    <CandlestickChart candles={selectedBot.candles} pair={selectedBot.pair} height={200} />
                   </div>
-                ) : (
-                  <div className="rounded-xl border border-border p-8 text-center text-xs text-muted-foreground font-mono">
-                    Waiting for trades…
+
+                  {/* Equity Curve */}
+                  <div className="mb-6">
+                    <EquityCurve balanceHistory={balanceHistory} />
                   </div>
-                )}
+
+                  {/* Trade Log for this bot */}
+                  <div>
+                    <div className="flex items-center gap-2 mb-3">
+                      <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Trade History</span>
+                      <span className="text-[10px] font-mono text-muted-foreground">({botTrades.length})</span>
+                    </div>
+
+                    {botTrades.length > 0 ? (
+                      <div className="rounded-xl border border-border overflow-hidden divide-y divide-border max-h-[280px] overflow-y-auto">
+                        <AnimatePresence initial={false}>
+                          {botTrades.map((trade) => (
+                            <motion.div
+                              key={trade.id}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              className="px-4 py-2.5 flex items-center justify-between gap-3 bg-background text-xs"
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className={`font-bold font-mono text-[10px] px-1.5 py-0.5 rounded ${
+                                  trade.type === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                                }`}>
+                                  {trade.type}
+                                </span>
+                                <span className="text-muted-foreground font-mono text-[10px]">@ {formatPrice(trade.entry)}</span>
+                                {trade.exit && (
+                                  <>
+                                    <span className="text-muted-foreground">→</span>
+                                    <span className="text-muted-foreground font-mono text-[10px]">{formatPrice(trade.exit)}</span>
+                                  </>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-3">
+                                {trade.status === "open" ? (
+                                  <span className="text-muted-foreground flex items-center gap-1 font-mono text-[10px]">
+                                    <div className="w-1.5 h-1.5 rounded-full bg-positive animate-pulse" />
+                                    OPEN
+                                  </span>
+                                ) : (
+                                  <span className={`font-bold font-mono text-[10px] ${(trade.pnl ?? 0) >= 0 ? "text-positive" : "text-negative"}`}>
+                                    {formatPnl(trade.pnl ?? 0)}
+                                  </span>
+                                )}
+                                <span className="text-[10px] text-muted-foreground font-mono">
+                                  {new Date(trade.timestamp).toLocaleTimeString()}
+                                </span>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <div className="rounded-xl border border-border p-8 text-center text-xs text-muted-foreground font-mono">
+                        Waiting for trades…
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        ) : (
-          /* No bot selected */
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <Bot className="h-12 w-12 text-border mx-auto mb-4" />
-              <h2 className="text-sm font-semibold text-foreground mb-1">No Agent Selected</h2>
-              <p className="text-xs text-muted-foreground font-mono mb-4">
-                Choose an agent from the sidebar or deploy a new one
-              </p>
-              <button
-                onClick={() => setShowCreate(true)}
-                className="text-[10px] font-mono uppercase tracking-widest bg-foreground text-background px-5 py-2.5 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 inline-flex items-center gap-2"
-              >
-                <Plus className="h-3 w-3" /> Deploy Agent
-              </button>
-            </div>
-          </div>
+            ) : (
+              /* No bot selected */
+              <div className="flex-1 flex items-center justify-center">
+                <div className="text-center">
+                  <Bot className="h-12 w-12 text-border mx-auto mb-4" />
+                  <h2 className="text-sm font-semibold text-foreground mb-1">No Agent Selected</h2>
+                  <p className="text-xs text-muted-foreground font-mono mb-4">
+                    Choose an agent from the sidebar or deploy a new one
+                  </p>
+                  <button
+                    onClick={() => setShowCreate(true)}
+                    className="text-[10px] font-mono uppercase tracking-widest bg-foreground text-background px-5 py-2.5 rounded-lg hover:bg-foreground/90 transition-all active:scale-95 inline-flex items-center gap-2"
+                  >
+                    <Plus className="h-3 w-3" /> Deploy Agent
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
     </div>

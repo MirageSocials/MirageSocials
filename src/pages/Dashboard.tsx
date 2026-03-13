@@ -439,9 +439,9 @@ const Dashboard = () => {
             </div>
 
             {/* Execute */}
-            {walletConnected ? (
+            {walletGenerated ? (
               <button
-                onClick={() => window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank")}
+                onClick={() => { addPosition(); window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank"); }}
                 className={`w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 font-bold ${
                   liveDirection === "LONG"
                     ? "bg-positive text-background hover:bg-positive/90"
@@ -452,10 +452,10 @@ const Dashboard = () => {
               </button>
             ) : (
               <button
-                onClick={connectWallet}
+                onClick={generateWallet}
                 className="w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
               >
-                <Wallet className="h-3 w-3" /> Connect Wallet
+                <Zap className="h-3 w-3" /> Generate Wallet First
               </button>
             )}
 

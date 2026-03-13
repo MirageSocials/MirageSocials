@@ -1,13 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Play, Pause, Plus, Trash2, Activity,
   Volume2, VolumeX, Wallet, ArrowDownToLine, ArrowUpFromLine,
   Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap, LogOut,
-  Shield, ExternalLink, AlertTriangle,
+  Shield, ExternalLink, AlertTriangle, Copy, Eye, EyeOff, RefreshCw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
+import { Keypair } from "@solana/web3.js";
 import { useAuth } from "@/hooks/useAuth";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
 import CandlestickChart from "@/components/CandlestickChart";
@@ -21,6 +22,9 @@ const livePairs = [
   { label: "SOL/USD", tv: "BINANCE:SOLUSDT", jup: "SOL" },
   { label: "BTC/USD", tv: "BINANCE:BTCUSDT", jup: "BTC" },
   { label: "ETH/USD", tv: "BINANCE:ETHUSDT", jup: "ETH" },
+  { label: "BONK/USD", tv: "BINANCE:BONKUSDT", jup: "BONK" },
+  { label: "WIF/USD", tv: "BYBIT:WIFUSDT", jup: "WIF" },
+  { label: "JTO/USD", tv: "BYBIT:JTOUSDT", jup: "JTO" },
 ];
 
 const formatPnl = (v: number) => `${v >= 0 ? "+" : ""}$${Math.abs(v).toFixed(2)}`;
@@ -59,28 +63,53 @@ const Dashboard = () => {
   const [liveDirection, setLiveDirection] = useState<"LONG" | "SHORT">("LONG");
   const [liveSize, setLiveSize] = useState("100");
   const [liveLeverage, setLiveLeverage] = useState("5");
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletGenerated, setWalletGenerated] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [walletSecret, setWalletSecret] = useState("");
+  const [showSecret, setShowSecret] = useState(false);
+  const [livePositions, setLivePositions] = useState<Array<{
+    id: number; pair: string; direction: "LONG" | "SHORT";
+    size: number; leverage: number; entryPrice: number; timestamp: number;
+  }>>([]);
 
-  const connectWallet = useCallback(async () => {
-    try {
-      const solana = (window as any).solana;
-      if (!solana?.isPhantom) {
-        window.open("https://phantom.app/", "_blank");
-        return;
-      }
-      const resp = await solana.connect();
-      setWalletAddress(resp.publicKey.toString());
-      setWalletConnected(true);
-    } catch (err) {
-      console.error("Wallet connection failed:", err);
+  // Load wallet from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("luna_live_wallet");
+    if (saved) {
+      try {
+        const { address, secret } = JSON.parse(saved);
+        setWalletAddress(address);
+        setWalletSecret(secret);
+        setWalletGenerated(true);
+      } catch {}
     }
   }, []);
 
-  const disconnectWallet = useCallback(() => {
-    try { (window as any).solana?.disconnect(); } catch {}
-    setWalletConnected(false);
-    setWalletAddress("");
+  const generateWallet = useCallback(() => {
+    const keypair = Keypair.generate();
+    const address = keypair.publicKey.toBase58();
+    const secret = Array.from(keypair.secretKey).map(b => b.toString(16).padStart(2, '0')).join('');
+    setWalletAddress(address);
+    setWalletSecret(secret);
+    setWalletGenerated(true);
+    localStorage.setItem("luna_live_wallet", JSON.stringify({ address, secret }));
+  }, []);
+
+  const addPosition = useCallback(() => {
+    const newPos = {
+      id: Date.now(),
+      pair: livePair.label,
+      direction: liveDirection,
+      size: parseFloat(liveSize) || 100,
+      leverage: parseFloat(liveLeverage) || 5,
+      entryPrice: 0, // placeholder — real price from Jupiter
+      timestamp: Date.now(),
+    };
+    setLivePositions(prev => [newPos, ...prev]);
+  }, [livePair, liveDirection, liveSize, liveLeverage]);
+
+  const closePosition = useCallback((id: number) => {
+    setLivePositions(prev => prev.filter(p => p.id !== id));
   }, []);
   const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
   const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);
@@ -178,25 +207,52 @@ const Dashboard = () => {
           {/* Wallet card - live only */}
           {mode === "live" && (
             <div className="rounded-xl bg-background border border-border p-3 mb-3">
-              {walletConnected ? (
+              {walletGenerated ? (
                 <div>
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Wallet</div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Your Wallet</div>
+                  <div className="flex items-center gap-1.5 mb-1">
                     <div className="w-1.5 h-1.5 rounded-full bg-positive" />
-                    <span className="text-xs font-mono text-foreground">
+                    <span className="text-[10px] font-mono text-foreground">
                       {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
                     </span>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(walletAddress)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title="Copy address"
+                    >
+                      <Copy className="h-3 w-3" />
+                    </button>
                   </div>
-                  <button onClick={disconnectWallet} className="text-[9px] font-mono text-muted-foreground hover:text-negative mt-1 transition-colors">
-                    Disconnect
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-mono text-muted-foreground">Private Key:</span>
+                    <button
+                      onClick={() => setShowSecret(!showSecret)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showSecret ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    </button>
+                  </div>
+                  {showSecret && (
+                    <div className="mt-1 p-2 rounded-lg bg-secondary/50 break-all">
+                      <span className="text-[8px] font-mono text-muted-foreground">{walletSecret.slice(0, 32)}...</span>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(walletSecret)}
+                        className="ml-1 text-muted-foreground hover:text-foreground transition-colors inline"
+                      >
+                        <Copy className="h-2.5 w-2.5 inline" />
+                      </button>
+                    </div>
+                  )}
+                  <p className="text-[8px] font-mono text-muted-foreground mt-2">
+                    Send SOL to this address to fund your wallet. Use Jupiter Perps to trade.
+                  </p>
                 </div>
               ) : (
                 <button
-                  onClick={connectWallet}
+                  onClick={generateWallet}
                   className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
                 >
-                  <Wallet className="h-3 w-3" /> Connect Phantom Wallet
+                  <Zap className="h-3 w-3" /> Generate Solana Wallet
                 </button>
               )}
             </div>
@@ -383,9 +439,9 @@ const Dashboard = () => {
             </div>
 
             {/* Execute */}
-            {walletConnected ? (
+            {walletGenerated ? (
               <button
-                onClick={() => window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank")}
+                onClick={() => { addPosition(); window.open(`https://jup.ag/perps/${livePair.jup}`, "_blank"); }}
                 className={`w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest transition-all active:scale-[0.98] flex items-center justify-center gap-1.5 font-bold ${
                   liveDirection === "LONG"
                     ? "bg-positive text-background hover:bg-positive/90"
@@ -396,10 +452,10 @@ const Dashboard = () => {
               </button>
             ) : (
               <button
-                onClick={connectWallet}
+                onClick={generateWallet}
                 className="w-full py-2.5 rounded-xl text-[10px] font-mono uppercase tracking-widest bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-[0.98] flex items-center justify-center gap-1.5"
               >
-                <Wallet className="h-3 w-3" /> Connect Wallet
+                <Zap className="h-3 w-3" /> Generate Wallet First
               </button>
             )}
 
@@ -435,7 +491,7 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-h-screen">
-        {/* Live Mode - TradingView + Risk Warning */}
+        {/* Live Mode - TradingView + Positions */}
         {mode === "live" && (
           <div className="flex-1 flex flex-col">
             <div className="bg-negative/10 border-b border-negative/20 px-4 py-2">
@@ -446,8 +502,58 @@ const Dashboard = () => {
                 </span>
               </div>
             </div>
-            <div className="flex-1 p-4">
-              <TradingViewWidget symbol={livePair.tv} height={580} />
+            <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+              <TradingViewWidget symbol={livePair.tv} height={420} />
+
+              {/* Positions Tracker */}
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Activity className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Open Positions</span>
+                  <span className="text-[10px] font-mono text-muted-foreground">({livePositions.length})</span>
+                </div>
+
+                {livePositions.length > 0 ? (
+                  <div className="rounded-xl border border-border overflow-hidden divide-y divide-border">
+                    <AnimatePresence initial={false}>
+                      {livePositions.map((pos) => (
+                        <motion.div
+                          key={pos.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="px-4 py-3 flex items-center justify-between bg-background"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                              pos.direction === "LONG" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                            }`}>
+                              {pos.direction}
+                            </span>
+                            <span className="text-xs font-mono font-semibold text-foreground">{pos.pair}</span>
+                            <span className="text-[10px] font-mono text-muted-foreground">${pos.size} × {pos.leverage}x</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] font-mono text-muted-foreground">
+                              {new Date(pos.timestamp).toLocaleTimeString()}
+                            </span>
+                            <button
+                              onClick={() => closePosition(pos.id)}
+                              className="text-[9px] font-mono text-negative hover:text-negative/80 transition-colors px-2 py-1 rounded border border-negative/20 hover:bg-negative/10"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    No open positions — place a trade via Jupiter Perps
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

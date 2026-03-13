@@ -8,7 +8,8 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";
-import { Keypair, Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { Keypair, Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram, sendAndConfirmTransaction } from "@solana/web3.js";
+import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { playDepositSound, playWithdrawSound } from "@/lib/sounds";
@@ -86,6 +87,14 @@ const Dashboard = () => {
   const [showSecret, setShowSecret] = useState(false);
   const [solBalance, setSolBalance] = useState<number | null>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const [withdrawAddress, setWithdrawAddress] = useState("");
+  const [withdrawAmount, setWithdrawAmount] = useState("");
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [showWithdraw, setShowWithdraw] = useState(false);
+  const [txHistory, setTxHistory] = useState<Array<{
+    signature: string; type: "in" | "out"; amount: number; timestamp: number; otherAddress: string;
+  }>>([]);
+  const [txLoading, setTxLoading] = useState(false);
   const [livePositions, setLivePositions] = useState<Array<{
     id: string; pair: string; direction: "LONG" | "SHORT";
     size: number; leverage: number; entry_price: number; created_at: string;
@@ -122,14 +131,91 @@ const Dashboard = () => {
     }
   }, [walletAddress]);
 
-  // Auto-fetch balance when wallet is generated
+  // Fetch transaction history
+  const fetchTxHistory = useCallback(async () => {
+    if (!walletAddress) return;
+    setTxLoading(true);
+    try {
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const pubkey = new PublicKey(walletAddress);
+      const sigs = await connection.getSignaturesForAddress(pubkey, { limit: 20 });
+      const txs: typeof txHistory = [];
+      for (const sig of sigs) {
+        try {
+          const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0 });
+          if (!tx?.meta || !tx.transaction) continue;
+          const preBalances = tx.meta.preBalances;
+          const postBalances = tx.meta.postBalances;
+          const accounts = tx.transaction.message.accountKeys;
+          const myIndex = accounts.findIndex(a => a.pubkey.toBase58() === walletAddress);
+          if (myIndex === -1) continue;
+          const diff = (postBalances[myIndex] - preBalances[myIndex]) / LAMPORTS_PER_SOL;
+          const otherIndex = myIndex === 0 ? 1 : 0;
+          const otherAddr = accounts[otherIndex]?.pubkey.toBase58() || "Unknown";
+          txs.push({
+            signature: sig.signature,
+            type: diff >= 0 ? "in" : "out",
+            amount: Math.abs(diff),
+            timestamp: (sig.blockTime || 0) * 1000,
+            otherAddress: otherAddr,
+          });
+        } catch {}
+      }
+      setTxHistory(txs);
+    } catch (err) {
+      console.error("Failed to fetch tx history:", err);
+    } finally {
+      setTxLoading(false);
+    }
+  }, [walletAddress]);
+
+  // Withdraw SOL
+  const handleWithdrawSol = useCallback(async () => {
+    if (!walletAddress || !walletSecret || !withdrawAddress || !withdrawAmount) return;
+    const amount = parseFloat(withdrawAmount);
+    if (isNaN(amount) || amount <= 0) return;
+    if (solBalance !== null && amount > solBalance - 0.001) {
+      toast.error("Insufficient balance (need ~0.001 SOL for fees)");
+      return;
+    }
+    setWithdrawing(true);
+    try {
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const secretBytes = new Uint8Array(
+        walletSecret.match(/.{1,2}/g)!.map((b: string) => parseInt(b, 16))
+      );
+      const keypair = Keypair.fromSecretKey(secretBytes);
+      const tx = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: keypair.publicKey,
+          toPubkey: new PublicKey(withdrawAddress),
+          lamports: Math.floor(amount * LAMPORTS_PER_SOL),
+        })
+      );
+      const sig = await sendAndConfirmTransaction(connection, tx, [keypair]);
+      toast.success(`Sent ${amount} SOL! Tx: ${sig.slice(0, 8)}...`);
+      setWithdrawAmount("");
+      setWithdrawAddress("");
+      setShowWithdraw(false);
+      fetchSolBalance();
+      fetchTxHistory();
+    } catch (err: any) {
+      console.error("Withdraw failed:", err);
+      toast.error(`Withdraw failed: ${err?.message || "Unknown error"}`);
+    } finally {
+      setWithdrawing(false);
+    }
+  }, [walletAddress, walletSecret, withdrawAddress, withdrawAmount, solBalance, fetchSolBalance, fetchTxHistory]);
+
+  // Auto-fetch balance + tx history when wallet is generated
   useEffect(() => {
     if (walletGenerated && walletAddress) {
       fetchSolBalance();
-      const interval = setInterval(fetchSolBalance, 30000); // refresh every 30s
+      fetchTxHistory();
+      const interval = setInterval(() => { fetchSolBalance(); fetchTxHistory(); }, 30000);
       return () => clearInterval(interval);
     }
-  }, [walletGenerated, walletAddress, fetchSolBalance]);
+  }, [walletGenerated, walletAddress, fetchSolBalance, fetchTxHistory]);
 
   // Load positions from database
   const loadPositions = useCallback(async () => {
@@ -355,6 +441,59 @@ const Dashboard = () => {
                       </button>
                     </div>
                   )}
+
+                  {/* Withdraw Section */}
+                  <div className="mt-2">
+                    <button
+                      onClick={() => setShowWithdraw(!showWithdraw)}
+                      className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
+                    >
+                      <ArrowUpFromLine className="h-3 w-3" /> {showWithdraw ? "Hide Withdraw" : "Withdraw SOL"}
+                    </button>
+                    <AnimatePresence>
+                      {showWithdraw && (
+                        <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
+                          <div className="mt-2 space-y-2">
+                            <input
+                              type="text"
+                              value={withdrawAddress}
+                              onChange={(e) => setWithdrawAddress(e.target.value)}
+                              placeholder="Recipient address"
+                              className="w-full text-[10px] font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                            />
+                            <input
+                              type="number"
+                              value={withdrawAmount}
+                              onChange={(e) => setWithdrawAmount(e.target.value)}
+                              placeholder="Amount (SOL)"
+                              className="w-full text-[10px] font-mono bg-background border border-border rounded-lg px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-primary/30"
+                              min="0.001" step="0.001"
+                            />
+                            {solBalance !== null && (
+                              <button
+                                onClick={() => setWithdrawAmount(Math.max(0, solBalance - 0.002).toFixed(6))}
+                                className="text-[8px] font-mono text-primary hover:text-primary/80 transition-colors"
+                              >
+                                Max: {Math.max(0, solBalance - 0.002).toFixed(6)} SOL
+                              </button>
+                            )}
+                            <button
+                              onClick={handleWithdrawSol}
+                              disabled={withdrawing || !withdrawAddress || !withdrawAmount}
+                              className="w-full text-[10px] font-mono uppercase tracking-wider bg-negative text-background py-2 rounded-lg hover:bg-negative/90 transition-all active:scale-95 disabled:opacity-40 flex items-center justify-center gap-1"
+                            >
+                              {withdrawing ? (
+                                <RefreshCw className="h-3 w-3 animate-spin" />
+                              ) : (
+                                <ArrowUpFromLine className="h-3 w-3" />
+                              )}
+                              {withdrawing ? "Sending..." : "Send SOL"}
+                            </button>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               ) : (
                 <button
@@ -665,6 +804,74 @@ const Dashboard = () => {
                 ) : (
                   <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
                     No open positions — place a trade via Jupiter Perps
+                  </div>
+                )}
+              </div>
+
+              {/* Transaction History */}
+              <div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Wallet className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Transaction History</span>
+                    <span className="text-[10px] font-mono text-muted-foreground">({txHistory.length})</span>
+                  </div>
+                  <button
+                    onClick={fetchTxHistory}
+                    disabled={txLoading}
+                    className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+                    title="Refresh transactions"
+                  >
+                    <RefreshCw className={`h-3 w-3 ${txLoading ? "animate-spin" : ""}`} />
+                  </button>
+                </div>
+
+                {txLoading && txHistory.length === 0 ? (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    Loading transactions...
+                  </div>
+                ) : txHistory.length > 0 ? (
+                  <div className="rounded-xl border border-border overflow-hidden divide-y divide-border max-h-[300px] overflow-y-auto">
+                    {txHistory.map((tx) => (
+                      <div
+                        key={tx.signature}
+                        className="px-4 py-3 flex items-center justify-between bg-background"
+                      >
+                        <div className="flex items-center gap-3">
+                          <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded ${
+                            tx.type === "in" ? "bg-positive/10 text-positive" : "bg-negative/10 text-negative"
+                          }`}>
+                            {tx.type === "in" ? "IN" : "OUT"}
+                          </span>
+                          <div>
+                            <div className="text-xs font-mono font-semibold text-foreground">
+                              {tx.type === "in" ? "+" : "-"}{tx.amount.toFixed(6)} SOL
+                            </div>
+                            <div className="text-[9px] font-mono text-muted-foreground">
+                              {tx.type === "in" ? "From" : "To"}: {tx.otherAddress.slice(0, 6)}...{tx.otherAddress.slice(-4)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono text-muted-foreground">
+                            {tx.timestamp > 0 ? new Date(tx.timestamp).toLocaleString() : "Pending"}
+                          </span>
+                          <a
+                            href={`https://solscan.io/tx/${tx.signature}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            title="View on Solscan"
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-border p-6 text-center text-xs text-muted-foreground font-mono">
+                    No transactions yet — send SOL to your wallet to get started
                   </div>
                 )}
               </div>

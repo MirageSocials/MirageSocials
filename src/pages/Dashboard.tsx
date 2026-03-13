@@ -4,7 +4,7 @@ import {
   ArrowLeft, Play, Pause, Plus, Trash2, Activity,
   Volume2, VolumeX, Wallet, ArrowDownToLine, ArrowUpFromLine,
   Bot, ChevronRight, Settings, TrendingUp, TrendingDown, Zap, LogOut,
-  Shield, ExternalLink, AlertTriangle,
+  Shield, ExternalLink, AlertTriangle, Copy, Eye, EyeOff, RefreshCw,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useBotSimulation } from "@/hooks/useBotSimulation";

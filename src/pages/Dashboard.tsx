@@ -63,28 +63,54 @@ const Dashboard = () => {
   const [liveDirection, setLiveDirection] = useState<"LONG" | "SHORT">("LONG");
   const [liveSize, setLiveSize] = useState("100");
   const [liveLeverage, setLiveLeverage] = useState("5");
-  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletGenerated, setWalletGenerated] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
+  const [walletSecret, setWalletSecret] = useState("");
+  const [showSecret, setShowSecret] = useState(false);
+  const [livePositions, setLivePositions] = useState<Array<{
+    id: number; pair: string; direction: "LONG" | "SHORT";
+    size: number; leverage: number; entryPrice: number; timestamp: number;
+  }>>([]);
 
-  const connectWallet = useCallback(async () => {
-    try {
-      const solana = (window as any).solana;
-      if (!solana?.isPhantom) {
-        window.open("https://phantom.app/", "_blank");
-        return;
-      }
-      const resp = await solana.connect();
-      setWalletAddress(resp.publicKey.toString());
-      setWalletConnected(true);
-    } catch (err) {
-      console.error("Wallet connection failed:", err);
+  // Load wallet from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("luna_live_wallet");
+    if (saved) {
+      try {
+        const { address, secret } = JSON.parse(saved);
+        setWalletAddress(address);
+        setWalletSecret(secret);
+        setWalletGenerated(true);
+      } catch {}
     }
   }, []);
 
-  const disconnectWallet = useCallback(() => {
-    try { (window as any).solana?.disconnect(); } catch {}
-    setWalletConnected(false);
-    setWalletAddress("");
+  const generateWallet = useCallback(() => {
+    const keypair = Keypair.generate();
+    const address = keypair.publicKey.toBase58();
+    const secret = Array.from(keypair.secretKey).map(b => b.toString(16).padStart(2, '0')).join('');
+    setWalletAddress(address);
+    setWalletSecret(secret);
+    setWalletGenerated(true);
+    localStorage.setItem("luna_live_wallet", JSON.stringify({ address, secret }));
+  }, []);
+
+  const addPosition = useCallback(() => {
+    const newPos = {
+      id: Date.now(),
+      pair: livePair.label,
+      direction: liveDirection,
+      size: parseFloat(liveSize) || 100,
+      leverage: parseFloat(liveLeverage) || 5,
+      entryPrice: 0, // placeholder — real price from Jupiter
+      timestamp: Date.now(),
+    };
+    setLivePositions(prev => [newPos, ...prev]);
+  }, [livePair, liveDirection, liveSize, liveLeverage]);
+
+  const closePosition = useCallback((id: number) => {
+    setLivePositions(prev => prev.filter(p => p.id !== id));
+  }, []);
   }, []);
   const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
   const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);

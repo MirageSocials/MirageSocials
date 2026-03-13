@@ -119,7 +119,7 @@ const Dashboard = () => {
     if (!walletAddress) return;
     setBalanceLoading(true);
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/demo", "confirmed");
       const pubkey = new PublicKey(walletAddress);
       const lamports = await connection.getBalance(pubkey);
       setSolBalance(lamports / LAMPORTS_PER_SOL);
@@ -136,7 +136,7 @@ const Dashboard = () => {
     if (!walletAddress) return;
     setTxLoading(true);
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/demo", "confirmed");
       const pubkey = new PublicKey(walletAddress);
       const sigs = await connection.getSignaturesForAddress(pubkey, { limit: 20 });
       const txs: typeof txHistory = [];
@@ -180,7 +180,7 @@ const Dashboard = () => {
     }
     setWithdrawing(true);
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/demo", "confirmed");
       const secretBytes = new Uint8Array(
         walletSecret.match(/.{1,2}/g)!.map((b: string) => parseInt(b, 16))
       );

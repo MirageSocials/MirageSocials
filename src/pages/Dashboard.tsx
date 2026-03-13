@@ -373,8 +373,13 @@ const Dashboard = () => {
                       {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
                     </div>
                   </div>
-                  <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
-                    {formatPnl(bot.pnl)}
+                  <div className="flex items-center justify-between mt-1">
+                    <span className={`text-[10px] font-mono ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
+                      {formatPnl(bot.pnl)}
+                    </span>
+                    <span className={`text-[8px] font-mono ${sentimentColors[bot.sentiment]}`}>
+                      {bot.sentiment}
+                    </span>
                   </div>
                 </button>
               ))}

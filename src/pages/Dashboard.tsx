@@ -180,7 +180,7 @@ const Dashboard = () => {
     }
     setWithdrawing(true);
     try {
-      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const connection = new Connection("https://solana-mainnet.g.alchemy.com/v2/demo", "confirmed");
       const secretBytes = new Uint8Array(
         walletSecret.match(/.{1,2}/g)!.map((b: string) => parseInt(b, 16))
       );

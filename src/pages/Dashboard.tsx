@@ -140,22 +140,67 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {/* Balance card */}
-          <div className="rounded-xl bg-background border border-border p-3 mb-3">
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">Balance</div>
-            <div className="text-lg font-bold text-foreground font-mono">${balance.toFixed(2)}</div>
-            <div className={`text-xs font-mono ${totalPnl >= 0 ? "text-positive" : "text-negative"}`}>
-              {formatPnl(totalPnl)} all time
-            </div>
+          {/* Mode Toggle */}
+          <div className="grid grid-cols-2 gap-1 p-1 rounded-xl bg-background border border-border mb-3">
+            <button
+              onClick={() => setMode("demo")}
+              className={`text-[10px] font-mono uppercase tracking-wider py-2 rounded-lg transition-all ${
+                mode === "demo"
+                  ? "bg-foreground text-background font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              Demo
+            </button>
+            <button
+              onClick={() => setMode("live")}
+              className={`text-[10px] font-mono uppercase tracking-wider py-2 rounded-lg transition-all flex items-center justify-center gap-1 ${
+                mode === "live"
+                  ? "bg-primary text-primary-foreground font-bold"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Zap className="h-3 w-3" /> Live
+            </button>
           </div>
 
-          <button
-            onClick={() => navigate("/trade")}
-            className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors mb-2 px-1 py-1.5 rounded-lg hover:bg-primary/5"
-          >
-            <Zap className="h-3 w-3" />
-            Switch to Live Trading
-          </button>
+          {/* Balance card - demo only */}
+          {mode === "demo" && (
+            <div className="rounded-xl bg-background border border-border p-3 mb-3">
+              <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">Demo Balance</div>
+              <div className="text-lg font-bold text-foreground font-mono">${balance.toFixed(2)}</div>
+              <div className={`text-xs font-mono ${totalPnl >= 0 ? "text-positive" : "text-negative"}`}>
+                {formatPnl(totalPnl)} all time
+              </div>
+            </div>
+          )}
+
+          {/* Wallet card - live only */}
+          {mode === "live" && (
+            <div className="rounded-xl bg-background border border-border p-3 mb-3">
+              {walletConnected ? (
+                <div>
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Wallet</div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-1.5 h-1.5 rounded-full bg-positive" />
+                    <span className="text-xs font-mono text-foreground">
+                      {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
+                    </span>
+                  </div>
+                  <button onClick={disconnectWallet} className="text-[9px] font-mono text-muted-foreground hover:text-negative mt-1 transition-colors">
+                    Disconnect
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={connectWallet}
+                  className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
+                >
+                  <Wallet className="h-3 w-3" /> Connect Phantom Wallet
+                </button>
+              )}
+            </div>
+          )}
 
           <button
             onClick={() => setShowFunds(!showFunds)}

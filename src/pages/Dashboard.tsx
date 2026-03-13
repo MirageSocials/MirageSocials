@@ -37,6 +37,22 @@ const strategyIcons: Record<string, string> = {
   "News-Based": "📰",
 };
 
+const sentimentColors: Record<string, string> = {
+  "Extremely Bullish": "text-positive",
+  Bullish: "text-positive",
+  Neutral: "text-muted-foreground",
+  Bearish: "text-negative",
+  "Extremely Bearish": "text-negative",
+};
+
+const sentimentBg: Record<string, string> = {
+  "Extremely Bullish": "bg-positive/10 border-positive/20",
+  Bullish: "bg-positive/5 border-positive/10",
+  Neutral: "bg-secondary border-border",
+  Bearish: "bg-negative/5 border-negative/10",
+  "Extremely Bearish": "bg-negative/10 border-negative/20",
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const {
@@ -357,8 +373,13 @@ const Dashboard = () => {
                       {selectedBotId === bot.id && <ChevronRight className="h-3 w-3 text-muted-foreground" />}
                     </div>
                   </div>
-                  <div className={`text-[10px] font-mono mt-1 ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
-                    {formatPnl(bot.pnl)}
+                  <div className="flex items-center justify-between mt-1">
+                    <span className={`text-[10px] font-mono ${bot.pnl >= 0 ? "text-positive" : "text-negative"}`}>
+                      {formatPnl(bot.pnl)}
+                    </span>
+                    <span className={`text-[8px] font-mono ${sentimentColors[bot.sentiment]}`}>
+                      {bot.sentiment}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -688,6 +709,43 @@ const Dashboard = () => {
                         className="p-2 rounded-lg bg-secondary text-muted-foreground hover:text-negative hover:bg-negative/10 transition-all">
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
+                    </div>
+                  </div>
+
+                  {/* Sentiment Card */}
+                  <div className={`rounded-xl border p-3 mb-4 ${sentimentBg[selectedBot.sentiment]}`}>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="text-[9px] font-mono uppercase tracking-widest text-muted-foreground">Agent Sentiment</div>
+                        <div className={`text-sm font-bold font-mono mt-0.5 ${sentimentColors[selectedBot.sentiment]}`}>
+                          {selectedBot.sentiment}
+                          <span className="text-[10px] font-normal ml-2">
+                            ({selectedBot.sentimentScore > 0 ? "+" : ""}{selectedBot.sentimentScore})
+                          </span>
+                        </div>
+                        <div className="text-[9px] font-mono text-muted-foreground mt-1">
+                          "{selectedBot.sentimentReason}"
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[9px] font-mono text-muted-foreground">Bias</div>
+                        <div className={`text-xs font-bold font-mono ${selectedBot.sentimentScore >= 0 ? "text-positive" : "text-negative"}`}>
+                          {selectedBot.sentimentScore >= 50 ? "STRONG LONG" :
+                           selectedBot.sentimentScore >= 15 ? "LONG" :
+                           selectedBot.sentimentScore >= -15 ? "NEUTRAL" :
+                           selectedBot.sentimentScore >= -50 ? "SHORT" : "STRONG SHORT"}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Sentiment bar */}
+                    <div className="mt-2 h-1.5 rounded-full bg-secondary overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${selectedBot.sentimentScore >= 0 ? "bg-positive" : "bg-negative"}`}
+                        style={{ width: `${Math.abs(selectedBot.sentimentScore)}%`, marginLeft: selectedBot.sentimentScore >= 0 ? "50%" : `${50 - Math.abs(selectedBot.sentimentScore)}%` }}
+                      />
+                    </div>
+                    <div className="flex justify-between text-[8px] font-mono text-muted-foreground mt-1">
+                      <span>Bearish</span><span>Neutral</span><span>Bullish</span>
                     </div>
                   </div>
 

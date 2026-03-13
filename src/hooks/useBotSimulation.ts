@@ -22,6 +22,8 @@ export interface Candle {
   close: number;
 }
 
+export type Sentiment = "Bullish" | "Bearish" | "Neutral" | "Extremely Bullish" | "Extremely Bearish";
+
 export interface Bot {
   id: number;
   pair: string;
@@ -39,6 +41,9 @@ export interface Bot {
   candles: Candle[];
   walletAddress: string;
   walletSecretKey: string;
+  sentiment: Sentiment;
+  sentimentScore: number; // -100 to 100
+  sentimentReason: string;
 }
 
 const basePrices: Record<string, number> = {
@@ -85,9 +90,31 @@ function generateWallet() {
   };
 }
 
+const sentimentReasons: Record<string, string[]> = {
+  Bullish: ["RSI oversold bounce", "Volume breakout detected", "Support level held", "Bullish engulfing pattern"],
+  Bearish: ["Resistance rejection", "Volume declining", "Death cross forming", "Bearish divergence on RSI"],
+  Neutral: ["Consolidating in range", "Awaiting catalyst", "Mixed signals", "Low volatility regime"],
+  "Extremely Bullish": ["Strong momentum + volume surge", "Multiple timeframe breakout", "Whale accumulation detected"],
+  "Extremely Bearish": ["Breakdown below key support", "Liquidation cascade risk", "Funding rate extreme negative"],
+};
+
+function randomSentiment(): { sentiment: Sentiment; sentimentScore: number; sentimentReason: string } {
+  const r = Math.random();
+  let sentiment: Sentiment;
+  let score: number;
+  if (r < 0.1) { sentiment = "Extremely Bullish"; score = 75 + Math.floor(Math.random() * 25); }
+  else if (r < 0.4) { sentiment = "Bullish"; score = 25 + Math.floor(Math.random() * 50); }
+  else if (r < 0.6) { sentiment = "Neutral"; score = -15 + Math.floor(Math.random() * 30); }
+  else if (r < 0.9) { sentiment = "Bearish"; score = -(25 + Math.floor(Math.random() * 50)); }
+  else { sentiment = "Extremely Bearish"; score = -(75 + Math.floor(Math.random() * 25)); }
+  const reasons = sentimentReasons[sentiment];
+  return { sentiment, sentimentScore: score, sentimentReason: reasons[Math.floor(Math.random() * reasons.length)] };
+}
+
 function makeBot(id: number, pair: string, strategy: string, sl: string, tp: string, active: boolean, positionSize: number): Bot {
   const base = getBasePrice(pair);
   const wallet = generateWallet();
+  const sent = randomSentiment();
   return {
     id, pair, strategy, sl, tp, active,
     pnl: 0, trades: 0, wins: 0,
@@ -96,6 +123,7 @@ function makeBot(id: number, pair: string, strategy: string, sl: string, tp: str
     positionSize,
     candles: generateInitialCandles(base),
     ...wallet,
+    ...sent,
   };
 }
 
@@ -157,10 +185,18 @@ export function useBotSimulation() {
           const tpPct = parseFloat(bot.tp) / 100;
           let updated = { ...bot, currentPrice: newPrice, candles };
 
-          // If no position, maybe open one
+          // If no position, maybe open one based on sentiment
           if (!updated.entryPrice) {
+            // Periodically shift sentiment
+            if (Math.random() < 0.02) {
+              const newSent = randomSentiment();
+              updated = { ...updated, ...newSent };
+            }
+
             if (Math.random() < 0.08) {
-              const dir: "LONG" | "SHORT" = Math.random() > 0.45 ? "LONG" : "SHORT";
+              // Sentiment-driven direction bias
+              const longBias = (updated.sentimentScore + 100) / 200; // 0 to 1
+              const dir: "LONG" | "SHORT" = Math.random() < longBias ? "LONG" : "SHORT";
               updated.entryPrice = newPrice;
               updated.direction = dir;
               const trade: Trade = {

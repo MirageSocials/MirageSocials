@@ -43,6 +43,7 @@ const Dashboard = () => {
   } = useBotSimulation();
   const { signOut, user } = useAuth();
 
+  const [mode, setMode] = useState<"demo" | "live">("demo");
   const [selectedBotId, setSelectedBotId] = useState<number | null>(bots[0]?.id ?? null);
   const [showCreate, setShowCreate] = useState(false);
   const [showFunds, setShowFunds] = useState(false);
@@ -53,8 +54,34 @@ const Dashboard = () => {
   const [posSize, setPosSize] = useState("500");
   const [fundAmount, setFundAmount] = useState("");
 
-  const selectedBot = bots.find((b) => b.id === selectedBotId) || null;
-  const botTrades = tradeLog.filter((t) => t.botId === selectedBotId);
+  // Live trading state
+  const [livePair, setLivePair] = useState(livePairs[0]);
+  const [liveDirection, setLiveDirection] = useState<"LONG" | "SHORT">("LONG");
+  const [liveSize, setLiveSize] = useState("100");
+  const [liveLeverage, setLiveLeverage] = useState("5");
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState("");
+
+  const connectWallet = useCallback(async () => {
+    try {
+      const solana = (window as any).solana;
+      if (!solana?.isPhantom) {
+        window.open("https://phantom.app/", "_blank");
+        return;
+      }
+      const resp = await solana.connect();
+      setWalletAddress(resp.publicKey.toString());
+      setWalletConnected(true);
+    } catch (err) {
+      console.error("Wallet connection failed:", err);
+    }
+  }, []);
+
+  const disconnectWallet = useCallback(() => {
+    try { (window as any).solana?.disconnect(); } catch {}
+    setWalletConnected(false);
+    setWalletAddress("");
+  }, []);
 
   const handleCreate = () => {
     const size = parseFloat(posSize) || 500;

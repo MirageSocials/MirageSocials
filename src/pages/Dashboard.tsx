@@ -37,6 +37,22 @@ const strategyIcons: Record<string, string> = {
   "News-Based": "📰",
 };
 
+const sentimentColors: Record<string, string> = {
+  "Extremely Bullish": "text-positive",
+  Bullish: "text-positive",
+  Neutral: "text-muted-foreground",
+  Bearish: "text-negative",
+  "Extremely Bearish": "text-negative",
+};
+
+const sentimentBg: Record<string, string> = {
+  "Extremely Bullish": "bg-positive/10 border-positive/20",
+  Bullish: "bg-positive/5 border-positive/10",
+  Neutral: "bg-secondary border-border",
+  Bearish: "bg-negative/5 border-negative/10",
+  "Extremely Bearish": "bg-negative/10 border-negative/20",
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const {

@@ -207,25 +207,52 @@ const Dashboard = () => {
           {/* Wallet card - live only */}
           {mode === "live" && (
             <div className="rounded-xl bg-background border border-border p-3 mb-3">
-              {walletConnected ? (
+              {walletGenerated ? (
                 <div>
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Wallet</div>
-                  <div className="flex items-center gap-1.5">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Your Wallet</div>
+                  <div className="flex items-center gap-1.5 mb-1">
                     <div className="w-1.5 h-1.5 rounded-full bg-positive" />
-                    <span className="text-xs font-mono text-foreground">
+                    <span className="text-[10px] font-mono text-foreground">
                       {walletAddress.slice(0, 6)}...{walletAddress.slice(-4)}
                     </span>
+                    <button
+                      onClick={() => navigator.clipboard.writeText(walletAddress)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                      title="Copy address"
+                    >
+                      <Copy className="h-3 w-3" />
+                    </button>
                   </div>
-                  <button onClick={disconnectWallet} className="text-[9px] font-mono text-muted-foreground hover:text-negative mt-1 transition-colors">
-                    Disconnect
-                  </button>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[9px] font-mono text-muted-foreground">Private Key:</span>
+                    <button
+                      onClick={() => setShowSecret(!showSecret)}
+                      className="text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {showSecret ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                    </button>
+                  </div>
+                  {showSecret && (
+                    <div className="mt-1 p-2 rounded-lg bg-secondary/50 break-all">
+                      <span className="text-[8px] font-mono text-muted-foreground">{walletSecret.slice(0, 32)}...</span>
+                      <button
+                        onClick={() => navigator.clipboard.writeText(walletSecret)}
+                        className="ml-1 text-muted-foreground hover:text-foreground transition-colors inline"
+                      >
+                        <Copy className="h-2.5 w-2.5 inline" />
+                      </button>
+                    </div>
+                  )}
+                  <p className="text-[8px] font-mono text-muted-foreground mt-2">
+                    Send SOL to this address to fund your wallet. Use Jupiter Perps to trade.
+                  </p>
                 </div>
               ) : (
                 <button
-                  onClick={connectWallet}
+                  onClick={generateWallet}
                   className="w-full text-[10px] font-mono uppercase tracking-wider text-primary hover:text-primary/80 flex items-center gap-1.5 transition-colors py-1"
                 >
-                  <Wallet className="h-3 w-3" /> Connect Phantom Wallet
+                  <Zap className="h-3 w-3" /> Generate Solana Wallet
                 </button>
               )}
             </div>

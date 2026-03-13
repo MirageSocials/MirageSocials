@@ -84,9 +84,12 @@ const Dashboard = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [walletSecret, setWalletSecret] = useState("");
   const [showSecret, setShowSecret] = useState(false);
+  const [solBalance, setSolBalance] = useState<number | null>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
   const [livePositions, setLivePositions] = useState<Array<{
-    id: number; pair: string; direction: "LONG" | "SHORT";
-    size: number; leverage: number; entryPrice: number; timestamp: number;
+    id: string; pair: string; direction: "LONG" | "SHORT";
+    size: number; leverage: number; entry_price: number; created_at: string;
+    wallet_address: string | null;
   }>>([]);
 
   // Load wallet from localStorage
@@ -102,6 +105,57 @@ const Dashboard = () => {
     }
   }, []);
 
+  // Fetch SOL balance
+  const fetchSolBalance = useCallback(async () => {
+    if (!walletAddress) return;
+    setBalanceLoading(true);
+    try {
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const pubkey = new PublicKey(walletAddress);
+      const lamports = await connection.getBalance(pubkey);
+      setSolBalance(lamports / LAMPORTS_PER_SOL);
+    } catch (err) {
+      console.error("Failed to fetch SOL balance:", err);
+      setSolBalance(0);
+    } finally {
+      setBalanceLoading(false);
+    }
+  }, [walletAddress]);
+
+  // Auto-fetch balance when wallet is generated
+  useEffect(() => {
+    if (walletGenerated && walletAddress) {
+      fetchSolBalance();
+      const interval = setInterval(fetchSolBalance, 30000); // refresh every 30s
+      return () => clearInterval(interval);
+    }
+  }, [walletGenerated, walletAddress, fetchSolBalance]);
+
+  // Load positions from database
+  const loadPositions = useCallback(async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("live_positions")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (!error && data) {
+      setLivePositions(data.map(p => ({
+        id: p.id,
+        pair: p.pair,
+        direction: p.direction as "LONG" | "SHORT",
+        size: Number(p.size),
+        leverage: Number(p.leverage),
+        entry_price: Number(p.entry_price),
+        created_at: p.created_at,
+        wallet_address: p.wallet_address,
+      })));
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) loadPositions();
+  }, [user, loadPositions]);
+
   const generateWallet = useCallback(() => {
     const keypair = Keypair.generate();
     const address = keypair.publicKey.toBase58();
@@ -112,20 +166,37 @@ const Dashboard = () => {
     localStorage.setItem("luna_live_wallet", JSON.stringify({ address, secret }));
   }, []);
 
-  const addPosition = useCallback(() => {
-    const newPos = {
-      id: Date.now(),
-      pair: livePair.label,
-      direction: liveDirection,
-      size: parseFloat(liveSize) || 100,
-      leverage: parseFloat(liveLeverage) || 5,
-      entryPrice: 0, // placeholder — real price from Jupiter
-      timestamp: Date.now(),
-    };
-    setLivePositions(prev => [newPos, ...prev]);
-  }, [livePair, liveDirection, liveSize, liveLeverage]);
+  const addPosition = useCallback(async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("live_positions")
+      .insert({
+        user_id: user.id,
+        pair: livePair.label,
+        direction: liveDirection,
+        size: parseFloat(liveSize) || 100,
+        leverage: parseFloat(liveLeverage) || 5,
+        entry_price: 0,
+        wallet_address: walletAddress || null,
+      })
+      .select()
+      .single();
+    if (!error && data) {
+      setLivePositions(prev => [{
+        id: data.id,
+        pair: data.pair,
+        direction: data.direction as "LONG" | "SHORT",
+        size: Number(data.size),
+        leverage: Number(data.leverage),
+        entry_price: Number(data.entry_price),
+        created_at: data.created_at,
+        wallet_address: data.wallet_address,
+      }, ...prev]);
+    }
+  }, [user, livePair, liveDirection, liveSize, liveLeverage, walletAddress]);
 
-  const closePosition = useCallback((id: number) => {
+  const closePosition = useCallback(async (id: string) => {
+    await supabase.from("live_positions").delete().eq("id", id);
     setLivePositions(prev => prev.filter(p => p.id !== id));
   }, []);
   const selectedBot = bots.find((b) => b.id === selectedBotId) || null;

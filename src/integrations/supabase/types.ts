@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      live_positions: {
+        Row: {
+          created_at: string
+          direction: string
+          entry_price: number
+          id: string
+          leverage: number
+          pair: string
+          size: number
+          user_id: string
+          wallet_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          direction: string
+          entry_price?: number
+          id?: string
+          leverage?: number
+          pair: string
+          size?: number
+          user_id: string
+          wallet_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          direction?: string
+          entry_price?: number
+          id?: string
+          leverage?: number
+          pair?: string
+          size?: number
+          user_id?: string
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

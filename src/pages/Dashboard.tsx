@@ -131,14 +131,91 @@ const Dashboard = () => {
     }
   }, [walletAddress]);
 
-  // Auto-fetch balance when wallet is generated
+  // Fetch transaction history
+  const fetchTxHistory = useCallback(async () => {
+    if (!walletAddress) return;
+    setTxLoading(true);
+    try {
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const pubkey = new PublicKey(walletAddress);
+      const sigs = await connection.getSignaturesForAddress(pubkey, { limit: 20 });
+      const txs: typeof txHistory = [];
+      for (const sig of sigs) {
+        try {
+          const tx = await connection.getParsedTransaction(sig.signature, { maxSupportedTransactionVersion: 0 });
+          if (!tx?.meta || !tx.transaction) continue;
+          const preBalances = tx.meta.preBalances;
+          const postBalances = tx.meta.postBalances;
+          const accounts = tx.transaction.message.accountKeys;
+          const myIndex = accounts.findIndex(a => a.pubkey.toBase58() === walletAddress);
+          if (myIndex === -1) continue;
+          const diff = (postBalances[myIndex] - preBalances[myIndex]) / LAMPORTS_PER_SOL;
+          const otherIndex = myIndex === 0 ? 1 : 0;
+          const otherAddr = accounts[otherIndex]?.pubkey.toBase58() || "Unknown";
+          txs.push({
+            signature: sig.signature,
+            type: diff >= 0 ? "in" : "out",
+            amount: Math.abs(diff),
+            timestamp: (sig.blockTime || 0) * 1000,
+            otherAddress: otherAddr,
+          });
+        } catch {}
+      }
+      setTxHistory(txs);
+    } catch (err) {
+      console.error("Failed to fetch tx history:", err);
+    } finally {
+      setTxLoading(false);
+    }
+  }, [walletAddress]);
+
+  // Withdraw SOL
+  const handleWithdrawSol = useCallback(async () => {
+    if (!walletAddress || !walletSecret || !withdrawAddress || !withdrawAmount) return;
+    const amount = parseFloat(withdrawAmount);
+    if (isNaN(amount) || amount <= 0) return;
+    if (solBalance !== null && amount > solBalance - 0.001) {
+      toast.error("Insufficient balance (need ~0.001 SOL for fees)");
+      return;
+    }
+    setWithdrawing(true);
+    try {
+      const connection = new Connection("https://api.mainnet-beta.solana.com", "confirmed");
+      const secretBytes = new Uint8Array(
+        walletSecret.match(/.{1,2}/g)!.map((b: string) => parseInt(b, 16))
+      );
+      const keypair = Keypair.fromSecretKey(secretBytes);
+      const tx = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: keypair.publicKey,
+          toPubkey: new PublicKey(withdrawAddress),
+          lamports: Math.floor(amount * LAMPORTS_PER_SOL),
+        })
+      );
+      const sig = await sendAndConfirmTransaction(connection, tx, [keypair]);
+      toast.success(`Sent ${amount} SOL! Tx: ${sig.slice(0, 8)}...`);
+      setWithdrawAmount("");
+      setWithdrawAddress("");
+      setShowWithdraw(false);
+      fetchSolBalance();
+      fetchTxHistory();
+    } catch (err: any) {
+      console.error("Withdraw failed:", err);
+      toast.error(`Withdraw failed: ${err?.message || "Unknown error"}`);
+    } finally {
+      setWithdrawing(false);
+    }
+  }, [walletAddress, walletSecret, withdrawAddress, withdrawAmount, solBalance, fetchSolBalance, fetchTxHistory]);
+
+  // Auto-fetch balance + tx history when wallet is generated
   useEffect(() => {
     if (walletGenerated && walletAddress) {
       fetchSolBalance();
-      const interval = setInterval(fetchSolBalance, 30000); // refresh every 30s
+      fetchTxHistory();
+      const interval = setInterval(() => { fetchSolBalance(); fetchTxHistory(); }, 30000);
       return () => clearInterval(interval);
     }
-  }, [walletGenerated, walletAddress, fetchSolBalance]);
+  }, [walletGenerated, walletAddress, fetchSolBalance, fetchTxHistory]);
 
   // Load positions from database
   const loadPositions = useCallback(async () => {

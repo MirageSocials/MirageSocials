@@ -297,7 +297,31 @@ const Dashboard = () => {
             <div className="rounded-xl bg-background border border-border p-3 mb-3">
               {walletGenerated ? (
                 <div>
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono mb-1">Your Wallet</div>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-mono">Your Wallet</div>
+                    <button
+                      onClick={fetchSolBalance}
+                      disabled={balanceLoading}
+                      className="text-muted-foreground hover:text-foreground transition-colors disabled:opacity-40"
+                      title="Refresh balance"
+                    >
+                      <RefreshCw className={`h-3 w-3 ${balanceLoading ? "animate-spin" : ""}`} />
+                    </button>
+                  </div>
+
+                  {/* SOL Balance */}
+                  <div className="rounded-lg bg-secondary/40 p-2 mb-2">
+                    <div className="text-[9px] font-mono text-muted-foreground uppercase">SOL Balance</div>
+                    <div className="text-sm font-bold font-mono text-foreground">
+                      {solBalance !== null ? `◎ ${solBalance.toFixed(4)}` : "Loading..."}
+                    </div>
+                    {solBalance !== null && solBalance === 0 && (
+                      <div className="text-[8px] font-mono text-primary mt-0.5">
+                        Send SOL to fund this wallet
+                      </div>
+                    )}
+                  </div>
+
                   <div className="flex items-center gap-1.5 mb-1">
                     <div className="w-1.5 h-1.5 rounded-full bg-positive" />
                     <span className="text-[10px] font-mono text-foreground">
@@ -331,9 +355,6 @@ const Dashboard = () => {
                       </button>
                     </div>
                   )}
-                  <p className="text-[8px] font-mono text-muted-foreground mt-2">
-                    Send SOL to this address to fund your wallet. Use Jupiter Perps to trade.
-                  </p>
                 </div>
               ) : (
                 <button

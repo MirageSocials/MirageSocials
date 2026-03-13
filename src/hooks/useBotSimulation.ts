@@ -22,6 +22,8 @@ export interface Candle {
   close: number;
 }
 
+export type Sentiment = "Bullish" | "Bearish" | "Neutral" | "Extremely Bullish" | "Extremely Bearish";
+
 export interface Bot {
   id: number;
   pair: string;
@@ -39,6 +41,9 @@ export interface Bot {
   candles: Candle[];
   walletAddress: string;
   walletSecretKey: string;
+  sentiment: Sentiment;
+  sentimentScore: number; // -100 to 100
+  sentimentReason: string;
 }
 
 const basePrices: Record<string, number> = {

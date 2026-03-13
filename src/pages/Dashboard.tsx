@@ -17,6 +17,12 @@ import TradingViewWidget from "@/components/TradingViewWidget";
 const pairs = ["BTC/USDT", "ETH/USDT", "SOL/USDT", "ARB/USDT", "DOGE/USDT", "AVAX/USDT", "OP/USDT", "MATIC/USDT"];
 const strategies = ["Scalp", "Swing", "Trend", "News-Based"];
 
+const livePairs = [
+  { label: "SOL/USD", tv: "BINANCE:SOLUSDT", jup: "SOL" },
+  { label: "BTC/USD", tv: "BINANCE:BTCUSDT", jup: "BTC" },
+  { label: "ETH/USD", tv: "BINANCE:ETHUSDT", jup: "ETH" },
+];
+
 const formatPnl = (v: number) => `${v >= 0 ? "+" : ""}$${Math.abs(v).toFixed(2)}`;
 const formatPrice = (p: number) => (p >= 1000 ? p.toFixed(2) : p >= 1 ? p.toFixed(3) : p.toFixed(5));
 

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { FadeIn } from "./FadeIn";
 import { useEffect, useState } from "react";
-import { BookOpen, LayoutDashboard } from "lucide-react";
+import { BookOpen, LayoutDashboard, Copy, Check } from "lucide-react";
+
+const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";
 
 const terminalLines = [
   { prefix: "◉", text: "luna agent", color: "text-primary" },
@@ -10,6 +12,13 @@ const terminalLines = [
 const Hero = () => {
   const navigate = useNavigate();
   const [showCursor, setShowCursor] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const copyCA = () => {
+    navigator.clipboard.writeText(CA);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => setShowCursor((p) => !p), 530);
@@ -55,6 +64,19 @@ const Hero = () => {
                   className="flex items-center gap-2 text-[11px] font-mono text-primary-foreground bg-primary border border-primary rounded-full px-4 py-2 hover:bg-primary/90 transition-all active:scale-95"
                 >
                   <LayoutDashboard className="h-3.5 w-3.5" /> Platform
+                </button>
+              </div>
+            </FadeIn>
+
+            <FadeIn delay={0.35}>
+              <div className="mt-6">
+                <span className="text-[9px] text-muted-foreground font-mono tracking-wider uppercase mb-1.5 block">Contract Address</span>
+                <button
+                  onClick={copyCA}
+                  className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground hover:text-foreground border border-border rounded-lg px-3 py-2 transition-all w-fit"
+                >
+                  <span className="break-all">{CA}</span>
+                  {copied ? <Check className="h-3 w-3 text-primary shrink-0" /> : <Copy className="h-3 w-3 shrink-0" />}
                 </button>
               </div>
             </FadeIn>

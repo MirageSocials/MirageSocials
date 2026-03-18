@@ -12,6 +12,13 @@ const terminalLines = [
 const Hero = () => {
   const navigate = useNavigate();
   const [showCursor, setShowCursor] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const copyCA = () => {
+    navigator.clipboard.writeText(CA);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => setShowCursor((p) => !p), 530);

@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { FadeIn } from "./FadeIn";
 import { useEffect, useState } from "react";
-import { BookOpen, LayoutDashboard } from "lucide-react";
+import { BookOpen, LayoutDashboard, Copy, Check } from "lucide-react";
+
+const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";
 
 const terminalLines = [
   { prefix: "◉", text: "luna agent", color: "text-primary" },

@@ -1,8 +1,18 @@
 import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Wallet } from "lucide-react";
+import { BookOpen, Users, Wallet, Copy, Check } from "lucide-react";
+import { useState } from "react";
+
+const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+
+  const copyCA = () => {
+    navigator.clipboard.writeText(CA);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl">
@@ -10,6 +20,18 @@ const Navbar = () => {
         <div className="flex items-center gap-2">
           <span className="text-[10px] text-muted-foreground">◎</span>
           <span className="text-xs font-mono tracking-wider text-foreground">luna agent</span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <button
+            onClick={copyCA}
+            className="flex items-center gap-1.5 text-[9px] font-mono text-muted-foreground hover:text-foreground border border-border rounded-full px-2.5 py-1 transition-all"
+            title="Copy CA"
+          >
+            <span className="hidden sm:inline">{CA.slice(0, 4)}...{CA.slice(-4)}</span>
+            <span className="sm:hidden">CA</span>
+            {copied ? <Check className="h-2.5 w-2.5 text-primary" /> : <Copy className="h-2.5 w-2.5" />}
+          </button>
         </div>
 
         <div className="flex items-center gap-4">

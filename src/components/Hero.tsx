@@ -67,6 +67,19 @@ const Hero = () => {
                 </button>
               </div>
             </FadeIn>
+
+            <FadeIn delay={0.35}>
+              <div className="mt-6">
+                <span className="text-[9px] text-muted-foreground font-mono tracking-wider uppercase mb-1.5 block">Contract Address</span>
+                <button
+                  onClick={copyCA}
+                  className="flex items-center gap-2 text-[10px] font-mono text-muted-foreground hover:text-foreground border border-border rounded-lg px-3 py-2 transition-all w-fit"
+                >
+                  <span className="break-all">{CA}</span>
+                  {copied ? <Check className="h-3 w-3 text-primary shrink-0" /> : <Copy className="h-3 w-3 shrink-0" />}
+                </button>
+              </div>
+            </FadeIn>
           </div>
 
           {/* Right — Terminal */}

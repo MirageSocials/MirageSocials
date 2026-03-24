@@ -68,6 +68,15 @@ const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: Post
       await supabase.from("likes").insert({ user_id: user.id, post_id: post.id } as any);
       setLiked(true);
       setLikeCount((c) => c + 1);
+      // Create notification for post author
+      if (post.user_id !== user.id) {
+        await supabase.from("notifications").insert({
+          user_id: post.user_id,
+          actor_id: user.id,
+          type: "like",
+          post_id: post.id,
+        } as any);
+      }
     }
   };
 

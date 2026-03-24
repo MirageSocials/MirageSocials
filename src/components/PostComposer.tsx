@@ -56,16 +56,28 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
       image_url = urlData.publicUrl;
     }
 
-    const { error } = await supabase.from("posts").insert({
+    const { data: postData, error } = await supabase.from("posts").insert({
       user_id: user.id,
       content: content.trim() || "",
       parent_id: parentId || null,
       image_url,
-    } as any);
+    } as any).select().single();
 
     if (error) {
       toast.error("Failed to post");
     } else {
+      // Send reply notification
+      if (parentId && postData) {
+        const { data: parentPost } = await supabase.from("posts").select("user_id").eq("id", parentId).single();
+        if (parentPost && parentPost.user_id !== user.id) {
+          await supabase.from("notifications").insert({
+            user_id: parentPost.user_id,
+            actor_id: user.id,
+            type: "reply",
+            post_id: parentId,
+          } as any);
+        }
+      }
       setContent("");
       removeImage();
       onPostCreated?.();

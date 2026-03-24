@@ -15,18 +15,18 @@ interface PostCardProps {
   };
   authorName?: string;
   authorUsername?: string;
+  authorAvatar?: string | null;
   onRefresh?: () => void;
   onClick?: () => void;
 }
 
-const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: PostCardProps) => {
+const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, onClick }: PostCardProps) => {
   const { user } = useAuth();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
 
   useEffect(() => {
-    // Fetch like count and user's like status
     const fetchLikes = async () => {
       const { count } = await supabase
         .from("likes")
@@ -68,7 +68,6 @@ const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: Post
       await supabase.from("likes").insert({ user_id: user.id, post_id: post.id } as any);
       setLiked(true);
       setLikeCount((c) => c + 1);
-      // Create notification for post author
       if (post.user_id !== user.id) {
         await supabase.from("notifications").insert({
           user_id: post.user_id,
@@ -98,12 +97,15 @@ const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: Post
     >
       <div className="flex gap-3">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
-          {displayName[0]?.toUpperCase()}
-        </div>
+        {authorAvatar ? (
+          <img src={authorAvatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+            {displayName[0]?.toUpperCase()}
+          </div>
+        )}
 
         <div className="flex-1 min-w-0">
-          {/* Header */}
           <div className="flex items-center gap-1.5 text-sm">
             <span className="font-bold text-foreground truncate">{displayName}</span>
             <span className="text-muted-foreground truncate">@{handle}</span>
@@ -111,7 +113,6 @@ const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: Post
             <span className="text-muted-foreground shrink-0">{timeAgo}</span>
           </div>
 
-          {/* Content */}
           <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">
             {post.content}
           </p>
@@ -120,7 +121,6 @@ const PostCard = ({ post, authorName, authorUsername, onRefresh, onClick }: Post
             <img src={post.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
           )}
 
-          {/* Actions */}
           <div className="flex items-center justify-between mt-3 max-w-md">
             <button
               onClick={(e) => { e.stopPropagation(); onClick?.(); }}

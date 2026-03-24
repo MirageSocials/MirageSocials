@@ -18,6 +18,7 @@ interface Profile {
   user_id: string;
   display_name: string | null;
   username: string | null;
+  avatar_url: string | null;
 }
 
 const Feed = () => {
@@ -55,12 +56,11 @@ const Feed = () => {
     const { data, error } = await query;
     if (!error && data) {
       setPosts(data as Post[]);
-      // Fetch profiles for post authors
       const userIds = [...new Set(data.map((p: any) => p.user_id))];
       if (userIds.length > 0) {
         const { data: profileData } = await supabase
           .from("profiles")
-          .select("user_id, display_name, username")
+          .select("user_id, display_name, username, avatar_url")
           .in("user_id", userIds);
         if (profileData) {
           const map: Record<string, Profile> = {};
@@ -76,7 +76,6 @@ const Feed = () => {
     fetchPosts();
   }, [fetchPosts]);
 
-  // Realtime subscription
   useEffect(() => {
     const channel = supabase
       .channel("posts-realtime")
@@ -91,7 +90,6 @@ const Feed = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container max-w-xl mx-auto">
-        {/* Tabs */}
         <div className="flex border-b border-border sticky top-14 z-40 bg-background/80 backdrop-blur-xl">
           <button
             onClick={() => setTab("for-you")}
@@ -117,10 +115,8 @@ const Feed = () => {
           </button>
         </div>
 
-        {/* Composer */}
         <PostComposer onPostCreated={fetchPosts} />
 
-        {/* Posts */}
         {loading ? (
           <div className="flex justify-center py-12">
             <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
@@ -137,6 +133,7 @@ const Feed = () => {
               post={post}
               authorName={profiles[post.user_id]?.display_name || undefined}
               authorUsername={profiles[post.user_id]?.username || undefined}
+              authorAvatar={profiles[post.user_id]?.avatar_url}
               onRefresh={fetchPosts}
             />
           ))

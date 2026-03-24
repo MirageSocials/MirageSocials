@@ -12,6 +12,7 @@ import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
 import Messages from "./pages/Messages";
+import Explore from "./pages/Explore";
 
 const queryClient = new QueryClient();
 

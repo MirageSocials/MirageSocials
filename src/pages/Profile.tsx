@@ -1,10 +1,11 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
-import { CalendarDays, MapPin } from "lucide-react";
+import { CalendarDays, Camera } from "lucide-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 
 const Profile = () => {
   const { user } = useAuth();
@@ -16,6 +17,8 @@ const Profile = () => {
   const [editName, setEditName] = useState("");
   const [editBio, setEditBio] = useState("");
   const [editUsername, setEditUsername] = useState("");
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const fetchProfile = useCallback(async () => {
     if (!user) return;
@@ -54,6 +57,39 @@ const Profile = () => {
 
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be under 2MB");
+      return;
+    }
+    setUploadingAvatar(true);
+    const ext = file.name.split(".").pop();
+    const path = `${user.id}/avatar.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("avatars")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error("Failed to upload avatar");
+      setUploadingAvatar(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
+
+    await supabase
+      .from("profiles")
+      .update({ avatar_url: `${urlData.publicUrl}?t=${Date.now()}` } as any)
+      .eq("user_id", user.id);
+
+    toast.success("Avatar updated!");
+    setUploadingAvatar(false);
+    fetchProfile();
+  };
+
   const saveProfile = async () => {
     if (!user) return;
     await supabase
@@ -87,8 +123,36 @@ const Profile = () => {
         {/* Profile header */}
         <div className="px-4 pb-4 border-b border-border">
           <div className="flex justify-between items-start -mt-16 mb-3">
-            <div className="w-32 h-32 rounded-full bg-card border-4 border-background flex items-center justify-center text-4xl font-bold text-muted-foreground">
-              {(profile.display_name || "U")[0]?.toUpperCase()}
+            <div className="relative group">
+              {profile.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt="Avatar"
+                  className="w-32 h-32 rounded-full border-4 border-background object-cover"
+                />
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-card border-4 border-background flex items-center justify-center text-4xl font-bold text-muted-foreground">
+                  {(profile.display_name || "U")[0]?.toUpperCase()}
+                </div>
+              )}
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleAvatarUpload}
+                className="hidden"
+              />
+              <button
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+              >
+                {uploadingAvatar ? (
+                  <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Camera className="h-6 w-6 text-white" />
+                )}
+              </button>
             </div>
             <button
               onClick={() => editing ? saveProfile() : setEditing(true)}
@@ -154,6 +218,7 @@ const Profile = () => {
             post={post}
             authorName={profile.display_name}
             authorUsername={(profile as any).username}
+            authorAvatar={profile.avatar_url}
             onRefresh={fetchProfile}
           />
         ))}

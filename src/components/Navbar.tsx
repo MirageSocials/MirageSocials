@@ -1,52 +1,90 @@
-import { useNavigate } from "react-router-dom";
-import { BookOpen, Users, Wallet, Copy, Check } from "lucide-react";
-import { useState } from "react";
-
-const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Home, Search, Bell, Mail, User, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const [copied, setCopied] = useState(false);
+  const location = useLocation();
+  const { user, signOut } = useAuth();
 
-  const copyCA = () => {
-    navigator.clipboard.writeText(CA);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  const navItems = [
+    { icon: Home, label: "Home", path: "/feed" },
+    { icon: Search, label: "Explore", path: "/explore" },
+    { icon: Bell, label: "Notifications", path: "/notifications" },
+    { icon: Mail, label: "Messages", path: "/messages" },
+    { icon: User, label: "Profile", path: "/profile" },
+  ];
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl">
-      <div className="flex h-11 items-center justify-between bg-card/60 backdrop-blur-xl border border-border rounded-full px-5">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <div className="container max-w-7xl flex items-center justify-between h-14 px-4">
+        <button onClick={() => navigate("/")} className="text-xl font-black text-primary tracking-tight">
+          𝕏itter
+        </button>
+
+        <nav className="hidden md:flex items-center gap-1">
+          {navItems.map((item) => {
+            const active = location.pathname === item.path;
+            return (
+              <button
+                key={item.path}
+                onClick={() => navigate(user ? item.path : "/auth")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors ${
+                  active
+                    ? "font-bold text-foreground"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="hidden lg:inline">{item.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+
         <div className="flex items-center gap-2">
-          <span className="text-[10px] text-muted-foreground">◎</span>
-          <span className="text-xs font-mono tracking-wider text-foreground">luna agent</span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          <button
-            onClick={copyCA}
-            className="flex items-center gap-1.5 text-[9px] font-mono text-muted-foreground hover:text-foreground border border-border rounded-full px-2.5 py-1 transition-all"
-            title="Copy CA"
-          >
-            <span className="hidden sm:inline">{CA.slice(0, 4)}...{CA.slice(-4)}</span>
-            <span className="sm:hidden">CA</span>
-            {copied ? <Check className="h-2.5 w-2.5 text-primary" /> : <Copy className="h-2.5 w-2.5" />}
-          </button>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">
-            <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <button onClick={() => navigate("/auth")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <Users className="h-3.5 w-3.5" />
-          </button>
-          <button onClick={() => navigate("/auth")} className="text-muted-foreground hover:text-foreground transition-colors">
-            <Wallet className="h-3.5 w-3.5" />
-          </button>
+          {user ? (
+            <>
+              <button
+                onClick={() => navigate("/feed")}
+                className="bg-primary text-primary-foreground font-bold text-sm px-5 py-2 rounded-full hover:bg-primary/90 transition-colors"
+              >
+                Post
+              </button>
+              <button
+                onClick={signOut}
+                className="p-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <LogOut className="h-5 w-5" />
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => navigate("/auth")}
+              className="bg-primary text-primary-foreground font-bold text-sm px-5 py-2 rounded-full hover:bg-primary/90 transition-colors"
+            >
+              Sign in
+            </button>
+          )}
         </div>
       </div>
-    </nav>
+
+      {/* Mobile bottom nav */}
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border flex justify-around py-2">
+        {navItems.slice(0, 4).map((item) => {
+          const active = location.pathname === item.path;
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(user ? item.path : "/auth")}
+              className={`p-2 ${active ? "text-foreground" : "text-muted-foreground"}`}
+            >
+              <item.icon className="h-6 w-6" />
+            </button>
+          );
+        })}
+      </nav>
+    </header>
   );
 };
 

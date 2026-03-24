@@ -12,24 +12,22 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState("");
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
 
     if (isLogin) {
       const { error } = await signIn(email, password);
       if (error) setError(error.message);
-      else navigate("/dashboard");
+      else navigate("/feed");
     } else {
       const { error } = await signUp(email, password, displayName);
       if (error) setError(error.message);
-      else navigate("/dashboard");
+      else navigate("/feed");
     }
 
     setLoading(false);
@@ -49,12 +47,10 @@ const Auth = () => {
           >
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
-          <h1 className="text-2xl font-bold font-display text-foreground">
-            {isLogin ? "Welcome back" : "Create account"}
+          <div className="text-3xl font-black text-primary mb-6">𝕏itter</div>
+          <h1 className="text-2xl font-bold text-foreground">
+            {isLogin ? "Sign in to Xitter" : "Create your account"}
           </h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {isLogin ? "Sign in to your Luna Agent dashboard" : "Start trading on autopilot"}
-          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -66,7 +62,7 @@ const Auth = () => {
                 placeholder="Display name"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
               />
             </div>
           )}
@@ -75,11 +71,11 @@ const Auth = () => {
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="email"
-              placeholder="Email address"
+              placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
             />
           </div>
 
@@ -92,7 +88,7 @@ const Auth = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-10 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+              className="w-full text-sm bg-card border border-border rounded-lg pl-10 pr-10 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
             />
             <button
               type="button"
@@ -104,29 +100,24 @@ const Auth = () => {
           </div>
 
           {error && (
-            <p className="text-sm text-negative bg-negative/5 border border-negative/20 rounded-lg px-3 py-2">
+            <p className="text-sm text-destructive bg-destructive/5 border border-destructive/20 rounded-lg px-3 py-2">
               {error}
-            </p>
-          )}
-          {success && (
-            <p className="text-sm text-positive bg-positive/5 border border-positive/20 rounded-lg px-3 py-2">
-              {success}
             </p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full text-sm font-medium bg-primary text-primary-foreground py-3 rounded-lg hover:bg-primary/90 transition-all active:scale-[0.98] disabled:opacity-50"
+            className="w-full text-sm font-bold bg-primary text-primary-foreground py-3 rounded-full hover:bg-primary/90 transition-all disabled:opacity-50"
           >
-            {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
+            {loading ? "Loading..." : isLogin ? "Sign in" : "Create account"}
           </button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <button
-            onClick={() => { setIsLogin(!isLogin); setError(""); setSuccess(""); }}
+            onClick={() => { setIsLogin(!isLogin); setError(""); }}
             className="text-primary hover:underline font-medium"
           >
             {isLogin ? "Sign up" : "Sign in"}

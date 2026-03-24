@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,53 +6,47 @@
 
 @layer base {
   :root {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 92%;
+    --background: 0 0% 0%;
+    --foreground: 0 0% 93%;
 
-    --card: 0 0% 8%;
-    --card-foreground: 0 0% 92%;
+    --card: 0 0% 7%;
+    --card-foreground: 0 0% 93%;
 
-    --popover: 0 0% 8%;
-    --popover-foreground: 0 0% 92%;
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 93%;
 
-    --primary: 160 100% 45%;
-    --primary-foreground: 0 0% 2%;
+    --primary: 204 88% 53%;
+    --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 80%;
 
-    --muted: 0 0% 12%;
-    --muted-foreground: 0 0% 50%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 45%;
 
-    --accent: 0 0% 14%;
-    --accent-foreground: 0 0% 92%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 93%;
 
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 160 100% 45%;
+    --border: 0 0% 14%;
+    --input: 0 0% 14%;
+    --ring: 204 88% 53%;
 
-    --radius: 0.5rem;
+    --radius: 1rem;
 
-    --sidebar-background: 0 0% 6%;
-    --sidebar-foreground: 0 0% 92%;
-    --sidebar-primary: 160 100% 45%;
-    --sidebar-primary-foreground: 0 0% 2%;
-    --sidebar-accent: 0 0% 12%;
-    --sidebar-accent-foreground: 0 0% 92%;
-    --sidebar-border: 0 0% 15%;
-    --sidebar-ring: 160 100% 45%;
+    --sidebar-background: 0 0% 0%;
+    --sidebar-foreground: 0 0% 93%;
+    --sidebar-primary: 204 88% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 93%;
+    --sidebar-border: 0 0% 14%;
+    --sidebar-ring: 204 88% 53%;
 
-    --positive: 160 100% 45%;
+    --positive: 152 69% 53%;
     --negative: 0 65% 52%;
-
-    --chart-up: 160 100% 45%;
-    --chart-down: 0 65% 52%;
-
-    --terminal-green: 160 100% 45%;
-    --terminal-dim: 0 0% 35%;
   }
 }
 
@@ -64,52 +58,9 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-background text-foreground font-mono antialiased;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
-}
-
-/* Terminal cursor blink */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-.terminal-cursor {
-  animation: blink 1s step-end infinite;
-}
-
-/* Ticker scroll */
-@keyframes ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-.ticker-scroll {
-  animation: ticker-scroll 30s linear infinite;
-}
-
-/* Glow effect */
-.glow-green {
-  text-shadow: 0 0 8px hsl(160 100% 45% / 0.5), 0 0 20px hsl(160 100% 45% / 0.2);
-}
-
-/* Terminal typing animation */
-@keyframes typewriter {
-  from { width: 0; }
-  to { width: 100%; }
-}
-
-/* Scan line effect */
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    hsl(0 0% 100% / 0.015) 2px,
-    hsl(0 0% 100% / 0.015) 4px
-  );
-  pointer-events: none;
 }
 
 /* Scrollbar styling */
@@ -117,7 +68,7 @@
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(0 0% 5%);
+  background: hsl(0 0% 0%);
 }
 ::-webkit-scrollbar-thumb {
   background: hsl(0 0% 20%);

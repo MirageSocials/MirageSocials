@@ -10,6 +10,8 @@ import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Notifications from "./pages/Notifications";
+import Messages from "./pages/Messages";
 
 const queryClient = new QueryClient();
 

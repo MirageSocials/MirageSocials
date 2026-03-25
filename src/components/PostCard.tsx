@@ -167,7 +167,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
         <span className="font-bold text-foreground truncate">{author?.display_name || "User"}</span>
         <span className="text-muted-foreground truncate">@{author?.username || op.user_id.slice(0, 8)}</span>
       </div>
-      <p className="text-foreground text-sm mt-1 whitespace-pre-wrap break-words">{op.content}</p>
+      <p className="text-foreground text-sm mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(op.content)}</p>
       {op.image_url && (
         <img src={op.image_url} alt="" className="mt-2 rounded-xl border border-border max-h-48 w-full object-cover" />
       )}

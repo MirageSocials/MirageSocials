@@ -140,10 +140,10 @@ const Index = () => {
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="text-5xl sm:text-6xl lg:text-[68px] font-black leading-[1.05] tracking-tight mb-6"
+              className="text-4xl sm:text-5xl lg:text-[68px] font-black leading-[1.05] tracking-tight mb-6"
             >
               every trade<br />
-              tells a story<span className="text-[hsl(204,88%,53%)]">.</span>
+              tells a story<span className="text-[hsl(var(--primary))]">.</span>
             </motion.h1>
 
             <motion.p

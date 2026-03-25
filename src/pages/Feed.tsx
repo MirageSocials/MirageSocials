@@ -137,6 +137,7 @@ const Feed = () => {
               authorUsername={profiles[post.user_id]?.username || undefined}
               authorAvatar={profiles[post.user_id]?.avatar_url}
               onRefresh={fetchPosts}
+              onClick={() => navigate(`/post/${post.id}`)}
             />
           ))
         )}

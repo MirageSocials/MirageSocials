@@ -28,6 +28,7 @@ interface Post {
 
 const Explore = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<"users" | "posts">("users");
   const [users, setUsers] = useState<Profile[]>([]);

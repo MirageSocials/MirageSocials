@@ -64,6 +64,18 @@ const Explore = () => {
             setTrendingProfiles(map);
           }
         }
+        // Extract trending hashtags
+        const tagCounts: Record<string, number> = {};
+        data.forEach((p: any) => {
+          extractHashtags(p.content).forEach((t) => {
+            tagCounts[t] = (tagCounts[t] || 0) + 1;
+          });
+        });
+        const sorted = Object.entries(tagCounts)
+          .map(([tag, count]) => ({ tag, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 8);
+        setTrendingHashtags(sorted);
       }
 
       // Suggested users

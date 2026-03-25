@@ -56,6 +56,7 @@ const Navbar = () => {
     { icon: Search, label: "Explore", path: "/explore", badge: 0 },
     { icon: Bell, label: "Notifications", path: "/notifications", badge: unreadNotifs },
     { icon: Mail, label: "Messages", path: "/messages", badge: unreadMessages },
+    { icon: Bookmark, label: "Bookmarks", path: "/bookmarks", badge: 0 },
     { icon: User, label: "Profile", path: "/profile", badge: 0 },
   ];
 

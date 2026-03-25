@@ -90,28 +90,30 @@ const Index = () => {
         transition={{ duration: 0.5 }}
         className="sticky top-0 z-50 flex items-center justify-center py-4 px-4"
       >
-        <div className="flex items-center gap-1 bg-white/80 backdrop-blur-xl border border-[#e5e7eb] rounded-full px-6 py-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
-          <span className="font-black text-lg tracking-tight mr-6">𝕏itter<span className="text-[hsl(204,88%,53%)]">_</span></span>
-          {["feed", "explore", "messages"].map((link) => (
-            <button
-              key={link}
-              onClick={() => navigate(user ? `/${link}` : "/auth")}
-              className="text-sm text-[#6b7280] hover:text-[#1a1a2e] px-3 py-1.5 rounded-full transition-colors"
-            >
-              {link}
-            </button>
-          ))}
+        <div className="flex items-center gap-1 bg-white/80 backdrop-blur-xl border border-[#e5e7eb] rounded-full px-4 sm:px-6 py-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.06)] max-w-full overflow-x-auto">
+          <span className="font-black text-lg tracking-tight mr-3 sm:mr-6 shrink-0">𝕏itter<span className="text-[hsl(var(--primary))]">_</span></span>
+          <div className="hidden sm:flex items-center gap-1">
+            {["feed", "explore", "messages"].map((link) => (
+              <button
+                key={link}
+                onClick={() => navigate(user ? `/${link}` : "/auth")}
+                className="text-sm text-[#6b7280] hover:text-[#1a1a2e] px-3 py-1.5 rounded-full transition-colors"
+              >
+                {link}
+              </button>
+            ))}
+          </div>
           <a
             href="https://x.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="ml-2 p-1.5 text-[#6b7280] hover:text-[#1a1a2e] transition-colors"
+            className="hidden sm:block ml-2 p-1.5 text-[#6b7280] hover:text-[#1a1a2e] transition-colors"
           >
             <X className="h-4 w-4" />
           </a>
           <button
             onClick={() => navigate(user ? "/feed" : "/auth")}
-            className="ml-3 bg-[hsl(204,88%,53%)] text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-[hsl(204,88%,46%)] transition-colors flex items-center gap-1.5"
+            className="ml-2 sm:ml-3 bg-[hsl(var(--primary))] text-white text-sm font-semibold px-4 sm:px-5 py-2 rounded-full hover:opacity-90 transition-colors flex items-center gap-1.5 shrink-0"
           >
             launch app <ArrowRight className="h-3.5 w-3.5" />
           </button>

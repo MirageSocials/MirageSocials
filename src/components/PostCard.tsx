@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Heart, MessageCircle, Repeat2, Share, Trash2, Quote } from "lucide-react";
+import { Heart, MessageCircle, Repeat2, Bookmark, Trash2, Quote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
 import { renderContentWithHashtags } from "@/lib/hashtags";
@@ -27,11 +28,13 @@ interface PostCardProps {
 
 const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, onClick }: PostCardProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
   const [repostCount, setRepostCount] = useState(0);
   const [reposted, setReposted] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [quoteContent, setQuoteContent] = useState("");
   const [showRepostMenu, setShowRepostMenu] = useState(false);
@@ -53,13 +56,12 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
 
       // Check if user reposted
       if (user) {
-        const { data: rp } = await supabase
-          .from("posts")
-          .select("id")
-          .eq("repost_id", post.id)
-          .eq("user_id", user.id)
-          .maybeSingle();
+        const [{ data: rp }, { data: bm }] = await Promise.all([
+          supabase.from("posts").select("id").eq("repost_id", post.id).eq("user_id", user.id).maybeSingle(),
+          supabase.from("bookmarks").select("id").eq("post_id", post.id).eq("user_id", user.id).maybeSingle(),
+        ]);
         setReposted(!!rp);
+        setBookmarked(!!bm);
       }
     };
 
@@ -149,6 +151,25 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
     onRefresh?.();
   };
 
+  const toggleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) return;
+    if (bookmarked) {
+      await supabase.from("bookmarks").delete().eq("post_id", post.id).eq("user_id", user.id);
+      setBookmarked(false);
+      toast("Bookmark removed");
+    } else {
+      await supabase.from("bookmarks").insert({ user_id: user.id, post_id: post.id } as any);
+      setBookmarked(true);
+      toast("Added to bookmarks");
+    }
+  };
+
+  const goToUserProfile = (e: React.MouseEvent, uid: string) => {
+    e.stopPropagation();
+    navigate(`/user/${uid}`);
+  };
+
   const displayName = authorName || "User";
   const handle = authorUsername || post.user_id.slice(0, 8);
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: false });
@@ -194,22 +215,22 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
           // Render the original post as the main content
           <div className="flex gap-3">
             {originalAuthor?.avatar_url ? (
-              <img src={originalAuthor.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              <img onClick={(e) => goToUserProfile(e, originalPost!.user_id)} src={originalAuthor.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer hover:opacity-80" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+              <div onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground cursor-pointer hover:opacity-80">
                 {(originalAuthor?.display_name || "U")[0]?.toUpperCase()}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 text-sm">
-                <span className="font-bold text-foreground truncate">{originalAuthor?.display_name || "User"}</span>
-                <span className="text-muted-foreground truncate">@{originalAuthor?.username || originalPost.user_id.slice(0, 8)}</span>
+                <span onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="font-bold text-foreground truncate cursor-pointer hover:underline">{originalAuthor?.display_name || "User"}</span>
+                <span onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="text-muted-foreground truncate cursor-pointer hover:underline">@{originalAuthor?.username || originalPost!.user_id.slice(0, 8)}</span>
                 <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost.created_at), { addSuffix: false })}</span>
+                <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost!.created_at), { addSuffix: false })}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost.content)}</p>
-              {originalPost.image_url && (
-                <img src={originalPost.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost!.content)}</p>
+              {originalPost!.image_url && (
+                <img src={originalPost!.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}
               <ActionButtons />
             </div>
@@ -217,16 +238,16 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
         ) : (
           <div className="flex gap-3">
             {authorAvatar ? (
-              <img src={authorAvatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              <img onClick={(e) => goToUserProfile(e, post.user_id)} src={authorAvatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer hover:opacity-80" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+              <div onClick={(e) => goToUserProfile(e, post.user_id)} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground cursor-pointer hover:opacity-80">
                 {displayName[0]?.toUpperCase()}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 text-sm">
-                <span className="font-bold text-foreground truncate">{displayName}</span>
-                <span className="text-muted-foreground truncate">@{handle}</span>
+                <span onClick={(e) => goToUserProfile(e, post.user_id)} className="font-bold text-foreground truncate cursor-pointer hover:underline">{displayName}</span>
+                <span onClick={(e) => goToUserProfile(e, post.user_id)} className="text-muted-foreground truncate cursor-pointer hover:underline">@{handle}</span>
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{timeAgo}</span>
               </div>
@@ -330,9 +351,12 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
           {likeCount > 0 && <span className="text-xs">{likeCount}</span>}
         </button>
 
-        <button className="text-muted-foreground hover:text-primary transition-colors group">
+        <button
+          onClick={toggleBookmark}
+          className={`transition-colors group ${bookmarked ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+        >
           <div className="p-1.5 rounded-full group-hover:bg-primary/10 transition-colors">
-            <Share className="h-4 w-4" />
+            <Bookmark className={`h-4 w-4 ${bookmarked ? "fill-current" : ""}`} />
           </div>
         </button>
 

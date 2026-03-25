@@ -28,11 +28,13 @@ interface PostCardProps {
 
 const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, onClick }: PostCardProps) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
   const [repostCount, setRepostCount] = useState(0);
   const [reposted, setReposted] = useState(false);
+  const [bookmarked, setBookmarked] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [quoteContent, setQuoteContent] = useState("");
   const [showRepostMenu, setShowRepostMenu] = useState(false);

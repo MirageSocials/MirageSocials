@@ -56,13 +56,12 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
 
       // Check if user reposted
       if (user) {
-        const { data: rp } = await supabase
-          .from("posts")
-          .select("id")
-          .eq("repost_id", post.id)
-          .eq("user_id", user.id)
-          .maybeSingle();
+        const [{ data: rp }, { data: bm }] = await Promise.all([
+          supabase.from("posts").select("id").eq("repost_id", post.id).eq("user_id", user.id).maybeSingle(),
+          supabase.from("bookmarks").select("id").eq("post_id", post.id).eq("user_id", user.id).maybeSingle(),
+        ]);
         setReposted(!!rp);
+        setBookmarked(!!bm);
       }
     };
 

@@ -151,6 +151,25 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
     onRefresh?.();
   };
 
+  const toggleBookmark = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) return;
+    if (bookmarked) {
+      await supabase.from("bookmarks").delete().eq("post_id", post.id).eq("user_id", user.id);
+      setBookmarked(false);
+      toast("Bookmark removed");
+    } else {
+      await supabase.from("bookmarks").insert({ user_id: user.id, post_id: post.id } as any);
+      setBookmarked(true);
+      toast("Added to bookmarks");
+    }
+  };
+
+  const goToUserProfile = (e: React.MouseEvent, uid: string) => {
+    e.stopPropagation();
+    navigate(`/user/${uid}`);
+  };
+
   const displayName = authorName || "User";
   const handle = authorUsername || post.user_id.slice(0, 8);
   const timeAgo = formatDistanceToNow(new Date(post.created_at), { addSuffix: false });

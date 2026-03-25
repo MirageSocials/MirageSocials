@@ -351,9 +351,12 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
           {likeCount > 0 && <span className="text-xs">{likeCount}</span>}
         </button>
 
-        <button className="text-muted-foreground hover:text-primary transition-colors group">
+        <button
+          onClick={toggleBookmark}
+          className={`transition-colors group ${bookmarked ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+        >
           <div className="p-1.5 rounded-full group-hover:bg-primary/10 transition-colors">
-            <Share className="h-4 w-4" />
+            <Bookmark className={`h-4 w-4 ${bookmarked ? "fill-current" : ""}`} />
           </div>
         </button>
 

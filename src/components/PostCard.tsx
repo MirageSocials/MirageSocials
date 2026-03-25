@@ -238,16 +238,16 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
         ) : (
           <div className="flex gap-3">
             {authorAvatar ? (
-              <img src={authorAvatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              <img onClick={(e) => goToUserProfile(e, post.user_id)} src={authorAvatar} alt="" className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer hover:opacity-80" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+              <div onClick={(e) => goToUserProfile(e, post.user_id)} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground cursor-pointer hover:opacity-80">
                 {displayName[0]?.toUpperCase()}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 text-sm">
-                <span className="font-bold text-foreground truncate">{displayName}</span>
-                <span className="text-muted-foreground truncate">@{handle}</span>
+                <span onClick={(e) => goToUserProfile(e, post.user_id)} className="font-bold text-foreground truncate cursor-pointer hover:underline">{displayName}</span>
+                <span onClick={(e) => goToUserProfile(e, post.user_id)} className="text-muted-foreground truncate cursor-pointer hover:underline">@{handle}</span>
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{timeAgo}</span>
               </div>

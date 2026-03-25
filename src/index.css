@@ -119,3 +119,10 @@
 ::-webkit-scrollbar-thumb:hover {
   background: hsl(0 0% 30%);
 }
+
+.dark ::-webkit-scrollbar-track {
+  background: hsl(0 0% 0%);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: hsl(0 0% 20%);
+}

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { Search } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Search, Hash, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import PostCard from "@/components/PostCard";
 import { toast } from "sonner";
+import { extractHashtags } from "@/lib/hashtags";
 
 interface Profile {
   user_id: string;
@@ -26,6 +28,7 @@ interface Post {
 
 const Explore = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [tab, setTab] = useState<"users" | "posts">("users");
   const [users, setUsers] = useState<Profile[]>([]);
@@ -36,6 +39,7 @@ const Explore = () => {
   const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
   const [trendingProfiles, setTrendingProfiles] = useState<Record<string, Profile>>({});
   const [suggestedUsers, setSuggestedUsers] = useState<Profile[]>([]);
+  const [trendingHashtags, setTrendingHashtags] = useState<{ tag: string; count: number }[]>([]);
 
   // Fetch initial trending content
   useEffect(() => {
@@ -60,6 +64,18 @@ const Explore = () => {
             setTrendingProfiles(map);
           }
         }
+        // Extract trending hashtags
+        const tagCounts: Record<string, number> = {};
+        data.forEach((p: any) => {
+          extractHashtags(p.content).forEach((t) => {
+            tagCounts[t] = (tagCounts[t] || 0) + 1;
+          });
+        });
+        const sorted = Object.entries(tagCounts)
+          .map(([tag, count]) => ({ tag, count }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 8);
+        setTrendingHashtags(sorted);
       }
 
       // Suggested users
@@ -229,11 +245,33 @@ const Explore = () => {
                 authorName={postProfiles[p.user_id]?.display_name || undefined}
                 authorUsername={postProfiles[p.user_id]?.username || undefined}
                 authorAvatar={postProfiles[p.user_id]?.avatar_url}
+                onClick={() => navigate(`/post/${p.id}`)}
               />
             ))
           )
         ) : (
           <>
+            {/* Trending hashtags */}
+            {trendingHashtags.length > 0 && (
+              <div className="border-b border-border px-4 py-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <h2 className="text-lg font-bold text-foreground">Trending topics</h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {trendingHashtags.map(({ tag, count }) => (
+                    <button
+                      key={tag}
+                      onClick={() => navigate(`/hashtag/${tag.slice(1)}`)}
+                      className="px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                    >
+                      {tag} <span className="text-primary/60 text-xs ml-1">{count}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Suggested users */}
             <div className="border-b border-border">
               <h2 className="px-4 pt-4 pb-2 text-lg font-bold text-foreground">Who to follow</h2>
@@ -254,6 +292,7 @@ const Explore = () => {
                 authorName={trendingProfiles[p.user_id]?.display_name || undefined}
                 authorUsername={trendingProfiles[p.user_id]?.username || undefined}
                 authorAvatar={trendingProfiles[p.user_id]?.avatar_url}
+                onClick={() => navigate(`/post/${p.id}`)}
               />
             ))}
           </>

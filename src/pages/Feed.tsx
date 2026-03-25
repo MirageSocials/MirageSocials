@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
@@ -23,6 +24,7 @@ interface Profile {
 
 const Feed = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [loading, setLoading] = useState(true);
@@ -135,6 +137,7 @@ const Feed = () => {
               authorUsername={profiles[post.user_id]?.username || undefined}
               authorAvatar={profiles[post.user_id]?.avatar_url}
               onRefresh={fetchPosts}
+              onClick={() => navigate(`/post/${post.id}`)}
             />
           ))
         )}

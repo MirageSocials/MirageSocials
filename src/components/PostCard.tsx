@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { renderContentWithHashtags } from "@/lib/hashtags";
 
 interface PostData {
   id: string;
@@ -166,7 +167,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
         <span className="font-bold text-foreground truncate">{author?.display_name || "User"}</span>
         <span className="text-muted-foreground truncate">@{author?.username || op.user_id.slice(0, 8)}</span>
       </div>
-      <p className="text-foreground text-sm mt-1 whitespace-pre-wrap break-words">{op.content}</p>
+      <p className="text-foreground text-sm mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(op.content)}</p>
       {op.image_url && (
         <img src={op.image_url} alt="" className="mt-2 rounded-xl border border-border max-h-48 w-full object-cover" />
       )}
@@ -206,7 +207,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost.created_at), { addSuffix: false })}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{originalPost.content}</p>
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost.content)}</p>
               {originalPost.image_url && (
                 <img src={originalPost.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}
@@ -229,7 +230,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{timeAgo}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{post.content}</p>
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(post.content)}</p>
               {post.image_url && (
                 <img src={post.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}

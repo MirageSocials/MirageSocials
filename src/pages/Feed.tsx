@@ -1,10 +1,12 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import Navbar from "@/components/Navbar";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
+
+const PAGE_SIZE = 20;
 
 interface Post {
   id: string;
@@ -28,65 +30,126 @@ const Feed = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [profiles, setProfiles] = useState<Record<string, Profile>>({});
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   const [tab, setTab] = useState<"for-you" | "following">("for-you");
+  const [followingIds, setFollowingIds] = useState<string[] | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const fetchPosts = useCallback(async () => {
-    setLoading(true);
+  // Fetch profiles for a set of user IDs and merge into state
+  const fetchProfiles = useCallback(async (userIds: string[]) => {
+    const missing = userIds.filter((id) => !profiles[id]);
+    if (missing.length === 0) return;
+    const { data } = await supabase
+      .from("profiles")
+      .select("user_id, display_name, username, avatar_url")
+      .in("user_id", missing);
+    if (data) {
+      setProfiles((prev) => {
+        const next = { ...prev };
+        data.forEach((p: any) => { next[p.user_id] = p; });
+        return next;
+      });
+    }
+  }, [profiles]);
+
+  // Fetch following IDs when tab is "following"
+  useEffect(() => {
+    if (tab === "following" && user) {
+      supabase
+        .from("follows")
+        .select("following_id")
+        .eq("follower_id", user.id)
+        .then(({ data }) => {
+          setFollowingIds(data?.map((f: any) => f.following_id) || []);
+        });
+    } else {
+      setFollowingIds(null);
+    }
+  }, [tab, user]);
+
+  const fetchPosts = useCallback(async (append = false, cursor?: string) => {
+    if (!append) setLoading(true);
+    else setLoadingMore(true);
 
     let query = supabase
       .from("posts")
       .select("*")
       .is("parent_id", null)
       .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(PAGE_SIZE);
 
-    if (tab === "following" && user) {
-      const { data: follows } = await supabase
-        .from("follows")
-        .select("following_id")
-        .eq("follower_id", user.id);
-      const followingIds = follows?.map((f: any) => f.following_id) || [];
-      if (followingIds.length > 0) {
-        query = query.in("user_id", followingIds);
-      } else {
+    if (cursor) {
+      query = query.lt("created_at", cursor);
+    }
+
+    if (tab === "following") {
+      if (!followingIds || followingIds.length === 0) {
         setPosts([]);
+        setHasMore(false);
         setLoading(false);
         return;
       }
+      query = query.in("user_id", followingIds);
     }
 
     const { data, error } = await query;
     if (!error && data) {
-      setPosts(data as Post[]);
-      const userIds = [...new Set(data.map((p: any) => p.user_id))];
-      if (userIds.length > 0) {
-        const { data: profileData } = await supabase
-          .from("profiles")
-          .select("user_id, display_name, username, avatar_url")
-          .in("user_id", userIds);
-        if (profileData) {
-          const map: Record<string, Profile> = {};
-          profileData.forEach((p: any) => { map[p.user_id] = p; });
-          setProfiles(map);
-        }
-      }
+      const newPosts = data as Post[];
+      setPosts((prev) => append ? [...prev, ...newPosts] : newPosts);
+      setHasMore(newPosts.length === PAGE_SIZE);
+      const userIds = [...new Set(newPosts.map((p) => p.user_id))];
+      if (userIds.length > 0) fetchProfiles(userIds);
     }
+
     setLoading(false);
-  }, [tab, user]);
+    setLoadingMore(false);
+  }, [tab, followingIds, fetchProfiles]);
 
+  // Initial load & tab/following change
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    if (tab === "following" && followingIds === null) return; // wait for IDs
+    setPosts([]);
+    setHasMore(true);
+    fetchPosts(false);
+  }, [tab, followingIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Realtime: prepend new posts
   useEffect(() => {
     const channel = supabase
       .channel("posts-realtime")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "posts" }, () => {
-        fetchPosts();
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "posts" }, (payload) => {
+        const newPost = payload.new as Post;
+        if (newPost.parent_id) return; // skip replies
+        if (tab === "following" && followingIds && !followingIds.includes(newPost.user_id)) return;
+        setPosts((prev) => {
+          if (prev.some((p) => p.id === newPost.id)) return prev;
+          return [newPost, ...prev];
+        });
+        fetchProfiles([newPost.user_id]);
       })
       .subscribe();
     return () => { supabase.removeChannel(channel); };
-  }, [fetchPosts]);
+  }, [tab, followingIds, fetchProfiles]);
+
+  // Intersection observer for infinite scroll
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+          const lastPost = posts[posts.length - 1];
+          if (lastPost) fetchPosts(true, lastPost.created_at);
+        }
+      },
+      { rootMargin: "200px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, loadingMore, loading, posts, fetchPosts]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -117,7 +180,7 @@ const Feed = () => {
           </button>
         </div>
 
-        <PostComposer onPostCreated={fetchPosts} />
+        <PostComposer onPostCreated={() => fetchPosts(false)} />
 
         {loading ? (
           <div className="flex justify-center py-12">
@@ -129,17 +192,29 @@ const Feed = () => {
             <p className="text-sm">Be the first to post something!</p>
           </div>
         ) : (
-          posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              authorName={profiles[post.user_id]?.display_name || undefined}
-              authorUsername={profiles[post.user_id]?.username || undefined}
-              authorAvatar={profiles[post.user_id]?.avatar_url}
-              onRefresh={fetchPosts}
-              onClick={() => navigate(`/post/${post.id}`)}
-            />
-          ))
+          <>
+            {posts.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                authorName={profiles[post.user_id]?.display_name || undefined}
+                authorUsername={profiles[post.user_id]?.username || undefined}
+                authorAvatar={profiles[post.user_id]?.avatar_url}
+                onRefresh={() => fetchPosts(false)}
+                onClick={() => navigate(`/post/${post.id}`)}
+              />
+            ))}
+
+            {/* Infinite scroll sentinel */}
+            <div ref={sentinelRef} className="py-6 flex justify-center">
+              {loadingMore && (
+                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              )}
+              {!hasMore && posts.length > 0 && (
+                <p className="text-xs text-muted-foreground">You've reached the end</p>
+              )}
+            </div>
+          </>
         )}
       </div>
     </div>

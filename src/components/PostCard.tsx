@@ -207,7 +207,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost.created_at), { addSuffix: false })}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{originalPost.content}</p>
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost.content)}</p>
               {originalPost.image_url && (
                 <img src={originalPost.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}

@@ -230,7 +230,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
                 <span className="text-muted-foreground">·</span>
                 <span className="text-muted-foreground shrink-0">{timeAgo}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{post.content}</p>
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(post.content)}</p>
               {post.image_url && (
                 <img src={post.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}

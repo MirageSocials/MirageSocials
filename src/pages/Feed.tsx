@@ -36,6 +36,14 @@ const Feed = () => {
   const [tab, setTab] = useState<"for-you" | "following">("for-you");
   const [followingIds, setFollowingIds] = useState<string[] | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Show scroll-to-top button when scrolled down
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Fetch profiles for a set of user IDs and merge into state
   const fetchProfiles = useCallback(async (userIds: string[]) => {

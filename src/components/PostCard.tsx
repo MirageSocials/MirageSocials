@@ -215,22 +215,22 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
           // Render the original post as the main content
           <div className="flex gap-3">
             {originalAuthor?.avatar_url ? (
-              <img src={originalAuthor.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+              <img onClick={(e) => goToUserProfile(e, originalPost!.user_id)} src={originalAuthor.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0 cursor-pointer hover:opacity-80" />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+              <div onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground cursor-pointer hover:opacity-80">
                 {(originalAuthor?.display_name || "U")[0]?.toUpperCase()}
               </div>
             )}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 text-sm">
-                <span className="font-bold text-foreground truncate">{originalAuthor?.display_name || "User"}</span>
-                <span className="text-muted-foreground truncate">@{originalAuthor?.username || originalPost.user_id.slice(0, 8)}</span>
+                <span onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="font-bold text-foreground truncate cursor-pointer hover:underline">{originalAuthor?.display_name || "User"}</span>
+                <span onClick={(e) => goToUserProfile(e, originalPost!.user_id)} className="text-muted-foreground truncate cursor-pointer hover:underline">@{originalAuthor?.username || originalPost!.user_id.slice(0, 8)}</span>
                 <span className="text-muted-foreground">·</span>
-                <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost.created_at), { addSuffix: false })}</span>
+                <span className="text-muted-foreground shrink-0">{formatDistanceToNow(new Date(originalPost!.created_at), { addSuffix: false })}</span>
               </div>
-              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost.content)}</p>
-              {originalPost.image_url && (
-                <img src={originalPost.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
+              <p className="text-foreground text-[15px] leading-relaxed mt-1 whitespace-pre-wrap break-words">{renderContentWithHashtags(originalPost!.content)}</p>
+              {originalPost!.image_url && (
+                <img src={originalPost!.image_url} alt="" className="mt-3 rounded-2xl border border-border max-h-96 w-full object-cover" />
               )}
               <ActionButtons />
             </div>

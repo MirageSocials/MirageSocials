@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
 import { toast } from "sonner";
+import { renderContentWithHashtags } from "@/lib/hashtags";
 
 interface PostData {
   id: string;

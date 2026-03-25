@@ -9,6 +9,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [unreadNotifs, setUnreadNotifs] = useState(0);
   const [unreadMessages, setUnreadMessages] = useState(0);
 

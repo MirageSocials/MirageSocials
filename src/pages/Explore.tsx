@@ -245,11 +245,33 @@ const Explore = () => {
                 authorName={postProfiles[p.user_id]?.display_name || undefined}
                 authorUsername={postProfiles[p.user_id]?.username || undefined}
                 authorAvatar={postProfiles[p.user_id]?.avatar_url}
+                onClick={() => navigate(`/post/${p.id}`)}
               />
             ))
           )
         ) : (
           <>
+            {/* Trending hashtags */}
+            {trendingHashtags.length > 0 && (
+              <div className="border-b border-border px-4 py-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <h2 className="text-lg font-bold text-foreground">Trending topics</h2>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {trendingHashtags.map(({ tag, count }) => (
+                    <button
+                      key={tag}
+                      onClick={() => navigate(`/hashtag/${tag.slice(1)}`)}
+                      className="px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors"
+                    >
+                      {tag} <span className="text-primary/60 text-xs ml-1">{count}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Suggested users */}
             <div className="border-b border-border">
               <h2 className="px-4 pt-4 pb-2 text-lg font-bold text-foreground">Who to follow</h2>
@@ -270,6 +292,7 @@ const Explore = () => {
                 authorName={trendingProfiles[p.user_id]?.display_name || undefined}
                 authorUsername={trendingProfiles[p.user_id]?.username || undefined}
                 authorAvatar={trendingProfiles[p.user_id]?.avatar_url}
+                onClick={() => navigate(`/post/${p.id}`)}
               />
             ))}
           </>

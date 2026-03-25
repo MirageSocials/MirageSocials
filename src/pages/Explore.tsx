@@ -39,6 +39,7 @@ const Explore = () => {
   const [trendingPosts, setTrendingPosts] = useState<Post[]>([]);
   const [trendingProfiles, setTrendingProfiles] = useState<Record<string, Profile>>({});
   const [suggestedUsers, setSuggestedUsers] = useState<Profile[]>([]);
+  const [trendingHashtags, setTrendingHashtags] = useState<{ tag: string; count: number }[]>([]);
 
   // Fetch initial trending content
   useEffect(() => {

@@ -536,37 +536,10 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Monitor and manage open positions in real-time.
           </p>
-          {[
-            { method: "GET", path: "/v1/positions", desc: "List all open positions." },
-            { method: "GET", path: "/v1/positions/:id", desc: "Get position details with live P&L." },
-            { method: "POST", path: "/v1/positions/:id/close", desc: "Manually close an open position at market price." },
-            { method: "PATCH", path: "/v1/positions/:id", desc: "Update SL/TP on an open position." },
-          ].map((ep) => (
-            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
-                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
-                  "bg-amber-500/10 text-amber-400"
-                }`}>{ep.method}</span>
-                <code className="text-xs text-foreground font-mono">{ep.path}</code>
-              </div>
-              <p className="text-xs text-muted-foreground">{ep.desc}</p>
-            </div>
-          ))}
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
-            <div className="text-muted-foreground">{"// Position response"}</div>
-            <div className="text-foreground">{"{"}</div>
-            <div className="text-foreground pl-4">"id": <span className="text-primary">"pos_9xK..."</span>,</div>
-            <div className="text-foreground pl-4">"pair": <span className="text-primary">"SOL/USDT"</span>,</div>
-            <div className="text-foreground pl-4">"direction": <span className="text-primary">"long"</span>,</div>
-            <div className="text-foreground pl-4">"entry_price": <span className="text-primary">142.35</span>,</div>
-            <div className="text-foreground pl-4">"current_price": <span className="text-primary">145.80</span>,</div>
-            <div className="text-foreground pl-4">"pnl_percent": <span className="text-primary">2.42</span>,</div>
-            <div className="text-foreground pl-4">"stop_loss": <span className="text-primary">139.50</span>,</div>
-            <div className="text-foreground pl-4">"take_profit": <span className="text-primary">148.05</span></div>
-            <div className="text-foreground">{"}"}</div>
-          </div>
+          <ApiPlayground method="GET" path="/v1/positions" desc="List all open positions." sampleResponse={`[\n  {\n    "id": "pos_9xK...",\n    "pair": "SOL/USDT",\n    "direction": "long",\n    "entry_price": 142.35,\n    "current_price": 145.80,\n    "pnl_percent": 2.42\n  }\n]`} />
+          <ApiPlayground method="GET" path="/v1/positions/:id" desc="Get position details with live P&L." sampleResponse={`{\n  "id": "pos_9xK...",\n  "pair": "SOL/USDT",\n  "direction": "long",\n  "entry_price": 142.35,\n  "current_price": 145.80,\n  "pnl_percent": 2.42,\n  "stop_loss": 139.50,\n  "take_profit": 148.05\n}`} />
+          <ApiPlayground method="POST" path="/v1/positions/:id/close" desc="Manually close an open position at market price." sampleResponse={`{\n  "id": "pos_9xK...",\n  "status": "closed",\n  "exit_price": 145.80,\n  "pnl": 17.25\n}`} />
+          <ApiPlayground method="PATCH" path="/v1/positions/:id" desc="Update SL/TP on an open position." sampleBody={`{\n  "stop_loss": 140.00,\n  "take_profit": 150.00\n}`} sampleResponse={`{\n  "id": "pos_9xK...",\n  "stop_loss": 140.00,\n  "take_profit": 150.00,\n  "updated_at": "2026-03-26T14:30:00Z"\n}`} />
         </div>
       ),
     },

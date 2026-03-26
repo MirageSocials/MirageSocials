@@ -184,6 +184,24 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      {/* Footer */}
+      <motion.footer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+        className="border-t border-border bg-card/40 backdrop-blur-sm py-8 mt-12"
+      >
+        <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
+          <span className="text-sm text-muted-foreground font-mono">© 2026 xitter</span>
+          <div className="flex items-center gap-6 text-sm text-muted-foreground">
+            <button onClick={() => navigate("/docs")} className="hover:text-foreground transition-colors">Docs</button>
+            <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
+            <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a>
+            <button onClick={() => navigate("/marketplace")} className="hover:text-foreground transition-colors">Marketplace</button>
+          </div>
+        </div>
+      </motion.footer>
     </div>
   );
 };

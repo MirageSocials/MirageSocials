@@ -105,11 +105,9 @@ const UserProfile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Back button */}
-        <div className="flex items-center gap-4 px-4 py-3 sticky top-14 z-40 bg-background/80 backdrop-blur-xl">
+    <AppLayout>
+      {/* Back button */}
+      <div className="flex items-center gap-4 px-4 py-3 sticky top-0 z-40 bg-background/80 backdrop-blur-xl">
           <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>

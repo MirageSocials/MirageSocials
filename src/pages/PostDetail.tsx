@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 import { renderContentWithHashtags } from "@/lib/hashtags";

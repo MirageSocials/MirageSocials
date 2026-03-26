@@ -479,38 +479,13 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Create, list, update, and delete trading agents.
           </p>
-          {[
-            { method: "GET", path: "/v1/agents", desc: "List all agents for the authenticated user." },
-            { method: "POST", path: "/v1/agents", desc: "Create a new agent with strategy and risk config." },
-            { method: "GET", path: "/v1/agents/:id", desc: "Retrieve a single agent by ID." },
-            { method: "PATCH", path: "/v1/agents/:id", desc: "Update agent parameters (strategy, SL, TP, etc.)." },
-            { method: "DELETE", path: "/v1/agents/:id", desc: "Delete an agent and close all open positions." },
-            { method: "POST", path: "/v1/agents/:id/pause", desc: "Pause an active agent." },
-            { method: "POST", path: "/v1/agents/:id/resume", desc: "Resume a paused agent." },
-          ].map((ep) => (
-            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
-                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
-                  ep.method === "PATCH" ? "bg-amber-500/10 text-amber-400" :
-                  "bg-red-500/10 text-red-400"
-                }`}>{ep.method}</span>
-                <code className="text-xs text-foreground font-mono">{ep.path}</code>
-              </div>
-              <p className="text-xs text-muted-foreground">{ep.desc}</p>
-            </div>
-          ))}
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
-            <div className="text-muted-foreground">{"// Create agent request body"}</div>
-            <div className="text-foreground">{"{"}</div>
-            <div className="text-foreground pl-4">"pair": <span className="text-primary">"SOL/USDT"</span>,</div>
-            <div className="text-foreground pl-4">"strategy": <span className="text-primary">"scalp"</span>,</div>
-            <div className="text-foreground pl-4">"stop_loss": <span className="text-primary">2.0</span>,</div>
-            <div className="text-foreground pl-4">"take_profit": <span className="text-primary">4.0</span>,</div>
-            <div className="text-foreground pl-4">"position_size": <span className="text-primary">500</span></div>
-            <div className="text-foreground">{"}"}</div>
-          </div>
+          <ApiPlayground method="GET" path="/v1/agents" desc="List all agents for the authenticated user." sampleResponse={`[\n  {\n    "id": "ag_01H...",\n    "pair": "SOL/USDT",\n    "strategy": "scalp",\n    "state": "active",\n    "pnl": 142.50\n  }\n]`} />
+          <ApiPlayground method="POST" path="/v1/agents" desc="Create a new agent with strategy and risk config." sampleBody={`{\n  "pair": "SOL/USDT",\n  "strategy": "scalp",\n  "stop_loss": 2.0,\n  "take_profit": 4.0,\n  "position_size": 500\n}`} sampleResponse={`{\n  "id": "ag_02K...",\n  "pair": "SOL/USDT",\n  "strategy": "scalp",\n  "state": "active",\n  "wallet": "7xKXt...9fQm"\n}`} />
+          <ApiPlayground method="GET" path="/v1/agents/:id" desc="Retrieve a single agent by ID." sampleResponse={`{\n  "id": "ag_01H...",\n  "pair": "SOL/USDT",\n  "strategy": "scalp",\n  "stop_loss": 2.0,\n  "take_profit": 4.0,\n  "position_size": 500,\n  "state": "active"\n}`} />
+          <ApiPlayground method="PATCH" path="/v1/agents/:id" desc="Update agent parameters (strategy, SL, TP, etc.)." sampleBody={`{\n  "stop_loss": 3.0,\n  "take_profit": 6.0\n}`} sampleResponse={`{\n  "id": "ag_01H...",\n  "stop_loss": 3.0,\n  "take_profit": 6.0,\n  "updated_at": "2026-03-26T14:30:00Z"\n}`} />
+          <ApiPlayground method="DELETE" path="/v1/agents/:id" desc="Delete an agent and close all open positions." sampleResponse={`{\n  "deleted": true,\n  "positions_closed": 1\n}`} />
+          <ApiPlayground method="POST" path="/v1/agents/:id/pause" desc="Pause an active agent." sampleResponse={`{\n  "id": "ag_01H...",\n  "state": "paused"\n}`} />
+          <ApiPlayground method="POST" path="/v1/agents/:id/resume" desc="Resume a paused agent." sampleResponse={`{\n  "id": "ag_01H...",\n  "state": "active"\n}`} />
         </div>
       ),
     },

@@ -512,19 +512,9 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Access trade history and execution details.
           </p>
-          {[
-            { method: "GET", path: "/v1/trades", desc: "List all trades with pagination and filters." },
-            { method: "GET", path: "/v1/trades/:id", desc: "Get a single trade with full execution details." },
-            { method: "GET", path: "/v1/agents/:id/trades", desc: "List trades for a specific agent." },
-          ].map((ep) => (
-            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400">{ep.method}</span>
-                <code className="text-xs text-foreground font-mono">{ep.path}</code>
-              </div>
-              <p className="text-xs text-muted-foreground">{ep.desc}</p>
-            </div>
-          ))}
+          <ApiPlayground method="GET" path="/v1/trades" desc="List all trades with pagination and filters." sampleResponse={`[\n  {\n    "id": "tr_01X...",\n    "pair": "SOL/USDT",\n    "direction": "long",\n    "entry_price": 142.35,\n    "exit_price": 145.80,\n    "pnl": 17.25,\n    "status": "closed"\n  }\n]`} />
+          <ApiPlayground method="GET" path="/v1/trades/:id" desc="Get a single trade with full execution details." sampleResponse={`{\n  "id": "tr_01X...",\n  "agent_id": "ag_01H...",\n  "pair": "SOL/USDT",\n  "direction": "long",\n  "entry_price": 142.35,\n  "exit_price": 145.80,\n  "pnl": 17.25,\n  "opened_at": "2026-03-26T14:00:00Z",\n  "closed_at": "2026-03-26T14:30:00Z"\n}`} />
+          <ApiPlayground method="GET" path="/v1/agents/:id/trades" desc="List trades for a specific agent." sampleResponse={`[\n  {\n    "id": "tr_01X...",\n    "pair": "SOL/USDT",\n    "pnl": 17.25,\n    "status": "closed"\n  }\n]`} />
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">Query Parameters</h3>
             <div className="space-y-2 text-xs text-muted-foreground">

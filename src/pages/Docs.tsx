@@ -706,9 +706,14 @@ const Docs = () => {
           <span className="font-bold">luna</span>
           <span className="text-muted-foreground font-normal">Docs</span>
         </button>
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
-          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <button onClick={toggleTheme} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors" aria-label="Toggle theme">
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile sidebar overlay */}

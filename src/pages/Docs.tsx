@@ -395,10 +395,10 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Every agent wallet is a real Solana address. You can verify its existence and activity on any Solana block explorer.
           </p>
-          <div className="bg-card border border-border rounded-xl p-4 font-mono text-xs">
+          <CodeBlock code={`Verify on Solscan:\nhttps://solscan.io/account/<agent_wallet_address>`} className="p-4">
             <div className="text-muted-foreground mb-1">Verify on Solscan:</div>
             <div className="text-primary">https://solscan.io/account/{"<agent_wallet_address>"}</div>
-          </div>
+          </CodeBlock>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Agent wallets are generated client-side using cryptographically secure Ed25519 keypairs.
             No private keys leave your browser.

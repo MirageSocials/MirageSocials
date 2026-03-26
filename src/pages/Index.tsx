@@ -81,7 +81,7 @@ const Index = () => {
           <span className="font-semibold text-[14px] tracking-tight mr-5">
             xitter<span className="text-primary font-mono glow-text">_</span>
           </span>
-          {["feed", "explore", "trade", "docs"].map((link) => (
+          {["feed", "explore", "docs"].map((link) => (
             <button
               key={link}
               onClick={() => navigate(user ? `/${link}` : "/auth")}

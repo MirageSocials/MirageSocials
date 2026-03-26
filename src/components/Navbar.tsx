@@ -60,6 +60,7 @@ const Navbar = () => {
     { icon: Mail, label: "Messages", path: "/messages", badge: unreadMessages },
     { icon: Bookmark, label: "Bookmarks", path: "/bookmarks", badge: 0 },
     { icon: User, label: "Profile", path: "/profile", badge: 0 },
+    { icon: Settings, label: "Settings", path: "/settings", badge: 0 },
   ];
 
   const Badge = ({ count }: { count: number }) => {

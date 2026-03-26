@@ -60,10 +60,8 @@ const Bookmarks = () => {
   useEffect(() => { fetchBookmarks(); }, [fetchBookmarks]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        <div className="px-4 py-4 border-b border-border sticky top-14 z-40 bg-background/80 backdrop-blur-xl">
+    <AppLayout>
+      <div className="px-4 py-4 border-b border-border sticky top-0 z-40 bg-background/80 backdrop-blur-xl">
           <h1 className="text-xl font-bold text-foreground">Bookmarks</h1>
           <p className="text-xs text-muted-foreground mt-0.5">@{user?.email?.split("@")[0]}</p>
         </div>

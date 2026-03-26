@@ -192,11 +192,9 @@ const Explore = () => {
   const hasSearched = query.trim().length > 0;
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Search bar */}
-        <div className="sticky top-14 z-40 bg-background/80 backdrop-blur-xl p-3">
+    <AppLayout>
+      {/* Search bar */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl p-3">
           <div className="flex items-center gap-2 bg-secondary rounded-full px-4 py-2">
             <Search className="h-4 w-4 text-muted-foreground shrink-0" />
             <input

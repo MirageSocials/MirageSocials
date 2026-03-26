@@ -1,7 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
+import { motion, useInView } from "framer-motion";
+import { ArrowRight, Sun, Moon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const mockPosts = [
   { user: "satoshi", time: "2m", text: "bitcoin will hit $500k this cycle. not financial advice but also financial advice.", price: "$2.40", mode: "rocket", earned: "$18.50", color: "bg-primary" },
@@ -10,19 +12,40 @@ const mockPosts = [
   { user: "based_dev", time: "12m", text: "building on xitter rn. the api is actually clean.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
 ];
 
+function AnimatedNumber({ value, prefix = "", suffix = "", duration = 1.5 }: { value: number; prefix?: string; suffix?: string; duration?: number }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    const start = performance.now();
+    const step = (now: number) => {
+      const progress = Math.min((now - start) / (duration * 1000), 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setDisplay(Math.round(eased * value * 100) / 100);
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [inView, value, duration]);
+
+  return <span ref={ref}>{prefix}{display % 1 === 0 ? display : display.toFixed(2)}{suffix}</span>;
+}
+
 const Index = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const launch = () => navigate(user ? "/feed" : "/auth");
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-[hsl(195,80%,92%)] via-[hsl(200,60%,95%)] to-[hsl(190,70%,90%)] text-foreground selection:bg-primary/20 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-[hsl(195,80%,92%)] via-[hsl(200,60%,95%)] to-[hsl(190,70%,90%)] dark:from-background dark:via-background dark:to-background text-foreground selection:bg-primary/20">
       {/* Nav */}
       <motion.nav
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="flex justify-center pt-4 pb-2 z-50"
+        className="flex justify-center pt-4 pb-2 z-50 sticky top-0"
       >
         <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border rounded-full px-5 py-2.5 shadow-lg">
           <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground">
@@ -38,16 +61,23 @@ const Index = () => {
             </button>
           ))}
           <button
+            onClick={toggleTheme}
+            className="ml-2 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            aria-label="Toggle theme"
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button
             onClick={launch}
-            className="ml-3 bg-primary text-primary-foreground text-[13px] font-medium px-5 py-2 rounded-full hover:brightness-110 transition-all flex items-center gap-1.5"
+            className="ml-2 bg-primary text-primary-foreground text-[13px] font-medium px-5 py-2 rounded-full hover:brightness-110 transition-all flex items-center gap-1.5"
           >
             launch app <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </div>
       </motion.nav>
 
-      {/* Main content — single screen */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      {/* Main content */}
+      <div className="flex items-center justify-center px-6 py-12 lg:py-24">
         <div className="max-w-6xl w-full">
           <div className="bg-card/60 backdrop-blur-sm border border-border rounded-3xl p-8 md:p-12 lg:p-16">
             <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -85,18 +115,26 @@ const Index = () => {
                   </button>
                 </div>
 
-                {/* Stats */}
+                {/* Animated Stats */}
                 <div className="flex items-center gap-8">
-                  {[
-                    { value: "$0.10", label: "min post" },
-                    { value: "2x", label: "steal price" },
-                    { value: "<1s", label: "settlement" },
-                  ].map((s) => (
-                    <div key={s.label}>
-                      <div className="text-xl md:text-2xl font-bold font-mono text-foreground">{s.value}</div>
-                      <div className="text-[11px] text-muted-foreground mt-0.5">{s.label}</div>
+                  <div>
+                    <div className="text-xl md:text-2xl font-bold font-mono text-foreground">
+                      <AnimatedNumber value={0.10} prefix="$" />
                     </div>
-                  ))}
+                    <div className="text-[11px] text-muted-foreground mt-0.5">min post</div>
+                  </div>
+                  <div>
+                    <div className="text-xl md:text-2xl font-bold font-mono text-foreground">
+                      <AnimatedNumber value={2} suffix="x" />
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">steal price</div>
+                  </div>
+                  <div>
+                    <div className="text-xl md:text-2xl font-bold font-mono text-foreground">
+                      {"<"}<AnimatedNumber value={1} suffix="s" />
+                    </div>
+                    <div className="text-[11px] text-muted-foreground mt-0.5">settlement</div>
+                  </div>
                 </div>
               </motion.div>
 
@@ -107,7 +145,6 @@ const Index = () => {
                 transition={{ delay: 0.2, duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
                 className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl"
               >
-                {/* Feed header */}
                 <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                   <div className="flex items-center gap-4">
                     <span className="font-semibold text-sm text-foreground">xitter<span className="text-primary font-mono">_</span></span>
@@ -121,7 +158,6 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Posts */}
                 <div className="divide-y divide-border">
                   {mockPosts.map((post, i) => (
                     <div key={i} className="px-5 py-4 flex gap-3">

@@ -19,7 +19,7 @@ import HashtagPage from "./pages/HashtagPage";
 import Bookmarks from "./pages/Bookmarks";
 import Settings from "./pages/Settings";
 import Docs from "./pages/Docs";
-
+import Marketplace from "./pages/Marketplace";
 import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
@@ -44,6 +44,7 @@ const App = () => (
             <Route path="/post/:postId" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
             <Route path="/hashtag/:tag" element={<ProtectedRoute><HashtagPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+            <Route path="/marketplace" element={<ProtectedRoute><Marketplace /></ProtectedRoute>} />
             <Route path="/docs" element={<Docs />} />
             
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

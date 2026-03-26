@@ -116,7 +116,7 @@ const Index = () => {
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-[12px] font-mono text-primary tracking-wide mb-5"
+                className="text-[12px] font-mono text-primary tracking-wide mb-5 glow-text"
               >
                 built on solana · 0% fees
               </motion.p>

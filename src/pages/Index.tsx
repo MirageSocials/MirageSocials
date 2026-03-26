@@ -79,7 +79,7 @@ const Index = () => {
       >
         <div className="flex items-center gap-1 bg-white/80 backdrop-blur-xl border border-white/50 rounded-full px-5 py-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.06)]">
           <span className="font-semibold text-[14px] tracking-tight mr-5">
-            xitter<span className="text-primary font-mono">_</span>
+            xitter<span className="text-primary font-mono glow-text">_</span>
           </span>
           {["feed", "explore", "trade", "docs"].map((link) => (
             <button

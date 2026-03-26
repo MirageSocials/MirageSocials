@@ -101,9 +101,14 @@ const Settings = () => {
         .maybeSingle();
 
       if (existing) {
-        setUsernameError("Username is already taken");
+        setUsernameError("Username is taken — reserve it for $0.10 SOL");
+        setUsernameTaken(true);
+        setShowReservation(true);
         setSavingAccount(false);
         return;
+      } else {
+        setUsernameTaken(false);
+        setShowReservation(false);
       }
     }
 

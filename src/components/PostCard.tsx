@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Heart, MessageCircle, Repeat2, Bookmark, Trash2, Quote } from "lucide-react";
+import PollDisplay from "./PollDisplay";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";

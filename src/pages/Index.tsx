@@ -201,29 +201,36 @@ const Index = () => {
       {/* ── How It Works — Feature Cards ── */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="text-center mb-14"
         >
           <h2 className="text-[clamp(28px,3vw,42px)] font-semibold tracking-[-0.03em]">
-            how it works<span className="text-primary">.</span>
+            how it works<span className="text-primary glow-text">.</span>
           </h2>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 gap-4">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid md:grid-cols-2 gap-4"
+        >
           {/* Pricing modes */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm"
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
             <span className="text-primary text-[11px] font-mono font-medium tracking-wider">pricing modes</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               every post is
               <br />
-              a micro-market<span className="text-primary">.</span>
+              a micro-market<span className="text-primary glow-text">.</span>
             </h3>
             <div className="space-y-3">
               <PricingBar label="rocket" color="text-emerald-500" width="80%" desc="price increases with engagement" />
@@ -234,58 +241,52 @@ const Index = () => {
 
           {/* Steal */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.06 }}
-            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm"
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
             <span className="text-primary text-[11px] font-mono font-medium tracking-wider">steal</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
-              take any post<span className="text-primary">.</span>
+              take any post<span className="text-primary glow-text">.</span>
               <br />
               pay 2x.
             </h3>
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl font-bold font-mono">2x</div>
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center text-primary text-xl font-bold font-mono glow-primary">2x</div>
               <p className="text-[13px] text-[#999] leading-relaxed">original author earns, new owner controls the post</p>
             </div>
           </motion.div>
 
           {/* Replies */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.04 }}
-            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm"
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
             <span className="text-primary text-[11px] font-mono font-medium tracking-wider">replies</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-4 leading-[1.15]">
               every reply
               <br />
-              pays the author<span className="text-primary">.</span>
+              pays the author<span className="text-primary glow-text">.</span>
             </h3>
             <p className="text-[13px] text-[#999] leading-relaxed">replying to a post costs money. 100% goes to the original poster.</p>
           </motion.div>
 
           {/* Versus */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.08 }}
-            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm"
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
             <span className="text-primary text-[11px] font-mono font-medium tracking-wider">versus</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               battle with
               <br />
-              real stakes<span className="text-primary">.</span>
+              real stakes<span className="text-primary glow-text">.</span>
             </h3>
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-primary/10 rounded-xl p-3 text-center">
-                <div className="text-primary font-bold font-mono text-lg">$240</div>
+                <div className="text-primary font-bold font-mono text-lg glow-text">$240</div>
                 <div className="text-[11px] text-[#999] mt-1">take a</div>
               </div>
               <span className="text-[13px] font-semibold text-[#ccc]">vs</span>
@@ -295,19 +296,21 @@ const Index = () => {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Fees Banner ── */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-10 md:p-16 text-center shadow-sm"
+          variants={scaleIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-10 md:p-16 text-center shadow-sm glow-card"
         >
           <span className="text-primary text-[11px] font-mono font-medium tracking-wider">fees</span>
-          <div className="text-[clamp(60px,8vw,100px)] font-bold font-mono text-primary mt-2 leading-none">0%</div>
+          <div className="text-[clamp(60px,8vw,100px)] font-bold font-mono text-primary mt-2 leading-none glow-text-strong">0%</div>
           <p className="text-[18px] font-semibold mt-4 mb-1">100% of everything</p>
           <p className="text-[15px] text-[#999]">flows directly to users.</p>
         </motion.div>
@@ -316,71 +319,86 @@ const Index = () => {
       {/* ── Steps ── */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="text-center mb-14"
         >
           <h2 className="text-[clamp(28px,3vw,42px)] font-semibold tracking-[-0.03em]">
-            how it works<span className="text-primary">.</span>
+            get started<span className="text-primary glow-text">.</span>
           </h2>
           <p className="text-[15px] text-[#999] mt-3">three steps. under a minute.</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid md:grid-cols-3 gap-4"
+        >
           {[
             { num: "01", title: "sign up", desc: "create your account with email or wallet. a profile is set up instantly." },
             { num: "02", title: "deposit", desc: "connect your wallet or fund your account. that's your balance for everything." },
             { num: "03", title: "post & earn", desc: "write something worth paying for. earn from every reply, every engagement." },
-          ].map((step, i) => (
+          ].map((step) => (
             <motion.div
               key={step.num}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-7 shadow-sm"
+              variants={fadeUp}
+              transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+              className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-7 shadow-sm glow-card"
             >
-              <span className="text-primary font-mono text-[13px] font-bold">{step.num}</span>
+              <span className="text-primary font-mono text-[13px] font-bold glow-text">{step.num}</span>
               <h3 className="text-[17px] font-semibold mt-3 mb-2">{step.title}</h3>
               <p className="text-[13px] text-[#999] leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Stats Row ── */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+        >
           {[
             { value: "100%", label: "goes to users" },
             { value: "$0.10", label: "min post price" },
             { value: "2×", label: "steal price" },
             { value: "<1s", label: "settlement" },
-          ].map((s, i) => (
+          ].map((s) => (
             <motion.div
               key={s.label}
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-6 text-center shadow-sm"
+              variants={fadeUp}
+              transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+              className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-6 text-center shadow-sm glow-card"
             >
-              <div className="text-[28px] font-bold font-mono text-primary">{s.value}</div>
+              <div className="text-[28px] font-bold font-mono text-primary glow-text">{s.value}</div>
               <div className="text-[12px] text-[#999] mt-1">{s.label}</div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* ── Comparison ── */}
       <section className="max-w-7xl mx-auto px-6 pb-20">
-        <div className="grid md:grid-cols-2 gap-4">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-60px" }}
+          className="grid md:grid-cols-2 gap-4"
+        >
           {/* Everyone else */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm"
           >
             <h3 className="text-[18px] font-semibold mb-5 text-[#999]">everyone else</h3>
@@ -393,7 +411,7 @@ const Index = () => {
                 "zero skin in the game",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-2.5 text-[13px] text-[#999]">
-                  <X className="h-4 w-4 text-red-400 shrink-0 mt-0.5" />
+                  <X className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
                   {item}
                 </div>
               ))}
@@ -402,13 +420,11 @@ const Index = () => {
 
           {/* xitter */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.06 }}
-            className="bg-white/70 backdrop-blur-md border border-primary/20 rounded-[20px] p-8 shadow-sm"
+            variants={fadeUp}
+            transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
+            className="bg-white/70 backdrop-blur-md border border-primary/20 rounded-[20px] p-8 shadow-sm glow-card glow-border"
           >
-            <h3 className="text-[18px] font-semibold mb-5">xitter<span className="text-primary font-mono">_</span></h3>
+            <h3 className="text-[18px] font-semibold mb-5">xitter<span className="text-primary font-mono glow-text">_</span></h3>
             <div className="space-y-3">
               {[
                 "every post costs real money",
@@ -424,26 +440,28 @@ const Index = () => {
               ))}
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── CTA ── */}
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          variants={scaleIn}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="text-center py-16"
         >
           <h2 className="text-[clamp(32px,4vw,56px)] font-semibold tracking-[-0.03em] mb-4">
-            get started<span className="text-primary">.</span>
+            get started<span className="text-primary glow-text-strong">.</span>
           </h2>
           <p className="text-[15px] text-[#999] mb-8 max-w-md mx-auto">
             join the social network where every word has a price tag. built on solana, settled on-chain.
           </p>
           <button
             onClick={launch}
-            className="group rounded-full bg-primary px-8 py-3 text-[14px] font-medium text-primary-foreground transition-all hover:brightness-110 active:scale-[0.97] inline-flex items-center gap-2"
+            className="group rounded-full bg-primary px-8 py-3 text-[14px] font-medium text-primary-foreground transition-all hover:brightness-110 active:scale-[0.97] inline-flex items-center gap-2 glow-primary-strong"
           >
             launch app
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -452,14 +470,21 @@ const Index = () => {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[#eee] py-5">
+      <motion.footer
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="border-t border-[#eee] py-5"
+      >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-center gap-2 text-[11px] text-[#bbb] font-mono">
           <span>solana</span><span>·</span>
           <span>usdc</span><span>·</span>
           <span>0% fees</span><span>·</span>
           <span>open api</span>
         </div>
-      </footer>
+      </motion.footer>
     </div>
   );
 };

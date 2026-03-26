@@ -301,6 +301,7 @@ export type Database = {
           id: string
           image_url: string | null
           parent_id: string | null
+          poll_expires_at: string | null
           repost_id: string | null
           user_id: string
         }
@@ -310,6 +311,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           parent_id?: string | null
+          poll_expires_at?: string | null
           repost_id?: string | null
           user_id: string
         }
@@ -319,6 +321,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           parent_id?: string | null
+          poll_expires_at?: string | null
           repost_id?: string | null
           user_id?: string
         }

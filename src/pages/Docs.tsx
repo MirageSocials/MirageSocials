@@ -1,6 +1,8 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight, Search, Menu, X } from "lucide-react";
+import CodeBlock from "@/components/docs/CodeBlock";
+import ApiPlayground from "@/components/docs/ApiPlayground";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DocSection {

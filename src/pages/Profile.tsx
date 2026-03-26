@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostCard from "@/components/PostCard";
 import { CalendarDays, Camera } from "lucide-react";
 import { format } from "date-fns";
@@ -105,18 +105,15 @@ const Profile = () => {
   };
 
   if (!profile) return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <AppLayout>
       <div className="flex justify-center py-20">
         <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
-    </div>
+    </AppLayout>
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
+    <AppLayout>
         {/* Banner */}
         <div className="h-48 bg-secondary" />
 
@@ -231,8 +228,7 @@ const Profile = () => {
             No posts yet
           </div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 
 const USERNAME_REGEX = /^[a-z]+$/;
 const RECEIVING_WALLET = "8akGLGrkuwYfCuPHvq2G3RiJecD6eFVrNScArQUvTnTf";
@@ -214,9 +214,7 @@ const Settings = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
+    <AppLayout>
         {/* Header */}
         <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
           <button onClick={() => navigate(-1)} className="p-1 hover:bg-secondary rounded-full transition-colors">
@@ -419,8 +417,7 @@ const Settings = () => {
             </>
           )}
         </div>
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -3,7 +3,7 @@ import { ArrowLeft, Send, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 
 interface Conversation {
   id: string;
@@ -156,9 +156,8 @@ const Messages = () => {
     const otherId = getOtherId(activeConvo);
     const otherProfile = profiles[otherId];
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
-        <div className="container max-w-xl mx-auto flex flex-col flex-1">
+      <AppLayout>
+        <div className="flex flex-col flex-1">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
             <button onClick={() => setActiveConvo(null)} className="text-foreground hover:text-primary transition-colors">
               <ArrowLeft className="h-5 w-5" />
@@ -204,15 +203,13 @@ const Messages = () => {
             </button>
           </div>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   // Conversations list
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
+    <AppLayout>
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h1 className="text-xl font-bold text-foreground">Messages</h1>
           <button
@@ -279,8 +276,7 @@ const Messages = () => {
             );
           })
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

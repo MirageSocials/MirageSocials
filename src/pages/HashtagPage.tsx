@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Hash, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostCard from "@/components/PostCard";
 
 interface Post {
@@ -61,11 +61,9 @@ const HashtagPage = () => {
   useEffect(() => { fetchPosts(); }, [fetchPosts]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Header */}
-        <div className="sticky top-14 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+    <AppLayout>
+      {/* Header */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
           <div className="px-4 py-3 flex items-center gap-4">
             <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
               <ArrowLeft className="h-5 w-5 text-foreground" />
@@ -111,8 +109,7 @@ const HashtagPage = () => {
             </motion.div>
           ))
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

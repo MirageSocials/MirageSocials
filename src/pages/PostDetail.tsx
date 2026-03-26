@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow, format } from "date-fns";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 import { renderContentWithHashtags } from "@/lib/hashtags";
@@ -141,24 +141,22 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <AppLayout>
         <div className="flex justify-center py-20">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <AppLayout>
         <div className="text-center py-20">
           <p className="text-2xl font-bold text-foreground">Post not found</p>
           <p className="text-muted-foreground mt-2">It might have been deleted.</p>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
@@ -166,13 +164,11 @@ const PostDetail = () => {
   const handle = author?.username || post.user_id.slice(0, 8);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Header */}
-        <div className="sticky top-14 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
-            <ArrowLeft className="h-5 w-5 text-foreground" />
+    <AppLayout>
+      {/* Header */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-4">
+        <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
+          <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className="text-lg font-bold text-foreground">Post</h1>
         </div>
@@ -325,8 +321,7 @@ const PostDetail = () => {
             <p className="text-sm">No replies yet. Be the first to respond!</p>
           </div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

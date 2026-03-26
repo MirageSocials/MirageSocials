@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostCard from "@/components/PostCard";
 import { CalendarDays, UserPlus, UserMinus, ArrowLeft } from "lucide-react";
 import { format } from "date-fns";
@@ -97,20 +97,17 @@ const UserProfile = () => {
   };
 
   if (loading || !profile) return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
+    <AppLayout>
       <div className="flex justify-center py-20">
         <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
       </div>
-    </div>
+    </AppLayout>
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Back button */}
-        <div className="flex items-center gap-4 px-4 py-3 sticky top-14 z-40 bg-background/80 backdrop-blur-xl">
+    <AppLayout>
+      {/* Back button */}
+      <div className="flex items-center gap-4 px-4 py-3 sticky top-0 z-40 bg-background/80 backdrop-blur-xl">
           <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
             <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
@@ -201,8 +198,7 @@ const UserProfile = () => {
         {posts.length === 0 && (
           <div className="text-center py-16 text-muted-foreground text-sm">No posts yet</div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -497,29 +497,10 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Query agent wallet information and balance history.
           </p>
-          {[
-            { method: "GET", path: "/v1/wallets", desc: "List all wallets across your agents." },
-            { method: "GET", path: "/v1/wallets/:address", desc: "Get wallet details by Solana address." },
-            { method: "GET", path: "/v1/wallets/:address/balance", desc: "Get current SOL and token balances." },
-            { method: "GET", path: "/v1/wallets/:address/transactions", desc: "List on-chain transactions for a wallet." },
-          ].map((ep) => (
-            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400">{ep.method}</span>
-                <code className="text-xs text-foreground font-mono">{ep.path}</code>
-              </div>
-              <p className="text-xs text-muted-foreground">{ep.desc}</p>
-            </div>
-          ))}
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
-            <div className="text-muted-foreground">{"// Response example"}</div>
-            <div className="text-foreground">{"{"}</div>
-            <div className="text-foreground pl-4">"address": <span className="text-primary">"7xKXt...9fQm"</span>,</div>
-            <div className="text-foreground pl-4">"balance_sol": <span className="text-primary">12.45</span>,</div>
-            <div className="text-foreground pl-4">"balance_usdt": <span className="text-primary">3420.80</span>,</div>
-            <div className="text-foreground pl-4">"agent_id": <span className="text-primary">"ag_01H..."</span></div>
-            <div className="text-foreground">{"}"}</div>
-          </div>
+          <ApiPlayground method="GET" path="/v1/wallets" desc="List all wallets across your agents." sampleResponse={`[\n  {\n    "address": "7xKXt...9fQm",\n    "balance_sol": 12.45,\n    "balance_usdt": 3420.80,\n    "agent_id": "ag_01H..."\n  }\n]`} />
+          <ApiPlayground method="GET" path="/v1/wallets/:address" desc="Get wallet details by Solana address." sampleResponse={`{\n  "address": "7xKXt...9fQm",\n  "balance_sol": 12.45,\n  "balance_usdt": 3420.80,\n  "agent_id": "ag_01H..."\n}`} />
+          <ApiPlayground method="GET" path="/v1/wallets/:address/balance" desc="Get current SOL and token balances." sampleResponse={`{\n  "sol": 12.45,\n  "usdt": 3420.80,\n  "total_usd": 5280.50\n}`} />
+          <ApiPlayground method="GET" path="/v1/wallets/:address/transactions" desc="List on-chain transactions for a wallet." sampleResponse={`[\n  {\n    "signature": "3xK9f...",\n    "type": "transfer",\n    "amount": 2.5,\n    "timestamp": "2026-03-26T14:30:00Z"\n  }\n]`} />
         </div>
       ),
     },

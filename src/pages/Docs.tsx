@@ -417,12 +417,14 @@ const Docs = () => {
             The Luna Agent REST API lets you manage agents, wallets, trades, and positions programmatically.
             All endpoints return JSON and use standard HTTP status codes.
           </p>
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-2">
-            <div className="text-muted-foreground">{"// Base URL"}</div>
-            <div className="text-primary">https://api.lunaagent.io/v1</div>
-            <div className="text-muted-foreground mt-3">{"// Content-Type"}</div>
-            <div className="text-foreground">application/json</div>
-          </div>
+          <CodeBlock code={`// Base URL\nhttps://api.lunaagent.io/v1\n\n// Content-Type\napplication/json`}>
+            <div className="space-y-2">
+              <div className="text-muted-foreground">{"// Base URL"}</div>
+              <div className="text-primary">https://api.lunaagent.io/v1</div>
+              <div className="text-muted-foreground mt-3">{"// Content-Type"}</div>
+              <div className="text-foreground">application/json</div>
+            </div>
+          </CodeBlock>
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">Rate Limits</h3>
             <div className="space-y-2 text-xs text-muted-foreground">

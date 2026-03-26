@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Feather } from "lucide-react";
+import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Feather, TrendingUp } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { supabase } from "@/integrations/supabase/client";
@@ -58,6 +58,7 @@ const Navbar = () => {
     { icon: Bell, label: "Notifications", path: "/notifications", badge: unreadNotifs },
     { icon: Mail, label: "Messages", path: "/messages", badge: unreadMessages },
     { icon: Bookmark, label: "Bookmarks", path: "/bookmarks", badge: 0 },
+    { icon: TrendingUp, label: "Trade", path: "/trade", badge: 0 },
     { icon: User, label: "Profile", path: "/profile", badge: 0 },
     { icon: Settings, label: "Settings", path: "/settings", badge: 0 },
   ];
@@ -65,7 +66,7 @@ const Navbar = () => {
   const Badge = ({ count }: { count: number }) => {
     if (count <= 0) return null;
     return (
-      <span className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[11px] font-bold px-1">
+      <span className="absolute -top-1 -right-1.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full bg-primary text-primary-foreground text-[10px] font-bold font-mono px-1 glow-primary">
         {count > 99 ? "99+" : count}
       </span>
     );
@@ -74,29 +75,41 @@ const Navbar = () => {
   return (
     <>
       {/* ── Desktop Sidebar ── */}
-      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[68px] xl:w-[260px] flex-col items-center xl:items-start border-r border-border bg-background z-50 py-4 px-3 xl:px-6">
+      <aside className="hidden md:flex fixed left-0 top-0 h-screen w-[68px] xl:w-[260px] flex-col items-center xl:items-start border-r border-border bg-background/95 backdrop-blur-xl z-50 py-4 px-3 xl:px-5">
         {/* Logo */}
-        <button onClick={() => navigate("/")} className="p-3 rounded-full hover:bg-secondary/50 transition-colors mb-2">
-          <span className="text-xl font-black text-primary tracking-tight">𝕏</span>
+        <button onClick={() => navigate("/")} className="p-3 rounded-xl hover:bg-secondary/50 transition-all mb-4 group">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center glow-primary">
+              <TrendingUp className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="hidden xl:inline font-bold text-lg tracking-tight text-foreground">
+              xitter<span className="text-primary font-mono">_</span>
+            </span>
+          </div>
         </button>
 
         {/* Nav items */}
-        <nav className="flex flex-col gap-0.5 flex-1 w-full mt-2">
+        <nav className="flex flex-col gap-0.5 flex-1 w-full">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
             return (
               <button
                 key={item.path}
                 onClick={() => navigate(user ? item.path : "/auth")}
-                className={`flex items-center gap-4 px-3 py-3 rounded-full transition-all w-full hover:bg-secondary/50 group ${
-                  active ? "font-bold" : ""
+                className={`flex items-center gap-3.5 px-3 py-2.5 rounded-xl transition-all w-full group relative ${
+                  active 
+                    ? "bg-primary/10 text-primary" 
+                    : "hover:bg-secondary/60 text-muted-foreground hover:text-foreground"
                 }`}
               >
+                {active && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 bg-primary rounded-r-full" />
+                )}
                 <span className="relative">
-                  <item.icon className={`h-[26px] w-[26px] ${active ? "text-foreground" : "text-foreground/70 group-hover:text-foreground"}`} strokeWidth={active ? 2.5 : 1.8} />
+                  <item.icon className="h-[22px] w-[22px]" strokeWidth={active ? 2.2 : 1.6} />
                   <Badge count={item.badge} />
                 </span>
-                <span className={`hidden xl:inline text-[15px] ${active ? "text-foreground font-bold" : "text-foreground/70 group-hover:text-foreground"}`}>
+                <span className={`hidden xl:inline text-[14px] font-medium ${active ? "font-semibold" : ""}`}>
                   {item.label}
                 </span>
               </button>
@@ -106,15 +119,15 @@ const Navbar = () => {
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
-            className="flex items-center gap-4 px-3 py-3 rounded-full transition-all w-full hover:bg-secondary/50 group"
+            className="flex items-center gap-3.5 px-3 py-2.5 rounded-xl transition-all w-full hover:bg-secondary/60 text-muted-foreground hover:text-foreground group"
           >
             {theme === "dark" ? (
-              <Sun className="h-[26px] w-[26px] text-foreground/70 group-hover:text-foreground" strokeWidth={1.8} />
+              <Sun className="h-[22px] w-[22px]" strokeWidth={1.6} />
             ) : (
-              <Moon className="h-[26px] w-[26px] text-foreground/70 group-hover:text-foreground" strokeWidth={1.8} />
+              <Moon className="h-[22px] w-[22px]" strokeWidth={1.6} />
             )}
-            <span className="hidden xl:inline text-[15px] text-foreground/70 group-hover:text-foreground">
-              {theme === "dark" ? "Light mode" : "Dark mode"}
+            <span className="hidden xl:inline text-[14px] font-medium">
+              {theme === "dark" ? "Light" : "Dark"}
             </span>
           </button>
         </nav>
@@ -122,13 +135,13 @@ const Navbar = () => {
         {/* Post button */}
         <button
           onClick={() => navigate(user ? "/feed" : "/auth")}
-          className="w-full bg-primary text-primary-foreground font-bold rounded-full py-3 mt-2 hover:bg-primary/90 transition-colors text-[15px] hidden xl:block"
+          className="w-full bg-primary text-primary-foreground font-bold rounded-xl py-3 mt-3 hover:brightness-110 transition-all text-[14px] hidden xl:block glow-primary"
         >
           Post
         </button>
         <button
           onClick={() => navigate(user ? "/feed" : "/auth")}
-          className="xl:hidden p-3.5 bg-primary text-primary-foreground rounded-full hover:bg-primary/90 transition-colors mt-2 shadow-lg shadow-primary/20"
+          className="xl:hidden p-3 bg-primary text-primary-foreground rounded-xl hover:brightness-110 transition-all mt-3 glow-primary"
         >
           <Feather className="h-5 w-5" />
         </button>
@@ -138,26 +151,26 @@ const Navbar = () => {
           <div className="mt-3 w-full">
             <button
               onClick={() => navigate("/profile")}
-              className="flex items-center gap-3 w-full p-3 rounded-full hover:bg-secondary/50 transition-colors"
+              className="flex items-center gap-3 w-full p-2.5 rounded-xl hover:bg-secondary/60 transition-all"
             >
               {profile.avatar_url ? (
-                <img src={profile.avatar_url} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+                <img src={profile.avatar_url} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 ring-1 ring-border" />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center shrink-0 text-sm font-bold text-muted-foreground">
+                <div className="w-9 h-9 rounded-lg bg-primary/20 flex items-center justify-center shrink-0 text-xs font-bold font-mono text-primary">
                   {(profile.display_name || "U")[0]?.toUpperCase()}
                 </div>
               )}
               <div className="hidden xl:block text-left min-w-0">
-                <p className="text-sm font-bold text-foreground truncate">{profile.display_name || "User"}</p>
-                <p className="text-xs text-muted-foreground truncate">@{profile.username || "user"}</p>
+                <p className="text-[13px] font-semibold text-foreground truncate">{profile.display_name || "User"}</p>
+                <p className="text-[11px] text-muted-foreground truncate font-mono">@{profile.username || "user"}</p>
               </div>
             </button>
             <button
               onClick={signOut}
-              className="hidden xl:flex items-center gap-3 w-full px-3 py-2 rounded-full hover:bg-secondary/50 transition-colors text-muted-foreground hover:text-foreground mt-1"
+              className="hidden xl:flex items-center gap-3 w-full px-3 py-2 rounded-xl hover:bg-secondary/60 transition-all text-muted-foreground hover:text-destructive mt-0.5"
             >
-              <LogOut className="h-5 w-5" />
-              <span className="text-sm">Log out</span>
+              <LogOut className="h-4 w-4" />
+              <span className="text-[13px]">Log out</span>
             </button>
           </div>
         )}
@@ -165,20 +178,25 @@ const Navbar = () => {
 
       {/* ── Mobile Top Bar ── */}
       <header className="md:hidden sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="flex items-center justify-between h-14 px-4">
-          <button onClick={() => navigate("/")} className="text-xl font-black text-primary tracking-tight">
-            𝕏itter
+        <div className="flex items-center justify-between h-13 px-4">
+          <button onClick={() => navigate("/")} className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+              <TrendingUp className="h-3.5 w-3.5 text-primary-foreground" />
+            </div>
+            <span className="font-bold text-sm tracking-tight text-foreground">
+              xitter<span className="text-primary font-mono">_</span>
+            </span>
           </button>
-          <div className="flex items-center gap-2">
-            <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
-              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          <div className="flex items-center gap-1">
+            <button onClick={toggleTheme} className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/60">
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
             {user ? (
-              <button onClick={signOut} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
-                <LogOut className="h-5 w-5" />
+              <button onClick={signOut} className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-secondary/60">
+                <LogOut className="h-4 w-4" />
               </button>
             ) : (
-              <button onClick={() => navigate("/auth")} className="bg-primary text-primary-foreground font-bold text-sm px-5 py-2 rounded-full hover:bg-primary/90 transition-colors">
+              <button onClick={() => navigate("/auth")} className="bg-primary text-primary-foreground font-bold text-xs px-4 py-1.5 rounded-lg hover:brightness-110 transition-all">
                 Sign in
               </button>
             )}
@@ -187,16 +205,16 @@ const Navbar = () => {
       </header>
 
       {/* ── Mobile Bottom Nav ── */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-t border-border flex justify-around py-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-xl border-t border-border flex justify-around py-1.5">
         {navItems.slice(0, 5).map((item) => {
           const active = location.pathname === item.path;
           return (
             <button
               key={item.path}
               onClick={() => navigate(user ? item.path : "/auth")}
-              className={`p-2.5 relative transition-colors ${active ? "text-foreground" : "text-muted-foreground"}`}
+              className={`p-2.5 relative transition-all rounded-xl ${active ? "text-primary" : "text-muted-foreground"}`}
             >
-              <item.icon className="h-6 w-6" strokeWidth={active ? 2.5 : 1.8} />
+              <item.icon className="h-5 w-5" strokeWidth={active ? 2.2 : 1.6} />
               <Badge count={item.badge} />
             </button>
           );

@@ -1,19 +1,19 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
-import { ArrowRight, TrendingUp, MessageCircle, Heart, Repeat2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const MockPost = ({ avatar, handle, content, time, earned, price, tag, delay }: {
   avatar: string; handle: string; content: string; time: string;
   earned: string; price: string; tag: string; delay: number;
 }) => (
   <motion.div
-    initial={{ opacity: 0, y: 8 }}
+    initial={{ opacity: 0, y: 6 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.35 }}
-    className="flex gap-3 px-4 py-3.5 border-b border-border/60"
+    transition={{ delay, duration: 0.3 }}
+    className="flex gap-3 px-4 py-3.5 border-b border-border/40 last:border-0"
   >
-    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold shrink-0">
+    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold shrink-0 uppercase">
       {avatar}
     </div>
     <div className="flex-1 min-w-0">
@@ -21,13 +21,13 @@ const MockPost = ({ avatar, handle, content, time, earned, price, tag, delay }: 
         <span className="font-semibold text-foreground">@{handle}</span>
         <span className="text-muted-foreground">{time}</span>
       </div>
-      <p className="text-foreground/90 text-[13px] leading-relaxed mt-1">{content}</p>
-      <div className="flex items-center gap-2 mt-2">
-        <span className="text-primary text-[11px] font-medium">{tag}</span>
-        <span className="text-primary/70 text-[11px]">{earned} earned</span>
+      <p className="text-foreground/80 text-[13px] leading-relaxed mt-0.5">{content}</p>
+      <div className="flex items-center gap-2 mt-1.5">
+        <span className="text-primary text-[11px] font-mono font-medium">{tag}</span>
+        <span className="text-primary/60 text-[11px] font-mono">{earned} earned</span>
       </div>
     </div>
-    <span className="text-foreground font-semibold text-sm shrink-0">{price}</span>
+    <span className="text-foreground font-semibold text-sm shrink-0 font-mono">{price}</span>
   </motion.div>
 );
 
@@ -44,15 +44,15 @@ const Index = () => {
   const launch = () => navigate(user ? "/feed" : "/auth");
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
+    <div className="min-h-screen bg-[hsl(220,20%,96%)] text-foreground selection:bg-primary/20 dark:bg-background">
       {/* ── Nav ── */}
       <motion.nav
-        initial={{ opacity: 0, y: -10 }}
+        initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
         className="fixed top-0 inset-x-0 z-50 flex justify-center pt-5"
       >
-        <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border/60 rounded-2xl px-5 py-2.5 shadow-sm">
+        <div className="flex items-center gap-1 bg-white/80 dark:bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl px-5 py-2.5 shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
           <span className="font-bold text-sm tracking-tight mr-6">
             xitter<span className="text-primary font-mono">_</span>
           </span>
@@ -76,23 +76,23 @@ const Index = () => {
 
       {/* ── Hero ── */}
       <section className="min-h-screen flex items-center justify-center px-6 pt-20">
-        <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-[1fr_1.1fr] gap-16 items-center">
+        <div className="w-full max-w-[1100px] mx-auto grid lg:grid-cols-[1fr_1.1fr] gap-16 items-center">
           {/* Left */}
           <div>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              transition={{ delay: 0.15 }}
               className="text-primary text-xs font-mono tracking-wider mb-6"
             >
               built on solana · 0% fees
             </motion.p>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-bold tracking-tight leading-[1.05] mb-5"
+              transition={{ delay: 0.25, duration: 0.5 }}
+              className="text-[clamp(2.5rem,5vw,4rem)] font-bold tracking-[-0.03em] leading-[1.08] mb-5 text-[hsl(220,20%,10%)] dark:text-foreground"
             >
               every trade
               <br />
@@ -100,25 +100,25 @@ const Index = () => {
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-muted-foreground text-base max-w-sm mb-8 leading-relaxed"
+              transition={{ delay: 0.35 }}
+              className="text-muted-foreground text-[15px] max-w-[340px] mb-8 leading-relaxed"
             >
               share your trades. follow top traders. discuss in threads. 100% flows to users.
             </motion.p>
 
             <motion.div
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex items-center gap-4 mb-12"
+              transition={{ delay: 0.45 }}
+              className="flex items-center gap-5 mb-14"
             >
               <button
                 onClick={launch}
                 className="bg-primary text-primary-foreground font-semibold text-sm px-7 py-3 rounded-xl hover:brightness-110 transition-all active:scale-[0.97] flex items-center gap-2"
               >
-                launch app <ArrowRight className="h-4 w-4" />
+                launch app <ArrowRight className="h-3.5 w-3.5" />
               </button>
               <button
                 onClick={() => navigate("/docs")}
@@ -132,8 +132,8 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.65 }}
-              className="flex items-center gap-8"
+              transition={{ delay: 0.55 }}
+              className="flex items-center gap-10"
             >
               {[
                 { value: "$0.10", label: "min post" },
@@ -141,7 +141,7 @@ const Index = () => {
                 { value: "<1s", label: "settlement" },
               ].map((s) => (
                 <div key={s.label}>
-                  <div className="text-xl font-bold font-mono text-foreground">{s.value}</div>
+                  <div className="text-xl font-bold font-mono text-[hsl(220,20%,10%)] dark:text-foreground">{s.value}</div>
                   <div className="text-[11px] text-muted-foreground mt-0.5">{s.label}</div>
                 </div>
               ))}
@@ -150,27 +150,25 @@ const Index = () => {
 
           {/* Right — Feed Preview */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
+            transition={{ delay: 0.35, duration: 0.5 }}
             className="hidden lg:block"
           >
-            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-lg">
+            <div className="bg-white dark:bg-card border border-border/50 rounded-2xl overflow-hidden shadow-[0_4px_40px_rgba(0,0,0,0.06)]">
               {/* Feed chrome */}
-              <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm">xitter<span className="text-primary font-mono">_</span></span>
-                </div>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border/40">
+                <span className="font-bold text-sm">xitter<span className="text-primary font-mono">_</span></span>
                 <div className="flex items-center gap-0.5 text-[11px]">
                   <span className="px-3 py-1 rounded-lg bg-primary text-primary-foreground font-medium">feed</span>
-                  <span className="px-3 py-1 rounded-lg text-muted-foreground">explore</span>
-                  <span className="px-3 py-1 rounded-lg text-muted-foreground">trade</span>
+                  <span className="px-3 py-1 rounded-lg text-muted-foreground hover:bg-accent transition-colors cursor-pointer">explore</span>
+                  <span className="px-3 py-1 rounded-lg text-muted-foreground hover:bg-accent transition-colors cursor-pointer">trade</span>
                 </div>
                 <span className="text-muted-foreground text-[11px] font-mono">$42.80 <span className="text-foreground font-medium">@you</span></span>
               </div>
 
               {mockPosts.map((post, i) => (
-                <MockPost key={i} {...post} delay={0.6 + i * 0.1} />
+                <MockPost key={i} {...post} delay={0.55 + i * 0.08} />
               ))}
             </div>
           </motion.div>
@@ -178,14 +176,14 @@ const Index = () => {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="max-w-5xl mx-auto px-6 py-28">
+      <section className="max-w-[1100px] mx-auto px-6 py-28">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-[-0.03em] text-[hsl(220,20%,10%)] dark:text-foreground">
             how it works<span className="text-primary">.</span>
           </h2>
           <p className="text-muted-foreground text-sm mt-3">three steps. under a minute.</p>
@@ -199,14 +197,14 @@ const Index = () => {
           ].map((step, i) => (
             <motion.div
               key={step.num}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="bg-card border border-border rounded-2xl p-6 hover:border-primary/30 transition-colors"
+              transition={{ delay: i * 0.06 }}
+              className="bg-white dark:bg-card border border-border/50 rounded-2xl p-7 hover:border-primary/30 transition-colors"
             >
               <span className="text-primary font-mono text-sm font-bold">{step.num}</span>
-              <h3 className="text-lg font-bold mt-3 mb-2">{step.title}</h3>
+              <h3 className="text-lg font-bold mt-3 mb-2 text-[hsl(220,20%,10%)] dark:text-foreground">{step.title}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">{step.desc}</p>
             </motion.div>
           ))}
@@ -214,7 +212,7 @@ const Index = () => {
       </section>
 
       {/* ── Features ── */}
-      <section className="max-w-5xl mx-auto px-6 pb-28">
+      <section className="max-w-[1100px] mx-auto px-6 pb-28">
         <div className="grid md:grid-cols-2 gap-4">
           {[
             { title: "threads", desc: "every reply builds a thread. see the full conversation in context." },
@@ -224,11 +222,11 @@ const Index = () => {
           ].map((f, i) => (
             <motion.div
               key={f.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.06 }}
-              className="bg-card border border-border rounded-2xl p-6 hover:border-primary/30 transition-colors"
+              transition={{ delay: i * 0.05 }}
+              className="bg-white dark:bg-card border border-border/50 rounded-2xl p-7 hover:border-primary/30 transition-colors"
             >
               <span className="text-primary text-xs font-mono font-medium tracking-wider">{f.title}</span>
               <p className="text-sm text-muted-foreground mt-2 leading-relaxed">{f.desc}</p>
@@ -238,15 +236,15 @@ const Index = () => {
       </section>
 
       {/* ── Fees Banner ── */}
-      <section className="max-w-5xl mx-auto px-6 pb-28">
+      <section className="max-w-[1100px] mx-auto px-6 pb-28">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-card border border-border rounded-2xl p-10 md:p-16 text-center"
+          className="bg-white dark:bg-card border border-border/50 rounded-2xl p-10 md:p-16 text-center"
         >
           <div className="text-6xl sm:text-7xl font-bold font-mono text-primary mb-3">0%</div>
-          <p className="text-lg font-semibold mb-1">fees</p>
+          <p className="text-lg font-semibold text-[hsl(220,20%,10%)] dark:text-foreground mb-1">fees</p>
           <p className="text-muted-foreground text-sm max-w-xs mx-auto">
             100% of everything flows directly to users.
           </p>
@@ -254,14 +252,14 @@ const Index = () => {
       </section>
 
       {/* ── CTA ── */}
-      <section className="max-w-5xl mx-auto px-6 pb-24">
+      <section className="max-w-[1100px] mx-auto px-6 pb-24">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight mb-4">
+          <h2 className="text-3xl sm:text-5xl font-bold tracking-[-0.03em] mb-4 text-[hsl(220,20%,10%)] dark:text-foreground">
             start posting<span className="text-primary">.</span>
           </h2>
           <p className="text-muted-foreground text-sm mb-8 max-w-sm mx-auto">
@@ -277,9 +275,9 @@ const Index = () => {
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-border py-6">
-        <div className="max-w-5xl mx-auto px-6 flex items-center justify-between">
-          <span className="font-bold text-xs">xitter<span className="text-primary font-mono">_</span></span>
+      <footer className="border-t border-border/40 py-6">
+        <div className="max-w-[1100px] mx-auto px-6 flex items-center justify-between">
+          <span className="font-bold text-xs text-[hsl(220,20%,10%)] dark:text-foreground">xitter<span className="text-primary font-mono">_</span></span>
           <div className="flex items-center gap-6 text-[11px] text-muted-foreground">
             <span>© 2026</span>
             <button onClick={() => navigate("/auth")} className="hover:text-foreground transition-colors">sign in</button>

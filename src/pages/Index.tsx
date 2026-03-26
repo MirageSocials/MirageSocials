@@ -185,7 +185,7 @@ const Index = () => {
                   <div className="flex items-center gap-0.5 text-[11px]">
                     <span className="px-3 py-1 rounded-lg bg-primary text-primary-foreground font-medium">feed</span>
                     <span className="px-3 py-1 rounded-lg text-[#999]">explore</span>
-                    <span className="px-3 py-1 rounded-lg text-[#999]">trade</span>
+                    <span className="px-3 py-1 rounded-lg text-[#999]">trending</span>
                   </div>
                   <span className="text-[#999] text-[11px] font-mono">$42.80 <span className="text-[#1a1a1a] font-medium">@you</span></span>
                 </div>

@@ -141,24 +141,22 @@ const PostDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <AppLayout>
         <div className="flex justify-center py-20">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-background">
-        <Navbar />
+      <AppLayout>
         <div className="text-center py-20">
           <p className="text-2xl font-bold text-foreground">Post not found</p>
           <p className="text-muted-foreground mt-2">It might have been deleted.</p>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 

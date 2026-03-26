@@ -1,8 +1,10 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Image, Smile, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import data from "@emoji-mart/data";
+import Picker from "@emoji-mart/react";
 
 interface PostComposerProps {
   onPostCreated?: () => void;
@@ -16,8 +18,26 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [focused, setFocused] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const emojiPickerRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(e.target as Node)) {
+        setShowEmojiPicker(false);
+      }
+    };
+    if (showEmojiPicker) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showEmojiPicker]);
+
+  const handleEmojiSelect = (emoji: any) => {
+    if (content.length + emoji.native.length <= 280) {
+      setContent((prev) => prev + emoji.native);
+    }
+  };
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -80,10 +100,13 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
       }
       setContent("");
       removeImage();
+      setShowEmojiPicker(false);
       onPostCreated?.();
     }
     setLoading(false);
   };
+
+  const remaining = 280 - content.length;
 
   return (
     <div className={`border-b border-border p-4 transition-colors ${focused ? "bg-secondary/20" : ""}`}>
@@ -111,7 +134,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
       )}
 
       <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-1 text-primary">
+        <div className="flex items-center gap-1 text-primary relative">
           <input
             ref={fileInputRef}
             type="file"
@@ -125,10 +148,20 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
           >
             <Image className="h-4 w-4" />
           </button>
-          <button className="hover:bg-primary/10 p-2 rounded-lg transition-colors">
+          <button
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="hover:bg-primary/10 p-2 rounded-lg transition-colors"
+          >
             <Smile className="h-4 w-4" />
           </button>
-          <span className={`text-[11px] font-mono ml-1 ${280 - content.length <= 20 ? "text-destructive" : "text-muted-foreground"}`}>{280 - content.length} left</span>
+
+          {showEmojiPicker && (
+            <div ref={emojiPickerRef} className="absolute top-10 left-0 z-50">
+              <Picker data={data} onEmojiSelect={handleEmojiSelect} theme="dark" previewPosition="none" skinTonePosition="none" maxFrequentRows={1} />
+            </div>
+          )}
+
+          <span className={`text-[11px] font-mono ml-1 ${remaining <= 20 ? "text-destructive" : "text-muted-foreground"}`}>{remaining} left</span>
         </div>
         <button
           onClick={handleSubmit}

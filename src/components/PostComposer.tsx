@@ -128,7 +128,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
           <button className="hover:bg-primary/10 p-2 rounded-lg transition-colors">
             <Smile className="h-4 w-4" />
           </button>
-          <span className="text-[11px] text-muted-foreground font-mono ml-1">{content.length}/280</span>
+          <span className={`text-[11px] font-mono ml-1 ${280 - content.length <= 20 ? "text-destructive" : "text-muted-foreground"}`}>{280 - content.length} left</span>
         </div>
         <button
           onClick={handleSubmit}

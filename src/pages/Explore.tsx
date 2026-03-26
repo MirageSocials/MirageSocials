@@ -158,7 +158,10 @@ const Explore = () => {
   };
 
   const UserCard = ({ profile }: { profile: Profile }) => (
-    <div className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors">
+    <div
+      onClick={() => navigate(`/user/${profile.user_id}`)}
+      className="flex items-center gap-3 px-4 py-3 hover:bg-secondary/30 transition-colors cursor-pointer"
+    >
       {profile.avatar_url ? (
         <img src={profile.avatar_url} alt="" className="w-12 h-12 rounded-full object-cover shrink-0" />
       ) : (
@@ -173,7 +176,7 @@ const Explore = () => {
       </div>
       {user && profile.user_id !== user.id && (
         <button
-          onClick={() => toggleFollow(profile.user_id)}
+          onClick={(e) => { e.stopPropagation(); toggleFollow(profile.user_id); }}
           className={`text-sm font-bold px-4 py-1.5 rounded-full transition-colors ${
             following.has(profile.user_id)
               ? "bg-transparent border border-border text-foreground hover:border-destructive hover:text-destructive"

@@ -208,9 +208,7 @@ const Messages = () => {
 
   // Conversations list
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
+    <AppLayout>
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h1 className="text-xl font-bold text-foreground">Messages</h1>
           <button

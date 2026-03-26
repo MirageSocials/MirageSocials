@@ -15,6 +15,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [focused, setFocused] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { user } = useAuth();
 
@@ -66,7 +67,6 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
     if (error) {
       toast.error("Failed to post");
     } else {
-      // Send reply notification
       if (parentId && postData) {
         const { data: parentPost } = await supabase.from("posts").select("user_id").eq("id", parentId).single();
         if (parentPost && parentPost.user_id !== user.id) {
@@ -86,30 +86,32 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
   };
 
   return (
-    <div className="border-b border-border p-4">
+    <div className={`border-b border-border p-4 transition-colors ${focused ? "bg-secondary/20" : ""}`}>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         placeholder={placeholder}
         maxLength={280}
-        rows={3}
-        className="w-full bg-transparent text-foreground text-lg placeholder:text-muted-foreground resize-none focus:outline-none"
+        rows={focused || content ? 3 : 1}
+        className="w-full bg-transparent text-foreground text-[15px] placeholder:text-muted-foreground resize-none focus:outline-none transition-all"
       />
 
       {imagePreview && (
         <div className="relative mt-2 inline-block">
-          <img src={imagePreview} alt="Preview" className="max-h-48 rounded-2xl border border-border" />
+          <img src={imagePreview} alt="Preview" className="max-h-48 rounded-xl border border-border" />
           <button
             onClick={removeImage}
-            className="absolute top-1 right-1 bg-background/80 backdrop-blur-sm rounded-full p-1 hover:bg-background transition-colors"
+            className="absolute top-2 right-2 bg-background/80 backdrop-blur-sm rounded-lg p-1 hover:bg-background transition-colors"
           >
-            <X className="h-4 w-4 text-foreground" />
+            <X className="h-3.5 w-3.5 text-foreground" />
           </button>
         </div>
       )}
 
       <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-3 text-primary">
+        <div className="flex items-center gap-1 text-primary">
           <input
             ref={fileInputRef}
             type="file"
@@ -119,19 +121,19 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
           />
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="hover:bg-primary/10 p-2 rounded-full transition-colors"
+            className="hover:bg-primary/10 p-2 rounded-lg transition-colors"
           >
-            <Image className="h-5 w-5" />
+            <Image className="h-4 w-4" />
           </button>
-          <button className="hover:bg-primary/10 p-2 rounded-full transition-colors">
-            <Smile className="h-5 w-5" />
+          <button className="hover:bg-primary/10 p-2 rounded-lg transition-colors">
+            <Smile className="h-4 w-4" />
           </button>
-          <span className="text-xs text-muted-foreground">{content.length}/280</span>
+          <span className="text-[11px] text-muted-foreground font-mono ml-1">{content.length}/280</span>
         </div>
         <button
           onClick={handleSubmit}
           disabled={(!content.trim() && !imageFile) || loading}
-          className="bg-primary text-primary-foreground font-bold text-sm px-5 py-2 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-40"
+          className="bg-primary text-primary-foreground font-bold text-[13px] px-5 py-1.5 rounded-lg hover:brightness-110 transition-all disabled:opacity-40"
         >
           {parentId ? "Reply" : "Post"}
         </button>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 
@@ -151,86 +151,75 @@ const Feed = () => {
   }, [hasMore, loadingMore, loading, posts, fetchPosts]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      {/* Main content with sidebar offset */}
-      <main className="md:ml-[68px] xl:ml-[260px]">
-        <div className="max-w-[600px] mx-auto border-x border-border min-h-screen">
-          {/* Sticky tabs */}
-          <div className="sticky top-0 md:top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
-            <div className="flex">
-              <button
-                onClick={() => setTab("for-you")}
-                className={`flex-1 py-4 text-[15px] font-medium transition-colors relative hover:bg-secondary/30 ${
-                  tab === "for-you" ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                For you
-                {tab === "for-you" && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
-                )}
-              </button>
-              <button
-                onClick={() => setTab("following")}
-                className={`flex-1 py-4 text-[15px] font-medium transition-colors relative hover:bg-secondary/30 ${
-                  tab === "following" ? "text-foreground" : "text-muted-foreground"
-                }`}
-              >
-                Following
-                {tab === "following" && (
-                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
-                )}
-              </button>
-            </div>
-          </div>
-
-          <PostComposer onPostCreated={() => fetchPosts(false)} />
-
-          {loading ? (
-            <div className="flex justify-center py-16">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : posts.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-xl font-bold text-foreground mb-1">No posts yet</p>
-              <p className="text-sm text-muted-foreground">Be the first to post something!</p>
-            </div>
-          ) : (
-            <>
-              {posts.map((post) => (
-                <PostCard
-                  key={post.id}
-                  post={post}
-                  authorName={profiles[post.user_id]?.display_name || undefined}
-                  authorUsername={profiles[post.user_id]?.username || undefined}
-                  authorAvatar={profiles[post.user_id]?.avatar_url}
-                  onRefresh={() => fetchPosts(false)}
-                  onClick={() => navigate(`/post/${post.id}`)}
-                />
-              ))}
-              <div ref={sentinelRef} className="py-8 flex justify-center">
-                {loadingMore && (
-                  <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                )}
-                {!hasMore && posts.length > 0 && (
-                  <p className="text-xs text-muted-foreground">You've reached the end</p>
-                )}
-              </div>
-            </>
-          )}
+    <AppLayout>
+      {/* Sticky tabs */}
+      <div className="sticky top-0 md:top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+        <div className="flex">
+          {(["for-you", "following"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`flex-1 py-3.5 text-[13px] font-medium transition-all relative hover:bg-secondary/30 ${
+                tab === t ? "text-foreground" : "text-muted-foreground"
+              }`}
+            >
+              {t === "for-you" ? "For you" : "Following"}
+              {tab === t && (
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-primary rounded-full glow-primary" />
+              )}
+            </button>
+          ))}
         </div>
-      </main>
+      </div>
+
+      <PostComposer onPostCreated={() => fetchPosts(false)} />
+
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : posts.length === 0 ? (
+        <div className="text-center py-24">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+            <span className="text-primary text-lg">✦</span>
+          </div>
+          <p className="text-lg font-bold text-foreground mb-1">No posts yet</p>
+          <p className="text-sm text-muted-foreground">Be the first to post something!</p>
+        </div>
+      ) : (
+        <>
+          {posts.map((post) => (
+            <PostCard
+              key={post.id}
+              post={post}
+              authorName={profiles[post.user_id]?.display_name || undefined}
+              authorUsername={profiles[post.user_id]?.username || undefined}
+              authorAvatar={profiles[post.user_id]?.avatar_url}
+              onRefresh={() => fetchPosts(false)}
+              onClick={() => navigate(`/post/${post.id}`)}
+            />
+          ))}
+          <div ref={sentinelRef} className="py-8 flex justify-center">
+            {loadingMore && (
+              <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            )}
+            {!hasMore && posts.length > 0 && (
+              <p className="text-xs text-muted-foreground font-mono">— end —</p>
+            )}
+          </div>
+        </>
+      )}
 
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-20 right-6 md:bottom-8 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all animate-fade-in"
+          className="fixed bottom-20 right-6 md:bottom-8 z-50 p-3 rounded-xl bg-primary text-primary-foreground shadow-lg glow-primary hover:brightness-110 transition-all animate-fade-in"
           aria-label="Scroll to top"
         >
-          <ArrowUp className="h-5 w-5" />
+          <ArrowUp className="h-4 w-4" />
         </button>
       )}
-    </div>
+    </AppLayout>
   );
 };
 

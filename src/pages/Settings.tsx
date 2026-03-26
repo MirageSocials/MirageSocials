@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings as SettingsIcon, User, Lock, Bell, ArrowLeft } from "lucide-react";
+import { Settings as SettingsIcon, User, Lock, Bell, ArrowLeft, Copy, Check, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 
 const USERNAME_REGEX = /^[a-z]+$/;
+const RECEIVING_WALLET = "8akGLGrkuwYfCuPHvq2G3RiJecD6eFVrNScArQUvTnTf";
+const RESERVATION_FEE_SOL = 0.10;
 
 const Settings = () => {
   const { user } = useAuth();
@@ -18,6 +20,11 @@ const Settings = () => {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  const [showReservation, setShowReservation] = useState(false);
+  const [txSignature, setTxSignature] = useState("");
+  const [submittingReservation, setSubmittingReservation] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [savingAccount, setSavingAccount] = useState(false);
 
   // Password state
@@ -94,9 +101,14 @@ const Settings = () => {
         .maybeSingle();
 
       if (existing) {
-        setUsernameError("Username is already taken");
+        setUsernameError("Username is taken — reserve it for $0.10 SOL");
+        setUsernameTaken(true);
+        setShowReservation(true);
         setSavingAccount(false);
         return;
+      } else {
+        setUsernameTaken(false);
+        setShowReservation(false);
       }
     }
 
@@ -115,6 +127,35 @@ const Settings = () => {
       toast.success("Profile updated!");
     }
     setSavingAccount(false);
+  };
+
+  const copyWallet = () => {
+    navigator.clipboard.writeText(RECEIVING_WALLET);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const submitReservation = async () => {
+    if (!user || !txSignature.trim()) return;
+    setSubmittingReservation(true);
+    const { error } = await supabase
+      .from("username_reservations")
+      .insert({
+        user_id: user.id,
+        desired_username: username,
+        tx_signature: txSignature.trim(),
+        status: "pending",
+      } as any);
+    if (error) {
+      toast.error("Failed to submit reservation");
+    } else {
+      toast.success("Reservation submitted! Your username will be updated after verification.");
+      setShowReservation(false);
+      setTxSignature("");
+      setUsernameTaken(false);
+      setUsernameError("");
+    }
+    setSubmittingReservation(false);
   };
 
   const changePassword = async () => {
@@ -216,6 +257,8 @@ const Settings = () => {
                         const val = e.target.value.toLowerCase();
                         setUsername(val);
                         validateUsername(val);
+                        setUsernameTaken(false);
+                        setShowReservation(false);
                       }}
                       maxLength={20}
                       className="flex-1 bg-card border border-border rounded-lg px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
@@ -223,7 +266,40 @@ const Settings = () => {
                     />
                   </div>
                   {usernameError && (
-                    <p className="text-destructive text-xs mt-1">{usernameError}</p>
+                    <p className={`text-xs mt-1 ${usernameTaken ? "text-amber-500" : "text-destructive"}`}>{usernameError}</p>
+                  )}
+                  {showReservation && usernameTaken && (
+                    <div className="mt-3 p-4 bg-secondary/50 border border-border rounded-lg space-y-3">
+                      <p className="text-sm font-medium text-foreground">
+                        Reserve <span className="text-primary">@{username}</span> for {RESERVATION_FEE_SOL} SOL
+                      </p>
+                      <div className="space-y-2">
+                        <p className="text-xs text-muted-foreground">Send exactly {RESERVATION_FEE_SOL} SOL to:</p>
+                        <div className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2">
+                          <code className="text-xs text-foreground flex-1 break-all font-mono">{RECEIVING_WALLET}</code>
+                          <button onClick={copyWallet} className="shrink-0 p-1 hover:bg-secondary rounded transition-colors">
+                            {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4 text-muted-foreground" />}
+                          </button>
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-xs text-muted-foreground">After sending, paste your transaction signature:</p>
+                        <input
+                          value={txSignature}
+                          onChange={(e) => setTxSignature(e.target.value)}
+                          placeholder="Paste Solana tx signature..."
+                          className="w-full bg-card border border-border rounded-lg px-3 py-2 text-xs text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                        />
+                      </div>
+                      <button
+                        onClick={submitReservation}
+                        disabled={!txSignature.trim() || submittingReservation}
+                        className="w-full bg-primary text-primary-foreground font-bold text-xs py-2 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-40 flex items-center justify-center gap-2"
+                      >
+                        {submittingReservation && <Loader2 className="h-3 w-3 animate-spin" />}
+                        {submittingReservation ? "Submitting..." : "Submit Reservation"}
+                      </button>
+                    </div>
                   )}
                 </div>
 
@@ -247,7 +323,7 @@ const Settings = () => {
 
               <button
                 onClick={saveAccount}
-                disabled={savingAccount || !!usernameError}
+                disabled={savingAccount || (!!usernameError && !usernameTaken)}
                 className="w-full bg-primary text-primary-foreground font-bold text-sm py-2.5 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-40"
               >
                 {savingAccount ? "Saving..." : "Save Changes"}

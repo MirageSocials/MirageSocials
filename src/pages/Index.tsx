@@ -181,7 +181,7 @@ const Index = () => {
               <div className="bg-white/50">
                 {/* Feed chrome */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-[#f0f0f0]">
-                  <span className="font-semibold text-[13px]">xitter<span className="text-primary font-mono">_</span></span>
+                  <span className="font-semibold text-[13px]">xitter<span className="text-primary font-mono glow-text">_</span></span>
                   <div className="flex items-center gap-0.5 text-[11px]">
                     <span className="px-3 py-1 rounded-lg bg-primary text-primary-foreground font-medium">feed</span>
                     <span className="px-3 py-1 rounded-lg text-[#999]">explore</span>

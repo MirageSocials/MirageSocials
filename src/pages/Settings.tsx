@@ -158,6 +158,7 @@ const Settings = () => {
     setSubmittingReservation(false);
   };
 
+  const changePassword = async () => {
     if (newPassword.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;

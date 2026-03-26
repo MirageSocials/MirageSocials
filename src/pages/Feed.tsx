@@ -38,14 +38,12 @@ const Feed = () => {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  // Show scroll-to-top button when scrolled down
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 400);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Fetch profiles for a set of user IDs and merge into state
   const fetchProfiles = useCallback(async (userIds: string[]) => {
     const missing = userIds.filter((id) => !profiles[id]);
     if (missing.length === 0) return;
@@ -62,7 +60,6 @@ const Feed = () => {
     }
   }, [profiles]);
 
-  // Fetch following IDs when tab is "following"
   useEffect(() => {
     if (tab === "following" && user) {
       supabase
@@ -88,9 +85,7 @@ const Feed = () => {
       .order("created_at", { ascending: false })
       .limit(PAGE_SIZE);
 
-    if (cursor) {
-      query = query.lt("created_at", cursor);
-    }
+    if (cursor) query = query.lt("created_at", cursor);
 
     if (tab === "following") {
       if (!followingIds || followingIds.length === 0) {
@@ -115,21 +110,19 @@ const Feed = () => {
     setLoadingMore(false);
   }, [tab, followingIds, fetchProfiles]);
 
-  // Initial load & tab/following change
   useEffect(() => {
-    if (tab === "following" && followingIds === null) return; // wait for IDs
+    if (tab === "following" && followingIds === null) return;
     setPosts([]);
     setHasMore(true);
     fetchPosts(false);
   }, [tab, followingIds]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Realtime: prepend new posts
   useEffect(() => {
     const channel = supabase
       .channel("posts-realtime")
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "posts" }, (payload) => {
         const newPost = payload.new as Post;
-        if (newPost.parent_id) return; // skip replies
+        if (newPost.parent_id) return;
         if (tab === "following" && followingIds && !followingIds.includes(newPost.user_id)) return;
         setPosts((prev) => {
           if (prev.some((p) => p.id === newPost.id)) return prev;
@@ -141,11 +134,9 @@ const Feed = () => {
     return () => { supabase.removeChannel(channel); };
   }, [tab, followingIds, fetchProfiles]);
 
-  // Intersection observer for infinite scroll
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
@@ -155,7 +146,6 @@ const Feed = () => {
       },
       { rootMargin: "200px" }
     );
-
     observer.observe(sentinel);
     return () => observer.disconnect();
   }, [hasMore, loadingMore, loading, posts, fetchPosts]);
@@ -163,74 +153,78 @@ const Feed = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <div className="container max-w-xl mx-auto">
-        <div className="flex border-b border-border sticky top-14 z-40 bg-background/80 backdrop-blur-xl">
-          <button
-            onClick={() => setTab("for-you")}
-            className={`flex-1 py-3.5 text-sm font-medium transition-colors relative ${
-              tab === "for-you" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            For you
-            {tab === "for-you" && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-primary rounded-full" />
-            )}
-          </button>
-          <button
-            onClick={() => setTab("following")}
-            className={`flex-1 py-3.5 text-sm font-medium transition-colors relative ${
-              tab === "following" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Following
-            {tab === "following" && (
-              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-14 h-1 bg-primary rounded-full" />
-            )}
-          </button>
-        </div>
-
-        <PostComposer onPostCreated={() => fetchPosts(false)} />
-
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : posts.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground">
-            <p className="text-lg font-bold text-foreground mb-1">No posts yet</p>
-            <p className="text-sm">Be the first to post something!</p>
-          </div>
-        ) : (
-          <>
-            {posts.map((post) => (
-              <PostCard
-                key={post.id}
-                post={post}
-                authorName={profiles[post.user_id]?.display_name || undefined}
-                authorUsername={profiles[post.user_id]?.username || undefined}
-                authorAvatar={profiles[post.user_id]?.avatar_url}
-                onRefresh={() => fetchPosts(false)}
-                onClick={() => navigate(`/post/${post.id}`)}
-              />
-            ))}
-
-            {/* Infinite scroll sentinel */}
-            <div ref={sentinelRef} className="py-6 flex justify-center">
-              {loadingMore && (
-                <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-              )}
-              {!hasMore && posts.length > 0 && (
-                <p className="text-xs text-muted-foreground">You've reached the end</p>
-              )}
+      {/* Main content with sidebar offset */}
+      <main className="md:ml-[68px] xl:ml-[260px]">
+        <div className="max-w-[600px] mx-auto border-x border-border min-h-screen">
+          {/* Sticky tabs */}
+          <div className="sticky top-0 md:top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+            <div className="flex">
+              <button
+                onClick={() => setTab("for-you")}
+                className={`flex-1 py-4 text-[15px] font-medium transition-colors relative hover:bg-secondary/30 ${
+                  tab === "for-you" ? "text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                For you
+                {tab === "for-you" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
+                )}
+              </button>
+              <button
+                onClick={() => setTab("following")}
+                className={`flex-1 py-4 text-[15px] font-medium transition-colors relative hover:bg-secondary/30 ${
+                  tab === "following" ? "text-foreground" : "text-muted-foreground"
+                }`}
+              >
+                Following
+                {tab === "following" && (
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-primary rounded-full" />
+                )}
+              </button>
             </div>
-          </>
-        )}
-      </div>
-      {/* Scroll to top button */}
+          </div>
+
+          <PostComposer onPostCreated={() => fetchPosts(false)} />
+
+          {loading ? (
+            <div className="flex justify-center py-16">
+              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-xl font-bold text-foreground mb-1">No posts yet</p>
+              <p className="text-sm text-muted-foreground">Be the first to post something!</p>
+            </div>
+          ) : (
+            <>
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  authorName={profiles[post.user_id]?.display_name || undefined}
+                  authorUsername={profiles[post.user_id]?.username || undefined}
+                  authorAvatar={profiles[post.user_id]?.avatar_url}
+                  onRefresh={() => fetchPosts(false)}
+                  onClick={() => navigate(`/post/${post.id}`)}
+                />
+              ))}
+              <div ref={sentinelRef} className="py-8 flex justify-center">
+                {loadingMore && (
+                  <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                )}
+                {!hasMore && posts.length > 0 && (
+                  <p className="text-xs text-muted-foreground">You've reached the end</p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </main>
+
       {showScrollTop && (
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="fixed bottom-20 right-6 md:bottom-8 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all animate-in fade-in slide-in-from-bottom-4"
+          className="fixed bottom-20 right-6 md:bottom-8 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all animate-fade-in"
           aria-label="Scroll to top"
         >
           <ArrowUp className="h-5 w-5" />

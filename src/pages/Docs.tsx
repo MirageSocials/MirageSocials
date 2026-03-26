@@ -330,15 +330,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Luna Agent is built natively on Solana using <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">@solana/web3.js</code>.
           </p>
-          <CodeBlock code={`// Wallet generation\nimport { Keypair } from '@solana/web3.js'\n\nconst keypair = Keypair.generate()\nconst address = keypair.publicKey.toBase58()\n\n// Each agent gets a unique keypair on creation`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Wallet generation"}</div>
-              <div className="text-foreground">{"import { Keypair } from '@solana/web3.js'"}</div>
-              <div className="text-foreground mt-2">{"const keypair = Keypair.generate()"}</div>
-              <div className="text-foreground">{"const address = keypair.publicKey.toBase58()"}</div>
-              <div className="text-primary mt-2">{"// Each agent gets a unique keypair on creation"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Wallet generation\nimport { Keypair } from '@solana/web3.js'\n\nconst keypair = Keypair.generate()\nconst address = keypair.publicKey.toBase58()\n\n// Each agent gets a unique keypair on creation`} language="typescript" />
         </div>
       ),
     },

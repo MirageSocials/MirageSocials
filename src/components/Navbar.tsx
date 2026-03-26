@@ -181,7 +181,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-13 px-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-              <TrendingUp className="h-3.5 w-3.5 text-primary-foreground" />
+              <Feather className="h-3.5 w-3.5 text-primary-foreground" />
             </div>
             <span className="font-bold text-sm tracking-tight text-foreground">
               xitter<span className="text-primary font-mono">_</span>

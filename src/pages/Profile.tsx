@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostCard from "@/components/PostCard";
 import { CalendarDays, Camera } from "lucide-react";
 import { format } from "date-fns";

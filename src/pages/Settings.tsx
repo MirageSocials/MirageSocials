@@ -138,7 +138,9 @@ const Settings = () => {
   const submitReservation = async () => {
     if (!user || !txSignature.trim()) return;
     setSubmittingReservation(true);
-    const { error } = await supabase
+
+    // First insert the reservation record
+    const { error: insertErr } = await supabase
       .from("username_reservations")
       .insert({
         user_id: user.id,
@@ -146,14 +148,30 @@ const Settings = () => {
         tx_signature: txSignature.trim(),
         status: "pending",
       } as any);
-    if (error) {
+
+    if (insertErr) {
       toast.error("Failed to submit reservation");
-    } else {
-      toast.success("Reservation submitted! Your username will be updated after verification.");
-      setShowReservation(false);
-      setTxSignature("");
-      setUsernameTaken(false);
-      setUsernameError("");
+      setSubmittingReservation(false);
+      return;
+    }
+
+    // Call edge function to verify on-chain and auto-approve
+    try {
+      const { data, error } = await supabase.functions.invoke("verify-solana-tx", {
+        body: { tx_signature: txSignature.trim(), desired_username: username },
+      });
+
+      if (error || data?.error) {
+        toast.error(data?.error || "Verification failed. Please check your transaction and try again.");
+      } else {
+        toast.success("Username reserved and verified! Your profile has been updated.");
+        setShowReservation(false);
+        setTxSignature("");
+        setUsernameTaken(false);
+        setUsernameError("");
+      }
+    } catch {
+      toast.error("Verification service unavailable. Your reservation is saved and will be reviewed.");
     }
     setSubmittingReservation(false);
   };

@@ -256,14 +256,16 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             The trading engine runs a continuous simulation loop that manages price updates, position entries, and exits.
           </p>
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
-            <div className="text-muted-foreground">{"// Trade lifecycle"}</div>
-            <div className="text-foreground">1. Price tick → update market data</div>
-            <div className="text-foreground">2. No position? → evaluate entry signal</div>
-            <div className="text-foreground">3. Entry signal → open LONG or SHORT</div>
-            <div className="text-foreground">4. Position open → monitor SL/TP</div>
-            <div className="text-primary">5. SL/TP hit → close position, record P&L</div>
-          </div>
+          <CodeBlock code={`// Trade lifecycle\n1. Price tick → update market data\n2. No position? → evaluate entry signal\n3. Entry signal → open LONG or SHORT\n4. Position open → monitor SL/TP\n5. SL/TP hit → close position, record P&L`}>
+            <div className="space-y-1">
+              <div className="text-muted-foreground">{"// Trade lifecycle"}</div>
+              <div className="text-foreground">1. Price tick → update market data</div>
+              <div className="text-foreground">2. No position? → evaluate entry signal</div>
+              <div className="text-foreground">3. Entry signal → open LONG or SHORT</div>
+              <div className="text-foreground">4. Position open → monitor SL/TP</div>
+              <div className="text-primary">5. SL/TP hit → close position, record P&L</div>
+            </div>
+          </CodeBlock>
           <p className="text-xs text-muted-foreground leading-relaxed">
             The engine ticks every 800ms, updating candlestick data and evaluating all active agents in parallel.
             New candles are generated every 5 seconds for chart visualization.

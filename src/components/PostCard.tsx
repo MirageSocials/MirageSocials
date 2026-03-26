@@ -242,6 +242,7 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
               {post.image_url && (
                 <img src={post.image_url} alt="" className="mt-3 rounded-xl border border-border max-h-96 w-full object-cover" />
               )}
+              <PollDisplay postId={post.id} />
               {post.repost_id && post.content && originalPost && (
                 <EmbeddedPost op={originalPost} author={originalAuthor} />
               )}

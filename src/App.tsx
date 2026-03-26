@@ -19,7 +19,7 @@ import HashtagPage from "./pages/HashtagPage";
 import Bookmarks from "./pages/Bookmarks";
 import Settings from "./pages/Settings";
 import Docs from "./pages/Docs";
-
+import Marketplace from "./pages/Marketplace";
 import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();

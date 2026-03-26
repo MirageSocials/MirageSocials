@@ -42,6 +42,19 @@ const sidebarNav = [
       { id: "on-chain", label: "On-Chain Verification" },
     ],
   },
+  {
+    group: "API REFERENCE",
+    items: [
+      { id: "api-overview", label: "Overview" },
+      { id: "api-authentication", label: "Authentication" },
+      { id: "api-agents", label: "Agents" },
+      { id: "api-wallets", label: "Wallets" },
+      { id: "api-trades", label: "Trades" },
+      { id: "api-positions", label: "Positions" },
+      { id: "api-webhooks", label: "Webhooks" },
+      { id: "api-errors", label: "Error Codes" },
+    ],
+  },
 ];
 
 const allItems = sidebarNav.flatMap((g) => g.items);
@@ -382,6 +395,311 @@ const Docs = () => {
             Agent wallets are generated client-side using cryptographically secure Ed25519 keypairs.
             No private keys leave your browser.
           </p>
+        </div>
+      ),
+    },
+
+    /* ── API REFERENCE ── */
+    "api-overview": {
+      id: "api-overview",
+      title: "API Overview",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            The Luna Agent REST API lets you manage agents, wallets, trades, and positions programmatically.
+            All endpoints return JSON and use standard HTTP status codes.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-2">
+            <div className="text-muted-foreground">{"// Base URL"}</div>
+            <div className="text-primary">https://api.lunaagent.io/v1</div>
+            <div className="text-muted-foreground mt-3">{"// Content-Type"}</div>
+            <div className="text-foreground">application/json</div>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-3">Rate Limits</h3>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <p><span className="text-foreground font-medium">Free tier</span> — 60 requests / minute</p>
+              <p><span className="text-foreground font-medium">Pro tier</span> — 300 requests / minute</p>
+              <p><span className="text-foreground font-medium">Enterprise</span> — Custom limits</p>
+            </div>
+          </div>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Rate limit headers <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">X-RateLimit-Remaining</code> and <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">X-RateLimit-Reset</code> are included in every response.
+          </p>
+        </div>
+      ),
+    },
+    "api-authentication": {
+      id: "api-authentication",
+      title: "Authentication",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Authenticate using a Bearer token in the <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">Authorization</code> header. Generate API keys from your dashboard settings.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Example request"}</div>
+            <div className="text-foreground">curl https://api.lunaagent.io/v1/agents \</div>
+            <div className="text-foreground pl-4">-H <span className="text-primary">"Authorization: Bearer luna_sk_..."</span></div>
+          </div>
+          <div className="space-y-3">
+            {[
+              { bold: "API Key Prefix", rest: "All keys start with luna_sk_ for secret keys and luna_pk_ for publishable keys." },
+              { bold: "Scopes", rest: "Keys can be scoped to read-only, trade, or full-access permissions." },
+              { bold: "Rotation", rest: "Rotate keys instantly from the dashboard. Old keys are revoked immediately." },
+            ].map((item) => (
+              <div key={item.bold} className="flex items-start gap-2">
+                <ChevronRight className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  <span className="text-foreground font-medium">{item.bold}</span> — {item.rest}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
+    },
+    "api-agents": {
+      id: "api-agents",
+      title: "Agents API",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Create, list, update, and delete trading agents.
+          </p>
+          {[
+            { method: "GET", path: "/v1/agents", desc: "List all agents for the authenticated user." },
+            { method: "POST", path: "/v1/agents", desc: "Create a new agent with strategy and risk config." },
+            { method: "GET", path: "/v1/agents/:id", desc: "Retrieve a single agent by ID." },
+            { method: "PATCH", path: "/v1/agents/:id", desc: "Update agent parameters (strategy, SL, TP, etc.)." },
+            { method: "DELETE", path: "/v1/agents/:id", desc: "Delete an agent and close all open positions." },
+            { method: "POST", path: "/v1/agents/:id/pause", desc: "Pause an active agent." },
+            { method: "POST", path: "/v1/agents/:id/resume", desc: "Resume a paused agent." },
+          ].map((ep) => (
+            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
+                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
+                  ep.method === "PATCH" ? "bg-amber-500/10 text-amber-400" :
+                  "bg-red-500/10 text-red-400"
+                }`}>{ep.method}</span>
+                <code className="text-xs text-foreground font-mono">{ep.path}</code>
+              </div>
+              <p className="text-xs text-muted-foreground">{ep.desc}</p>
+            </div>
+          ))}
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Create agent request body"}</div>
+            <div className="text-foreground">{"{"}</div>
+            <div className="text-foreground pl-4">"pair": <span className="text-primary">"SOL/USDT"</span>,</div>
+            <div className="text-foreground pl-4">"strategy": <span className="text-primary">"scalp"</span>,</div>
+            <div className="text-foreground pl-4">"stop_loss": <span className="text-primary">2.0</span>,</div>
+            <div className="text-foreground pl-4">"take_profit": <span className="text-primary">4.0</span>,</div>
+            <div className="text-foreground pl-4">"position_size": <span className="text-primary">500</span></div>
+            <div className="text-foreground">{"}"}</div>
+          </div>
+        </div>
+      ),
+    },
+    "api-wallets": {
+      id: "api-wallets",
+      title: "Wallets API",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Query agent wallet information and balance history.
+          </p>
+          {[
+            { method: "GET", path: "/v1/wallets", desc: "List all wallets across your agents." },
+            { method: "GET", path: "/v1/wallets/:address", desc: "Get wallet details by Solana address." },
+            { method: "GET", path: "/v1/wallets/:address/balance", desc: "Get current SOL and token balances." },
+            { method: "GET", path: "/v1/wallets/:address/transactions", desc: "List on-chain transactions for a wallet." },
+          ].map((ep) => (
+            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400">{ep.method}</span>
+                <code className="text-xs text-foreground font-mono">{ep.path}</code>
+              </div>
+              <p className="text-xs text-muted-foreground">{ep.desc}</p>
+            </div>
+          ))}
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Response example"}</div>
+            <div className="text-foreground">{"{"}</div>
+            <div className="text-foreground pl-4">"address": <span className="text-primary">"7xKXt...9fQm"</span>,</div>
+            <div className="text-foreground pl-4">"balance_sol": <span className="text-primary">12.45</span>,</div>
+            <div className="text-foreground pl-4">"balance_usdt": <span className="text-primary">3420.80</span>,</div>
+            <div className="text-foreground pl-4">"agent_id": <span className="text-primary">"ag_01H..."</span></div>
+            <div className="text-foreground">{"}"}</div>
+          </div>
+        </div>
+      ),
+    },
+    "api-trades": {
+      id: "api-trades",
+      title: "Trades API",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Access trade history and execution details.
+          </p>
+          {[
+            { method: "GET", path: "/v1/trades", desc: "List all trades with pagination and filters." },
+            { method: "GET", path: "/v1/trades/:id", desc: "Get a single trade with full execution details." },
+            { method: "GET", path: "/v1/agents/:id/trades", desc: "List trades for a specific agent." },
+          ].map((ep) => (
+            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400">{ep.method}</span>
+                <code className="text-xs text-foreground font-mono">{ep.path}</code>
+              </div>
+              <p className="text-xs text-muted-foreground">{ep.desc}</p>
+            </div>
+          ))}
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-3">Query Parameters</h3>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <p><code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">limit</code> — Number of results (default 50, max 200)</p>
+              <p><code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">offset</code> — Pagination offset</p>
+              <p><code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">pair</code> — Filter by trading pair</p>
+              <p><code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">status</code> — Filter: <span className="text-foreground">open</span>, <span className="text-foreground">closed</span>, <span className="text-foreground">liquidated</span></p>
+              <p><code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">from</code> / <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">to</code> — ISO 8601 date range</p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    "api-positions": {
+      id: "api-positions",
+      title: "Positions API",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Monitor and manage open positions in real-time.
+          </p>
+          {[
+            { method: "GET", path: "/v1/positions", desc: "List all open positions." },
+            { method: "GET", path: "/v1/positions/:id", desc: "Get position details with live P&L." },
+            { method: "POST", path: "/v1/positions/:id/close", desc: "Manually close an open position at market price." },
+            { method: "PATCH", path: "/v1/positions/:id", desc: "Update SL/TP on an open position." },
+          ].map((ep) => (
+            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
+                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
+                  "bg-amber-500/10 text-amber-400"
+                }`}>{ep.method}</span>
+                <code className="text-xs text-foreground font-mono">{ep.path}</code>
+              </div>
+              <p className="text-xs text-muted-foreground">{ep.desc}</p>
+            </div>
+          ))}
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Position response"}</div>
+            <div className="text-foreground">{"{"}</div>
+            <div className="text-foreground pl-4">"id": <span className="text-primary">"pos_9xK..."</span>,</div>
+            <div className="text-foreground pl-4">"pair": <span className="text-primary">"SOL/USDT"</span>,</div>
+            <div className="text-foreground pl-4">"direction": <span className="text-primary">"long"</span>,</div>
+            <div className="text-foreground pl-4">"entry_price": <span className="text-primary">142.35</span>,</div>
+            <div className="text-foreground pl-4">"current_price": <span className="text-primary">145.80</span>,</div>
+            <div className="text-foreground pl-4">"pnl_percent": <span className="text-primary">2.42</span>,</div>
+            <div className="text-foreground pl-4">"stop_loss": <span className="text-primary">139.50</span>,</div>
+            <div className="text-foreground pl-4">"take_profit": <span className="text-primary">148.05</span></div>
+            <div className="text-foreground">{"}"}</div>
+          </div>
+        </div>
+      ),
+    },
+    "api-webhooks": {
+      id: "api-webhooks",
+      title: "Webhooks",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Receive real-time notifications when events occur — trades executed, positions closed, agents paused, etc.
+          </p>
+          {[
+            { method: "POST", path: "/v1/webhooks", desc: "Register a new webhook endpoint." },
+            { method: "GET", path: "/v1/webhooks", desc: "List all registered webhooks." },
+            { method: "DELETE", path: "/v1/webhooks/:id", desc: "Remove a webhook." },
+          ].map((ep) => (
+            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
+                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
+                  "bg-red-500/10 text-red-400"
+                }`}>{ep.method}</span>
+                <code className="text-xs text-foreground font-mono">{ep.path}</code>
+              </div>
+              <p className="text-xs text-muted-foreground">{ep.desc}</p>
+            </div>
+          ))}
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-3">Event Types</h3>
+            <div className="space-y-2 text-xs text-muted-foreground font-mono">
+              <p><span className="text-primary">trade.executed</span> — A trade was opened or closed</p>
+              <p><span className="text-primary">position.closed</span> — A position hit SL/TP or was manually closed</p>
+              <p><span className="text-primary">agent.paused</span> — An agent was paused</p>
+              <p><span className="text-primary">agent.resumed</span> — An agent was resumed</p>
+              <p><span className="text-primary">wallet.funded</span> — Funds were deposited to a wallet</p>
+            </div>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Webhook payload"}</div>
+            <div className="text-foreground">{"{"}</div>
+            <div className="text-foreground pl-4">"event": <span className="text-primary">"trade.executed"</span>,</div>
+            <div className="text-foreground pl-4">"timestamp": <span className="text-primary">"2026-03-26T14:30:00Z"</span>,</div>
+            <div className="text-foreground pl-4">"data": {"{ ... }"}</div>
+            <div className="text-foreground">{"}"}</div>
+          </div>
+        </div>
+      ),
+    },
+    "api-errors": {
+      id: "api-errors",
+      title: "Error Codes",
+      content: (
+        <div className="space-y-6">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            All errors follow a consistent format with an error code and human-readable message.
+          </p>
+          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
+            <div className="text-muted-foreground">{"// Error response"}</div>
+            <div className="text-foreground">{"{"}</div>
+            <div className="text-foreground pl-4">"error": {"{"}</div>
+            <div className="text-foreground pl-8">"code": <span className="text-primary">"insufficient_balance"</span>,</div>
+            <div className="text-foreground pl-8">"message": <span className="text-primary">"Position size exceeds available balance"</span>,</div>
+            <div className="text-foreground pl-8">"status": <span className="text-primary">400</span></div>
+            <div className="text-foreground pl-4">{"}"}</div>
+            <div className="text-foreground">{"}"}</div>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-3">HTTP Status Codes</h3>
+            <div className="space-y-2 text-xs text-muted-foreground">
+              <p><span className="text-foreground font-medium font-mono">200</span> — Success</p>
+              <p><span className="text-foreground font-medium font-mono">201</span> — Created</p>
+              <p><span className="text-foreground font-medium font-mono">400</span> — Bad request / validation error</p>
+              <p><span className="text-foreground font-medium font-mono">401</span> — Unauthorized (missing or invalid API key)</p>
+              <p><span className="text-foreground font-medium font-mono">403</span> — Forbidden (insufficient permissions)</p>
+              <p><span className="text-foreground font-medium font-mono">404</span> — Resource not found</p>
+              <p><span className="text-foreground font-medium font-mono">429</span> — Rate limited</p>
+              <p><span className="text-foreground font-medium font-mono">500</span> — Internal server error</p>
+            </div>
+          </div>
+          <div>
+            <h3 className="text-base font-semibold text-foreground mb-3">Common Error Codes</h3>
+            <div className="space-y-2 text-xs text-muted-foreground font-mono">
+              <p><span className="text-primary">insufficient_balance</span> — Not enough funds for the requested operation</p>
+              <p><span className="text-primary">agent_not_found</span> — The specified agent does not exist</p>
+              <p><span className="text-primary">position_not_found</span> — No open position with the given ID</p>
+              <p><span className="text-primary">invalid_strategy</span> — Unrecognized strategy type</p>
+              <p><span className="text-primary">rate_limited</span> — Too many requests, retry after cooldown</p>
+              <p><span className="text-primary">invalid_pair</span> — Trading pair not supported</p>
+            </div>
+          </div>
         </div>
       ),
     },

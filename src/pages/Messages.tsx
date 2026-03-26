@@ -3,7 +3,7 @@ import { ArrowLeft, Send, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { formatDistanceToNow } from "date-fns";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 
 interface Conversation {
   id: string;

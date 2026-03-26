@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Feather, TrendingUp } from "lucide-react";
+import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Feather } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { supabase } from "@/integrations/supabase/client";
@@ -80,7 +80,7 @@ const Navbar = () => {
         <button onClick={() => navigate("/")} className="p-3 rounded-xl hover:bg-secondary/50 transition-all mb-4 group">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center glow-primary">
-              <TrendingUp className="h-4 w-4 text-primary-foreground" />
+              <Feather className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="hidden xl:inline font-bold text-lg tracking-tight text-foreground">
               xitter<span className="text-primary font-mono">_</span>
@@ -181,7 +181,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-13 px-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-              <TrendingUp className="h-3.5 w-3.5 text-primary-foreground" />
+              <Feather className="h-3.5 w-3.5 text-primary-foreground" />
             </div>
             <span className="font-bold text-sm tracking-tight text-foreground">
               xitter<span className="text-primary font-mono">_</span>

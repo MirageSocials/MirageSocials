@@ -150,6 +150,88 @@ export type Database = {
         }
         Relationships: []
       }
+      marketplace_listings: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string | null
+          price_sol: number
+          seller_id: string
+          status: string
+          type: string
+          username_for_sale: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          price_sol: number
+          seller_id: string
+          status?: string
+          type: string
+          username_for_sale?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          price_sol?: number
+          seller_id?: string
+          status?: string
+          type?: string
+          username_for_sale?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_listings_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketplace_transactions: {
+        Row: {
+          amount_sol: number
+          buyer_id: string
+          created_at: string
+          id: string
+          listing_id: string | null
+          seller_id: string
+          tx_signature: string
+          type: string
+        }
+        Insert: {
+          amount_sol: number
+          buyer_id: string
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          seller_id: string
+          tx_signature: string
+          type: string
+        }
+        Update: {
+          amount_sol?: number
+          buyer_id?: string
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          seller_id?: string
+          tx_signature?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketplace_transactions_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "marketplace_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -353,6 +435,7 @@ export type Database = {
           updated_at: string
           user_id: string
           username: string | null
+          wallet_address: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -364,6 +447,7 @@ export type Database = {
           updated_at?: string
           user_id: string
           username?: string | null
+          wallet_address?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -375,8 +459,47 @@ export type Database = {
           updated_at?: string
           user_id?: string
           username?: string | null
+          wallet_address?: string | null
         }
         Relationships: []
+      }
+      tips: {
+        Row: {
+          amount_sol: number
+          created_at: string
+          id: string
+          post_id: string
+          recipient_id: string
+          tipper_id: string
+          tx_signature: string
+        }
+        Insert: {
+          amount_sol: number
+          created_at?: string
+          id?: string
+          post_id: string
+          recipient_id: string
+          tipper_id: string
+          tx_signature: string
+        }
+        Update: {
+          amount_sol?: number
+          created_at?: string
+          id?: string
+          post_id?: string
+          recipient_id?: string
+          tipper_id?: string
+          tx_signature?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tips_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       username_reservations: {
         Row: {

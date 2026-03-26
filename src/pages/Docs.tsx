@@ -686,11 +686,14 @@ const Docs = () => {
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-56 border-r border-border bg-background fixed top-0 left-0 h-screen flex-col">
-        <div className="p-4 border-b border-border">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2 text-xs font-mono text-foreground">
             <span className="text-muted-foreground">◎</span>
             <span className="font-bold">luna</span>
             <span className="text-muted-foreground font-normal">Docs</span>
+          </button>
+          <button onClick={toggleTheme} className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors" aria-label="Toggle theme">
+            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
         {sidebarContent}

@@ -156,9 +156,8 @@ const Messages = () => {
     const otherId = getOtherId(activeConvo);
     const otherProfile = profiles[otherId];
     return (
-      <div className="min-h-screen bg-background flex flex-col">
-        <Navbar />
-        <div className="container max-w-xl mx-auto flex flex-col flex-1">
+      <AppLayout>
+        <div className="flex flex-col flex-1">
           <div className="flex items-center gap-3 px-4 py-3 border-b border-border">
             <button onClick={() => setActiveConvo(null)} className="text-foreground hover:text-primary transition-colors">
               <ArrowLeft className="h-5 w-5" />

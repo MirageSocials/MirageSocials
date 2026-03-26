@@ -321,7 +321,7 @@ const Settings = () => {
 
               <button
                 onClick={saveAccount}
-                disabled={savingAccount || !!usernameError}
+                disabled={savingAccount || (!!usernameError && !usernameTaken)}
                 className="w-full bg-primary text-primary-foreground font-bold text-sm py-2.5 rounded-full hover:bg-primary/90 transition-colors disabled:opacity-40"
               >
                 {savingAccount ? "Saving..." : "Save Changes"}

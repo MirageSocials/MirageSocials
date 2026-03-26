@@ -17,6 +17,7 @@ import Explore from "./pages/Explore";
 import PostDetail from "./pages/PostDetail";
 import HashtagPage from "./pages/HashtagPage";
 import Bookmarks from "./pages/Bookmarks";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 

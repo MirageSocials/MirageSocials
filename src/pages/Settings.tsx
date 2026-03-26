@@ -20,6 +20,11 @@ const Settings = () => {
   const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [usernameTaken, setUsernameTaken] = useState(false);
+  const [showReservation, setShowReservation] = useState(false);
+  const [txSignature, setTxSignature] = useState("");
+  const [submittingReservation, setSubmittingReservation] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [savingAccount, setSavingAccount] = useState(false);
 
   // Password state

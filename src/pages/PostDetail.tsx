@@ -164,13 +164,11 @@ const PostDetail = () => {
   const handle = author?.username || post.user_id.slice(0, 8);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        {/* Header */}
-        <div className="sticky top-14 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-4">
-          <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
-            <ArrowLeft className="h-5 w-5 text-foreground" />
+    <AppLayout>
+      {/* Header */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border px-4 py-3 flex items-center gap-4">
+        <button onClick={() => navigate(-1)} className="p-1.5 rounded-full hover:bg-secondary transition-colors">
+          <ArrowLeft className="h-5 w-5 text-foreground" />
           </button>
           <h1 className="text-lg font-bold text-foreground">Post</h1>
         </div>

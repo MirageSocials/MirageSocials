@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Settings as SettingsIcon, User, Lock, Bell, ArrowLeft } from "lucide-react";
+import { Settings as SettingsIcon, User, Lock, Bell, ArrowLeft, Copy, Check, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -7,6 +7,8 @@ import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 
 const USERNAME_REGEX = /^[a-z]+$/;
+const RECEIVING_WALLET = "8akGLGrkuwYfCuPHvq2G3RiJecD6eFVrNScArQUvTnTf";
+const RESERVATION_FEE_SOL = 0.10;
 
 const Settings = () => {
   const { user } = useAuth();

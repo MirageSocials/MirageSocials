@@ -42,6 +42,19 @@ const sidebarNav = [
       { id: "on-chain", label: "On-Chain Verification" },
     ],
   },
+  {
+    group: "API REFERENCE",
+    items: [
+      { id: "api-overview", label: "Overview" },
+      { id: "api-authentication", label: "Authentication" },
+      { id: "api-agents", label: "Agents" },
+      { id: "api-wallets", label: "Wallets" },
+      { id: "api-trades", label: "Trades" },
+      { id: "api-positions", label: "Positions" },
+      { id: "api-webhooks", label: "Webhooks" },
+      { id: "api-errors", label: "Error Codes" },
+    ],
+  },
 ];
 
 const allItems = sidebarNav.flatMap((g) => g.items);

@@ -164,7 +164,7 @@ const Index = () => {
 
       {/* ── Hero ── */}
       <section ref={heroRef} className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <MatrixRain />
+        
 
         {/* Ambient orbs */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">

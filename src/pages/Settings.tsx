@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 
 const USERNAME_REGEX = /^[a-z]+$/;
 const RECEIVING_WALLET = "8akGLGrkuwYfCuPHvq2G3RiJecD6eFVrNScArQUvTnTf";

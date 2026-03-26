@@ -1,7 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { ArrowRight, Check, X } from "lucide-react";
+
+/* ── Scroll animation variants ── */
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 40, filter: "blur(6px)" },
+  visible: { opacity: 1, y: 0, filter: "blur(0px)" },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.92, filter: "blur(4px)" },
+  visible: { opacity: 1, scale: 1, filter: "blur(0px)" },
+};
 
 /* ── Mock feed data ── */
 const mockPosts = [

@@ -64,6 +64,7 @@ const allItems = sidebarNav.flatMap((g) => g.items);
 
 const Docs = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);

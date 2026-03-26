@@ -551,23 +551,9 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Receive real-time notifications when events occur — trades executed, positions closed, agents paused, etc.
           </p>
-          {[
-            { method: "POST", path: "/v1/webhooks", desc: "Register a new webhook endpoint." },
-            { method: "GET", path: "/v1/webhooks", desc: "List all registered webhooks." },
-            { method: "DELETE", path: "/v1/webhooks/:id", desc: "Remove a webhook." },
-          ].map((ep) => (
-            <div key={ep.method + ep.path} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
-                  ep.method === "GET" ? "bg-blue-500/10 text-blue-400" :
-                  ep.method === "POST" ? "bg-emerald-500/10 text-emerald-400" :
-                  "bg-red-500/10 text-red-400"
-                }`}>{ep.method}</span>
-                <code className="text-xs text-foreground font-mono">{ep.path}</code>
-              </div>
-              <p className="text-xs text-muted-foreground">{ep.desc}</p>
-            </div>
-          ))}
+          <ApiPlayground method="POST" path="/v1/webhooks" desc="Register a new webhook endpoint." sampleBody={`{\n  "url": "https://your-app.com/webhook",\n  "events": ["trade.executed", "position.closed"]\n}`} sampleResponse={`{\n  "id": "wh_01X...",\n  "url": "https://your-app.com/webhook",\n  "events": ["trade.executed", "position.closed"],\n  "active": true\n}`} />
+          <ApiPlayground method="GET" path="/v1/webhooks" desc="List all registered webhooks." sampleResponse={`[\n  {\n    "id": "wh_01X...",\n    "url": "https://your-app.com/webhook",\n    "events": ["trade.executed"],\n    "active": true\n  }\n]`} />
+          <ApiPlayground method="DELETE" path="/v1/webhooks/:id" desc="Remove a webhook." sampleResponse={`{\n  "deleted": true\n}`} />
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">Event Types</h3>
             <div className="space-y-2 text-xs text-muted-foreground font-mono">
@@ -578,14 +564,16 @@ const Docs = () => {
               <p><span className="text-primary">wallet.funded</span> — Funds were deposited to a wallet</p>
             </div>
           </div>
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-1">
-            <div className="text-muted-foreground">{"// Webhook payload"}</div>
-            <div className="text-foreground">{"{"}</div>
-            <div className="text-foreground pl-4">"event": <span className="text-primary">"trade.executed"</span>,</div>
-            <div className="text-foreground pl-4">"timestamp": <span className="text-primary">"2026-03-26T14:30:00Z"</span>,</div>
-            <div className="text-foreground pl-4">"data": {"{ ... }"}</div>
-            <div className="text-foreground">{"}"}</div>
-          </div>
+          <CodeBlock code={`{\n  "event": "trade.executed",\n  "timestamp": "2026-03-26T14:30:00Z",\n  "data": { ... }\n}`}>
+            <div className="space-y-1">
+              <div className="text-muted-foreground">{"// Webhook payload"}</div>
+              <div className="text-foreground">{"{"}</div>
+              <div className="text-foreground pl-4">"event": <span className="text-primary">"trade.executed"</span>,</div>
+              <div className="text-foreground pl-4">"timestamp": <span className="text-primary">"2026-03-26T14:30:00Z"</span>,</div>
+              <div className="text-foreground pl-4">"data": {"{ ... }"}</div>
+              <div className="text-foreground">{"}"}</div>
+            </div>
+          </CodeBlock>
         </div>
       ),
     },

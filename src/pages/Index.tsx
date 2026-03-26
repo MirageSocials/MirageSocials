@@ -102,26 +102,51 @@ const Index = () => {
       {/* ── Hero ── */}
       <section className="relative pt-28 lg:pt-36 pb-20 lg:pb-28 px-6 overflow-visible">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="relative z-10 mx-auto max-w-7xl rounded-[28px] bg-white/70 backdrop-blur-md border border-white/50 overflow-hidden shadow-xl shadow-black/[0.06]"
+          variants={fadeUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="relative z-10 mx-auto max-w-7xl rounded-[28px] bg-white/70 backdrop-blur-md border border-white/50 overflow-hidden shadow-xl shadow-black/[0.06] glow-card"
         >
           <div className="grid grid-cols-1 lg:grid-cols-2">
             {/* Left */}
             <div className="p-10 lg:p-14 flex flex-col justify-center">
-              <p className="text-[12px] font-mono text-primary tracking-wide mb-5">
+              <motion.p
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.3, duration: 0.6 }}
+                className="text-[12px] font-mono text-primary tracking-wide mb-5"
+              >
                 built on solana · 0% fees
-              </p>
-              <h1 className="text-[clamp(30px,3.5vw,48px)] font-semibold tracking-[-0.03em] text-[#1a1a1a] leading-[1.1]">
+              </motion.p>
+              <motion.h1
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.4, duration: 0.7 }}
+                className="text-[clamp(30px,3.5vw,48px)] font-semibold tracking-[-0.03em] text-[#1a1a1a] leading-[1.1]"
+              >
                 every word
                 <br />
-                has a price tag<span className="text-primary">.</span>
-              </h1>
-              <p className="text-[15px] text-[#999] leading-[1.7] mt-5 max-w-[380px]">
+                has a price tag<span className="text-primary glow-text-strong">.</span>
+              </motion.h1>
+              <motion.p
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="text-[15px] text-[#999] leading-[1.7] mt-5 max-w-[380px]"
+              >
                 posting costs money. replies pay the author. steal any post for 2x. 100% flows to users.
-              </p>
-              <div className="flex items-center gap-4 mt-8">
+              </motion.p>
+              <motion.div
+                variants={fadeUp}
+                initial="hidden"
+                animate="visible"
+                transition={{ delay: 0.6, duration: 0.6 }}
+                className="flex items-center gap-4 mt-8"
+              >
                 <button
                   onClick={launch}
                   className="group rounded-full bg-primary px-6 py-2.5 text-[14px] font-medium text-primary-foreground transition-all hover:brightness-110 active:scale-[0.97] flex items-center gap-2"

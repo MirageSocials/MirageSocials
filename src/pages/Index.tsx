@@ -226,7 +226,7 @@ const Index = () => {
             transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
-            <span className="text-primary text-[11px] font-mono font-medium tracking-wider">pricing modes</span>
+            <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">pricing modes</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               every post is
               <br />
@@ -245,7 +245,7 @@ const Index = () => {
             transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
-            <span className="text-primary text-[11px] font-mono font-medium tracking-wider">steal</span>
+            <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">steal</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               take any post<span className="text-primary glow-text">.</span>
               <br />
@@ -263,7 +263,7 @@ const Index = () => {
             transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
-            <span className="text-primary text-[11px] font-mono font-medium tracking-wider">replies</span>
+            <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">replies</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-4 leading-[1.15]">
               every reply
               <br />
@@ -278,7 +278,7 @@ const Index = () => {
             transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
             className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-8 shadow-sm glow-card"
           >
-            <span className="text-primary text-[11px] font-mono font-medium tracking-wider">versus</span>
+            <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">versus</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               battle with
               <br />
@@ -309,7 +309,7 @@ const Index = () => {
           transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
           className="bg-white/70 backdrop-blur-md border border-white/50 rounded-[20px] p-10 md:p-16 text-center shadow-sm glow-card"
         >
-          <span className="text-primary text-[11px] font-mono font-medium tracking-wider">fees</span>
+          <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">fees</span>
           <div className="text-[clamp(60px,8vw,100px)] font-bold font-mono text-primary mt-2 leading-none glow-text-strong">0%</div>
           <p className="text-[18px] font-semibold mt-4 mb-1">100% of everything</p>
           <p className="text-[15px] text-[#999]">flows directly to users.</p>

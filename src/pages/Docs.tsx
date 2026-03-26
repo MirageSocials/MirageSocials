@@ -512,16 +512,7 @@ const Docs = () => {
               <p><span className="text-primary">wallet.funded</span> — Funds were deposited to a wallet</p>
             </div>
           </div>
-          <CodeBlock code={`{\n  "event": "trade.executed",\n  "timestamp": "2026-03-26T14:30:00Z",\n  "data": { ... }\n}`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Webhook payload"}</div>
-              <div className="text-foreground">{"{"}</div>
-              <div className="text-foreground pl-4">"event": <span className="text-primary">"trade.executed"</span>,</div>
-              <div className="text-foreground pl-4">"timestamp": <span className="text-primary">"2026-03-26T14:30:00Z"</span>,</div>
-              <div className="text-foreground pl-4">"data": {"{ ... }"}</div>
-              <div className="text-foreground">{"}"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`{\n  "event": "trade.executed",\n  "timestamp": "2026-03-26T14:30:00Z",\n  "data": { ... }\n}`} language="json" />
         </div>
       ),
     },

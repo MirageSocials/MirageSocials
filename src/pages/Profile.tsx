@@ -113,9 +113,7 @@ const Profile = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
+    <AppLayout>
         {/* Banner */}
         <div className="h-48 bg-secondary" />
 

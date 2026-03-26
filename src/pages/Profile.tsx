@@ -172,8 +172,12 @@ const Profile = () => {
               />
               <input
                 value={editUsername}
-                onChange={(e) => setEditUsername(e.target.value)}
-                placeholder="Username"
+                onChange={(e) => {
+                  const val = e.target.value.toLowerCase().replace(/[^a-z]/g, "");
+                  setEditUsername(val);
+                }}
+                placeholder="Username (a-z only)"
+                maxLength={20}
                 className="w-full bg-card border border-border rounded-lg px-3 py-2 text-sm text-foreground"
               />
               <textarea

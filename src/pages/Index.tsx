@@ -125,7 +125,7 @@ const Index = () => {
                 initial="hidden"
                 animate="visible"
                 transition={{ delay: 0.4, duration: 0.7 }}
-                className="text-[clamp(30px,3.5vw,48px)] font-semibold tracking-[-0.03em] text-[#1a1a1a] leading-[1.1]"
+                className="text-[clamp(30px,3.5vw,48px)] font-semibold tracking-[-0.03em] text-[#1a1a1a] leading-[1.1] glow-text"
               >
                 every word
                 <br />

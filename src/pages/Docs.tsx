@@ -156,14 +156,14 @@ const Docs = () => {
             </div>
           ))}
 
-          <div className="bg-card border border-border rounded-xl p-4 font-mono text-xs">
+          <CodeBlock code={`$ luna init\n◉ Luna Agent v2.0.0\nGenerating agent wallet...\n✓ Wallet: 7xKXt...9fQm (Solana)\nLoading strategy: Scalper\n✓ Agent deployed. Scanning markets...`} className="p-4">
             <div className="text-muted-foreground mb-2">$ luna init</div>
             <div className="text-primary">◉ Luna Agent v2.0.0</div>
             <div className="text-muted-foreground">Generating agent wallet...</div>
             <div className="text-primary">✓ Wallet: 7xKXt...9fQm (Solana)</div>
             <div className="text-muted-foreground">Loading strategy: Scalper</div>
             <div className="text-primary">✓ Agent deployed. Scanning markets...</div>
-          </div>
+          </CodeBlock>
         </div>
       ),
     },

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft, Hash, TrendingUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import Navbar from "@/components/Navbar";
+import AppLayout from "@/components/AppLayout";
 import PostCard from "@/components/PostCard";
 
 interface Post {

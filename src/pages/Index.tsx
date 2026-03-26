@@ -160,7 +160,7 @@ const Index = () => {
                 >
                   api docs →
                 </button>
-              </div>
+              </motion.div>
               {/* Stats */}
               <div className="flex items-center gap-8 mt-10 pt-8 border-t border-[#f0f0f0]">
                 {[

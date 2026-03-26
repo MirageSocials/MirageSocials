@@ -340,6 +340,8 @@ const PostCard = ({ post, authorName, authorUsername, authorAvatar, onRefresh, o
           {likeCount > 0 && <span className="text-[11px] font-mono">{likeCount}</span>}
         </button>
 
+        <TipButton postId={post.id} recipientId={post.user_id} />
+
         <button
           onClick={toggleBookmark}
           className={`transition-colors group ${bookmarked ? "text-primary" : "text-muted-foreground hover:text-primary"}`}

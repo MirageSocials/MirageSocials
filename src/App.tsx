@@ -45,7 +45,7 @@ const App = () => (
             <Route path="/hashtag/:tag" element={<ProtectedRoute><HashtagPage /></ProtectedRoute>} />
             <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="/docs" element={<Docs />} />
-            <Route path="/trade" element={<ProtectedRoute><Trade /></ProtectedRoute>} />
+            
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

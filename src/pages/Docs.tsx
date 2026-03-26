@@ -401,13 +401,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Authenticate using a Bearer token in the <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">Authorization</code> header. Generate API keys from your dashboard settings.
           </p>
-          <CodeBlock code={`// Example request\ncurl https://api.lunaagent.io/v1/agents \\\n  -H "Authorization: Bearer luna_sk_..."`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Example request"}</div>
-              <div className="text-foreground">curl https://api.lunaagent.io/v1/agents \</div>
-              <div className="text-foreground pl-4">-H <span className="text-primary">"Authorization: Bearer luna_sk_..."</span></div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Example request\ncurl https://api.lunaagent.io/v1/agents \\\n  -H "Authorization: Bearer luna_sk_..."`} language="bash" />
           <div className="space-y-3">
             {[
               { bold: "API Key Prefix", rest: "All keys start with luna_sk_ for secret keys and luna_pk_ for publishable keys." },

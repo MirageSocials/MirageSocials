@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight, Search, Menu, X } from "lucide-react";
+import { ArrowLeft, Bot, Wallet, Shield, Zap, Settings, BarChart3, Code, Database, Rocket, ChevronRight, Search, Menu, X, Sun, Moon } from "lucide-react";
 import CodeBlock from "@/components/docs/CodeBlock";
 import ApiPlayground from "@/components/docs/ApiPlayground";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/hooks/useTheme";
 
 interface DocSection {
   id: string;
@@ -63,6 +64,7 @@ const allItems = sidebarNav.flatMap((g) => g.items);
 
 const Docs = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
   const [activeSection, setActiveSection] = useState("overview");
   const [searchQuery, setSearchQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -156,14 +158,7 @@ const Docs = () => {
             </div>
           ))}
 
-          <CodeBlock code={`$ luna init\n◉ Luna Agent v2.0.0\nGenerating agent wallet...\n✓ Wallet: 7xKXt...9fQm (Solana)\nLoading strategy: Scalper\n✓ Agent deployed. Scanning markets...`} className="p-4">
-            <div className="text-muted-foreground mb-2">$ luna init</div>
-            <div className="text-primary">◉ Luna Agent v2.0.0</div>
-            <div className="text-muted-foreground">Generating agent wallet...</div>
-            <div className="text-primary">✓ Wallet: 7xKXt...9fQm (Solana)</div>
-            <div className="text-muted-foreground">Loading strategy: Scalper</div>
-            <div className="text-primary">✓ Agent deployed. Scanning markets...</div>
-          </CodeBlock>
+          <CodeBlock code={`$ luna init\n◉ Luna Agent v2.0.0\nGenerating agent wallet...\n✓ Wallet: 7xKXt...9fQm (Solana)\nLoading strategy: Scalper\n✓ Agent deployed. Scanning markets...`} language="bash" />
         </div>
       ),
     },
@@ -199,21 +194,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Each Luna Agent is a self-contained trading unit with its own wallet, strategy engine, and risk parameters.
           </p>
-          <CodeBlock code={`// Agent structure\nAgent {\n  id: string\n  wallet: SolanaKeypair\n  strategy: Scalp | Swing | Trend | Degen\n  pair: string\n  stopLoss: percentage\n  takeProfit: percentage\n  positionSize: number\n  state: active | paused\n}`}>
-            <div className="space-y-2">
-              <div className="text-muted-foreground">{"// Agent structure"}</div>
-              <div className="text-foreground">{"Agent {"}</div>
-              <div className="text-foreground pl-4">id: <span className="text-primary">string</span></div>
-              <div className="text-foreground pl-4">wallet: <span className="text-primary">SolanaKeypair</span></div>
-              <div className="text-foreground pl-4">strategy: <span className="text-primary">Scalp | Swing | Trend | Degen</span></div>
-              <div className="text-foreground pl-4">pair: <span className="text-primary">string</span></div>
-              <div className="text-foreground pl-4">stopLoss: <span className="text-primary">percentage</span></div>
-              <div className="text-foreground pl-4">takeProfit: <span className="text-primary">percentage</span></div>
-              <div className="text-foreground pl-4">positionSize: <span className="text-primary">number</span></div>
-              <div className="text-foreground pl-4">state: <span className="text-primary">active | paused</span></div>
-              <div className="text-foreground">{"}"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Agent structure\nAgent {\n  id: string\n  wallet: SolanaKeypair\n  strategy: Scalp | Swing | Trend | Degen\n  pair: string\n  stopLoss: percentage\n  takeProfit: percentage\n  positionSize: number\n  state: active | paused\n}`} language="typescript" />
           <p className="text-xs text-muted-foreground leading-relaxed">
             Agents run on a tick-based simulation engine that updates prices, evaluates positions, and executes trades
             based on the configured strategy parameters. Each tick checks SL/TP conditions and manages trade lifecycle.
@@ -256,16 +237,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             The trading engine runs a continuous simulation loop that manages price updates, position entries, and exits.
           </p>
-          <CodeBlock code={`// Trade lifecycle\n1. Price tick → update market data\n2. No position? → evaluate entry signal\n3. Entry signal → open LONG or SHORT\n4. Position open → monitor SL/TP\n5. SL/TP hit → close position, record P&L`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Trade lifecycle"}</div>
-              <div className="text-foreground">1. Price tick → update market data</div>
-              <div className="text-foreground">2. No position? → evaluate entry signal</div>
-              <div className="text-foreground">3. Entry signal → open LONG or SHORT</div>
-              <div className="text-foreground">4. Position open → monitor SL/TP</div>
-              <div className="text-primary">5. SL/TP hit → close position, record P&L</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Trade lifecycle\n1. Price tick → update market data\n2. No position? → evaluate entry signal\n3. Entry signal → open LONG or SHORT\n4. Position open → monitor SL/TP\n5. SL/TP hit → close position, record P&L`} language="typescript" />
           <p className="text-xs text-muted-foreground leading-relaxed">
             The engine ticks every 800ms, updating candlestick data and evaluating all active agents in parallel.
             New candles are generated every 5 seconds for chart visualization.
@@ -358,15 +330,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Luna Agent is built natively on Solana using <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">@solana/web3.js</code>.
           </p>
-          <CodeBlock code={`// Wallet generation\nimport { Keypair } from '@solana/web3.js'\n\nconst keypair = Keypair.generate()\nconst address = keypair.publicKey.toBase58()\n\n// Each agent gets a unique keypair on creation`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Wallet generation"}</div>
-              <div className="text-foreground">{"import { Keypair } from '@solana/web3.js'"}</div>
-              <div className="text-foreground mt-2">{"const keypair = Keypair.generate()"}</div>
-              <div className="text-foreground">{"const address = keypair.publicKey.toBase58()"}</div>
-              <div className="text-primary mt-2">{"// Each agent gets a unique keypair on creation"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Wallet generation\nimport { Keypair } from '@solana/web3.js'\n\nconst keypair = Keypair.generate()\nconst address = keypair.publicKey.toBase58()\n\n// Each agent gets a unique keypair on creation`} language="typescript" />
         </div>
       ),
     },
@@ -395,10 +359,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Every agent wallet is a real Solana address. You can verify its existence and activity on any Solana block explorer.
           </p>
-          <CodeBlock code={`Verify on Solscan:\nhttps://solscan.io/account/<agent_wallet_address>`} className="p-4">
-            <div className="text-muted-foreground mb-1">Verify on Solscan:</div>
-            <div className="text-primary">https://solscan.io/account/{"<agent_wallet_address>"}</div>
-          </CodeBlock>
+          <CodeBlock code={`Verify on Solscan:\nhttps://solscan.io/account/<agent_wallet_address>`} language="bash" />
           <p className="text-xs text-muted-foreground leading-relaxed">
             Agent wallets are generated client-side using cryptographically secure Ed25519 keypairs.
             No private keys leave your browser.
@@ -417,14 +378,7 @@ const Docs = () => {
             The Luna Agent REST API lets you manage agents, wallets, trades, and positions programmatically.
             All endpoints return JSON and use standard HTTP status codes.
           </p>
-          <CodeBlock code={`// Base URL\nhttps://api.lunaagent.io/v1\n\n// Content-Type\napplication/json`}>
-            <div className="space-y-2">
-              <div className="text-muted-foreground">{"// Base URL"}</div>
-              <div className="text-primary">https://api.lunaagent.io/v1</div>
-              <div className="text-muted-foreground mt-3">{"// Content-Type"}</div>
-              <div className="text-foreground">application/json</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Base URL\nhttps://api.lunaagent.io/v1\n\n// Content-Type\napplication/json`} language="typescript" />
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">Rate Limits</h3>
             <div className="space-y-2 text-xs text-muted-foreground">
@@ -447,13 +401,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Authenticate using a Bearer token in the <code className="text-primary bg-primary/10 px-1.5 py-0.5 rounded text-[11px]">Authorization</code> header. Generate API keys from your dashboard settings.
           </p>
-          <CodeBlock code={`// Example request\ncurl https://api.lunaagent.io/v1/agents \\\n  -H "Authorization: Bearer luna_sk_..."`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Example request"}</div>
-              <div className="text-foreground">curl https://api.lunaagent.io/v1/agents \</div>
-              <div className="text-foreground pl-4">-H <span className="text-primary">"Authorization: Bearer luna_sk_..."</span></div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`// Example request\ncurl https://api.lunaagent.io/v1/agents \\\n  -H "Authorization: Bearer luna_sk_..."`} language="bash" />
           <div className="space-y-3">
             {[
               { bold: "API Key Prefix", rest: "All keys start with luna_sk_ for secret keys and luna_pk_ for publishable keys." },
@@ -564,16 +512,7 @@ const Docs = () => {
               <p><span className="text-primary">wallet.funded</span> — Funds were deposited to a wallet</p>
             </div>
           </div>
-          <CodeBlock code={`{\n  "event": "trade.executed",\n  "timestamp": "2026-03-26T14:30:00Z",\n  "data": { ... }\n}`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Webhook payload"}</div>
-              <div className="text-foreground">{"{"}</div>
-              <div className="text-foreground pl-4">"event": <span className="text-primary">"trade.executed"</span>,</div>
-              <div className="text-foreground pl-4">"timestamp": <span className="text-primary">"2026-03-26T14:30:00Z"</span>,</div>
-              <div className="text-foreground pl-4">"data": {"{ ... }"}</div>
-              <div className="text-foreground">{"}"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`{\n  "event": "trade.executed",\n  "timestamp": "2026-03-26T14:30:00Z",\n  "data": { ... }\n}`} language="json" />
         </div>
       ),
     },
@@ -585,18 +524,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             All errors follow a consistent format with an error code and human-readable message.
           </p>
-          <CodeBlock code={`{\n  "error": {\n    "code": "insufficient_balance",\n    "message": "Position size exceeds available balance",\n    "status": 400\n  }\n}`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Error response"}</div>
-              <div className="text-foreground">{"{"}</div>
-              <div className="text-foreground pl-4">"error": {"{"}</div>
-              <div className="text-foreground pl-8">"code": <span className="text-primary">"insufficient_balance"</span>,</div>
-              <div className="text-foreground pl-8">"message": <span className="text-primary">"Position size exceeds available balance"</span>,</div>
-              <div className="text-foreground pl-8">"status": <span className="text-primary">400</span></div>
-              <div className="text-foreground pl-4">{"}"}</div>
-              <div className="text-foreground">{"}"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`{\n  "error": {\n    "code": "insufficient_balance",\n    "message": "Position size exceeds available balance",\n    "status": 400\n  }\n}`} language="json" />
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">HTTP Status Codes</h3>
             <div className="space-y-2 text-xs text-muted-foreground">
@@ -684,11 +612,14 @@ const Docs = () => {
     <div className="min-h-screen bg-background flex">
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-56 border-r border-border bg-background fixed top-0 left-0 h-screen flex-col">
-        <div className="p-4 border-b border-border">
+        <div className="p-4 border-b border-border flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2 text-xs font-mono text-foreground">
             <span className="text-muted-foreground">◎</span>
             <span className="font-bold">luna</span>
             <span className="text-muted-foreground font-normal">Docs</span>
+          </button>
+          <button onClick={toggleTheme} className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-colors" aria-label="Toggle theme">
+            {theme === "dark" ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
           </button>
         </div>
         {sidebarContent}
@@ -701,9 +632,14 @@ const Docs = () => {
           <span className="font-bold">luna</span>
           <span className="text-muted-foreground font-normal">Docs</span>
         </button>
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
-          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <button onClick={toggleTheme} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors" aria-label="Toggle theme">
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-1.5 text-muted-foreground hover:text-foreground transition-colors">
+            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile sidebar overlay */}

@@ -129,7 +129,35 @@ const Settings = () => {
     setSavingAccount(false);
   };
 
-  const changePassword = async () => {
+  const copyWallet = () => {
+    navigator.clipboard.writeText(RECEIVING_WALLET);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const submitReservation = async () => {
+    if (!user || !txSignature.trim()) return;
+    setSubmittingReservation(true);
+    const { error } = await supabase
+      .from("username_reservations")
+      .insert({
+        user_id: user.id,
+        desired_username: username,
+        tx_signature: txSignature.trim(),
+        status: "pending",
+      } as any);
+    if (error) {
+      toast.error("Failed to submit reservation");
+    } else {
+      toast.success("Reservation submitted! Your username will be updated after verification.");
+      setShowReservation(false);
+      setTxSignature("");
+      setUsernameTaken(false);
+      setUsernameError("");
+    }
+    setSubmittingReservation(false);
+  };
+
     if (newPassword.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;

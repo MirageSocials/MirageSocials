@@ -24,6 +24,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
   const [showGifPicker, setShowGifPicker] = useState(false);
   const [gifUrl, setGifUrl] = useState<string | null>(null);
   const [pollOptions, setPollOptions] = useState<string[] | null>(null);
+  const [pollDuration, setPollDuration] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const emojiPickerRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
@@ -92,17 +93,24 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
       image_url = urlData.publicUrl;
     }
 
+    // Calculate poll expiry
+    let poll_expires_at: string | null = null;
+    if (pollOptions && pollDuration) {
+      const expiryDate = new Date(Date.now() + pollDuration * 60 * 1000);
+      poll_expires_at = expiryDate.toISOString();
+    }
+
     const { data: postData, error } = await supabase.from("posts").insert({
       user_id: user.id,
       content: content.trim() || "",
       parent_id: parentId || null,
       image_url,
+      poll_expires_at,
     } as any).select().single();
 
     if (error) {
       toast.error("Failed to post");
     } else {
-      // Create poll options if poll is active
       if (pollOptions && postData) {
         const validOptions = pollOptions.filter((o) => o.trim());
         if (validOptions.length >= 2) {
@@ -131,6 +139,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
       removeImage();
       setGifUrl(null);
       setPollOptions(null);
+      setPollDuration(null);
       setShowEmojiPicker(false);
       setShowGifPicker(false);
       onPostCreated?.();
@@ -181,7 +190,9 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
         <PollCreator
           options={pollOptions}
           onChange={setPollOptions}
-          onRemove={() => setPollOptions(null)}
+          onRemove={() => { setPollOptions(null); setPollDuration(null); }}
+          duration={pollDuration}
+          onDurationChange={setPollDuration}
         />
       )}
 
@@ -216,7 +227,7 @@ const PostComposer = ({ onPostCreated, parentId, placeholder = "What's happening
             <Smile className="h-4 w-4" />
           </button>
           <button
-            onClick={() => { setPollOptions(pollOptions ? null : ["", ""]); }}
+            onClick={() => { setPollOptions(pollOptions ? null : ["", ""]); if (pollOptions) setPollDuration(null); }}
             className={`hover:bg-primary/10 p-2 rounded-lg transition-colors ${pollOptions ? "text-primary bg-primary/10" : ""}`}
             title="Poll"
           >

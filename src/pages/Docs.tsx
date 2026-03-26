@@ -524,18 +524,7 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             All errors follow a consistent format with an error code and human-readable message.
           </p>
-          <CodeBlock code={`{\n  "error": {\n    "code": "insufficient_balance",\n    "message": "Position size exceeds available balance",\n    "status": 400\n  }\n}`}>
-            <div className="space-y-1">
-              <div className="text-muted-foreground">{"// Error response"}</div>
-              <div className="text-foreground">{"{"}</div>
-              <div className="text-foreground pl-4">"error": {"{"}</div>
-              <div className="text-foreground pl-8">"code": <span className="text-primary">"insufficient_balance"</span>,</div>
-              <div className="text-foreground pl-8">"message": <span className="text-primary">"Position size exceeds available balance"</span>,</div>
-              <div className="text-foreground pl-8">"status": <span className="text-primary">400</span></div>
-              <div className="text-foreground pl-4">{"}"}</div>
-              <div className="text-foreground">{"}"}</div>
-            </div>
-          </CodeBlock>
+          <CodeBlock code={`{\n  "error": {\n    "code": "insufficient_balance",\n    "message": "Position size exceeds available balance",\n    "status": 400\n  }\n}`} language="json" />
           <div>
             <h3 className="text-base font-semibold text-foreground mb-3">HTTP Status Codes</h3>
             <div className="space-y-2 text-xs text-muted-foreground">

@@ -298,8 +298,7 @@ const Explore = () => {
             ))}
           </>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

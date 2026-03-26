@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon } from "lucide-react";
+import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,6 +60,7 @@ const Navbar = () => {
     { icon: Mail, label: "Messages", path: "/messages", badge: unreadMessages },
     { icon: Bookmark, label: "Bookmarks", path: "/bookmarks", badge: 0 },
     { icon: User, label: "Profile", path: "/profile", badge: 0 },
+    { icon: Settings, label: "Settings", path: "/settings", badge: 0 },
   ];
 
   const Badge = ({ count }: { count: number }) => {

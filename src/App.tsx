@@ -17,6 +17,7 @@ import Explore from "./pages/Explore";
 import PostDetail from "./pages/PostDetail";
 import HashtagPage from "./pages/HashtagPage";
 import Bookmarks from "./pages/Bookmarks";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/user/:userId" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
             <Route path="/post/:postId" element={<ProtectedRoute><PostDetail /></ProtectedRoute>} />
             <Route path="/hashtag/:tag" element={<ProtectedRoute><HashtagPage /></ProtectedRoute>} />
+            <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

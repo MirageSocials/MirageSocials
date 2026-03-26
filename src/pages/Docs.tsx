@@ -199,19 +199,21 @@ const Docs = () => {
           <p className="text-sm text-muted-foreground leading-relaxed">
             Each Luna Agent is a self-contained trading unit with its own wallet, strategy engine, and risk parameters.
           </p>
-          <div className="bg-card border border-border rounded-xl p-5 font-mono text-xs space-y-2">
-            <div className="text-muted-foreground">{"// Agent structure"}</div>
-            <div className="text-foreground">{"Agent {"}</div>
-            <div className="text-foreground pl-4">id: <span className="text-primary">string</span></div>
-            <div className="text-foreground pl-4">wallet: <span className="text-primary">SolanaKeypair</span></div>
-            <div className="text-foreground pl-4">strategy: <span className="text-primary">Scalp | Swing | Trend | Degen</span></div>
-            <div className="text-foreground pl-4">pair: <span className="text-primary">string</span></div>
-            <div className="text-foreground pl-4">stopLoss: <span className="text-primary">percentage</span></div>
-            <div className="text-foreground pl-4">takeProfit: <span className="text-primary">percentage</span></div>
-            <div className="text-foreground pl-4">positionSize: <span className="text-primary">number</span></div>
-            <div className="text-foreground pl-4">state: <span className="text-primary">active | paused</span></div>
-            <div className="text-foreground">{"}"}</div>
-          </div>
+          <CodeBlock code={`// Agent structure\nAgent {\n  id: string\n  wallet: SolanaKeypair\n  strategy: Scalp | Swing | Trend | Degen\n  pair: string\n  stopLoss: percentage\n  takeProfit: percentage\n  positionSize: number\n  state: active | paused\n}`}>
+            <div className="space-y-2">
+              <div className="text-muted-foreground">{"// Agent structure"}</div>
+              <div className="text-foreground">{"Agent {"}</div>
+              <div className="text-foreground pl-4">id: <span className="text-primary">string</span></div>
+              <div className="text-foreground pl-4">wallet: <span className="text-primary">SolanaKeypair</span></div>
+              <div className="text-foreground pl-4">strategy: <span className="text-primary">Scalp | Swing | Trend | Degen</span></div>
+              <div className="text-foreground pl-4">pair: <span className="text-primary">string</span></div>
+              <div className="text-foreground pl-4">stopLoss: <span className="text-primary">percentage</span></div>
+              <div className="text-foreground pl-4">takeProfit: <span className="text-primary">percentage</span></div>
+              <div className="text-foreground pl-4">positionSize: <span className="text-primary">number</span></div>
+              <div className="text-foreground pl-4">state: <span className="text-primary">active | paused</span></div>
+              <div className="text-foreground">{"}"}</div>
+            </div>
+          </CodeBlock>
           <p className="text-xs text-muted-foreground leading-relaxed">
             Agents run on a tick-based simulation engine that updates prices, evaluates positions, and executes trades
             based on the configured strategy parameters. Each tick checks SL/TP conditions and manages trade lifecycle.

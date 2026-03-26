@@ -275,8 +275,7 @@ const Messages = () => {
             );
           })
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

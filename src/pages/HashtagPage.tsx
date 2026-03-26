@@ -109,8 +109,7 @@ const HashtagPage = () => {
             </motion.div>
           ))
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

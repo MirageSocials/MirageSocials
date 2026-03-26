@@ -321,8 +321,7 @@ const PostDetail = () => {
             <p className="text-sm">No replies yet. Be the first to respond!</p>
           </div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

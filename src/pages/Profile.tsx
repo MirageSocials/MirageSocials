@@ -228,8 +228,7 @@ const Profile = () => {
             No posts yet
           </div>
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

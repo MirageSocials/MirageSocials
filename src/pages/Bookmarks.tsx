@@ -89,8 +89,7 @@ const Bookmarks = () => {
             />
           ))
         )}
-      </div>
-    </div>
+    </AppLayout>
   );
 };
 

@@ -129,7 +129,7 @@ const Index = () => {
               >
                 every word
                 <br />
-                has a price tag<span className="text-primary glow-text-strong">.</span>
+                has a price tag<span className="text-primary glow-dot glow-text-strong">.</span>
               </motion.h1>
               <motion.p
                 variants={fadeUp}
@@ -209,7 +209,7 @@ const Index = () => {
           className="text-center mb-14"
         >
           <h2 className="text-[clamp(28px,3vw,42px)] font-semibold tracking-[-0.03em]">
-            how it works<span className="text-primary glow-text">.</span>
+            how it works<span className="text-primary glow-dot glow-text">.</span>
           </h2>
         </motion.div>
 
@@ -230,7 +230,7 @@ const Index = () => {
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               every post is
               <br />
-              a micro-market<span className="text-primary glow-text">.</span>
+              a micro-market<span className="text-primary glow-dot glow-text">.</span>
             </h3>
             <div className="space-y-3">
               <PricingBar label="rocket" color="text-emerald-500" width="80%" desc="price increases with engagement" />
@@ -247,7 +247,7 @@ const Index = () => {
           >
             <span className="text-primary text-[11px] font-mono font-medium tracking-wider glow-text">steal</span>
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
-              take any post<span className="text-primary glow-text">.</span>
+              take any post<span className="text-primary glow-dot glow-text">.</span>
               <br />
               pay 2x.
             </h3>
@@ -267,7 +267,7 @@ const Index = () => {
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-4 leading-[1.15]">
               every reply
               <br />
-              pays the author<span className="text-primary glow-text">.</span>
+              pays the author<span className="text-primary glow-dot glow-text">.</span>
             </h3>
             <p className="text-[13px] text-[#999] leading-relaxed">replying to a post costs money. 100% goes to the original poster.</p>
           </motion.div>
@@ -282,7 +282,7 @@ const Index = () => {
             <h3 className="text-[clamp(20px,2vw,28px)] font-semibold tracking-[-0.02em] mt-3 mb-6 leading-[1.15]">
               battle with
               <br />
-              real stakes<span className="text-primary glow-text">.</span>
+              real stakes<span className="text-primary glow-dot glow-text">.</span>
             </h3>
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-primary/10 rounded-xl p-3 text-center">
@@ -327,7 +327,7 @@ const Index = () => {
           className="text-center mb-14"
         >
           <h2 className="text-[clamp(28px,3vw,42px)] font-semibold tracking-[-0.03em]">
-            get started<span className="text-primary glow-text">.</span>
+            get started<span className="text-primary glow-dot glow-text">.</span>
           </h2>
           <p className="text-[15px] text-[#999] mt-3">three steps. under a minute.</p>
         </motion.div>
@@ -454,7 +454,7 @@ const Index = () => {
           className="text-center py-16"
         >
           <h2 className="text-[clamp(32px,4vw,56px)] font-semibold tracking-[-0.03em] mb-4">
-            get started<span className="text-primary glow-text-strong">.</span>
+            get started<span className="text-primary glow-dot glow-text-strong">.</span>
           </h2>
           <p className="text-[15px] text-[#999] mb-8 max-w-md mx-auto">
             join the social network where every word has a price tag. built on solana, settled on-chain.

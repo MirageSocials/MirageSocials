@@ -88,48 +88,45 @@ const Notifications = () => {
   }, [user, fetchNotifications]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <div className="container max-w-xl mx-auto">
-        <div className="border-b border-border px-4 py-3">
-          <h1 className="text-xl font-bold text-foreground">Notifications</h1>
-        </div>
-
-        {loading ? (
-          <div className="flex justify-center py-12">
-            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          </div>
-        ) : notifications.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground">
-            <p className="text-lg font-bold text-foreground mb-1">No notifications yet</p>
-            <p className="text-sm">When someone interacts with your posts, you'll see it here.</p>
-          </div>
-        ) : (
-          notifications.map((n) => {
-            const actor = profiles[n.actor_id];
-            return (
-              <div
-                key={n.id}
-                className={`flex items-start gap-3 px-4 py-3 border-b border-border transition-colors ${
-                  !n.read ? "bg-primary/5" : "hover:bg-secondary/30"
-                }`}
-              >
-                <div className="mt-1">{iconMap[n.type]}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm text-foreground">
-                    <span className="font-bold">{actor?.display_name || "Someone"}</span>{" "}
-                    <span className="text-muted-foreground">{labelMap[n.type] || n.type}</span>
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-0.5">
-                    {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
-                  </p>
-                </div>
-              </div>
-            );
-          })
-        )}
+    <AppLayout>
+      <div className="border-b border-border px-4 py-3">
+        <h1 className="text-xl font-bold text-foreground">Notifications</h1>
       </div>
-    </div>
+
+      {loading ? (
+        <div className="flex justify-center py-12">
+          <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      ) : notifications.length === 0 ? (
+        <div className="text-center py-16 text-muted-foreground">
+          <p className="text-lg font-bold text-foreground mb-1">No notifications yet</p>
+          <p className="text-sm">When someone interacts with your posts, you'll see it here.</p>
+        </div>
+      ) : (
+        notifications.map((n) => {
+          const actor = profiles[n.actor_id];
+          return (
+            <div
+              key={n.id}
+              className={`flex items-start gap-3 px-4 py-3 border-b border-border transition-colors ${
+                !n.read ? "bg-primary/5" : "hover:bg-secondary/30"
+              }`}
+            >
+              <div className="mt-1">{iconMap[n.type]}</div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-foreground">
+                  <span className="font-bold">{actor?.display_name || "Someone"}</span>{" "}
+                  <span className="text-muted-foreground">{labelMap[n.type] || n.type}</span>
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                </p>
+              </div>
+            </div>
+          );
+        })
+      )}
+    </AppLayout>
   );
 };
 

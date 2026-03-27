@@ -49,7 +49,8 @@ const Index = () => {
         className="flex justify-center pt-4 pb-2 z-50 sticky top-0"
       >
         <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border rounded-full px-5 py-2.5 shadow-lg">
-          <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground">
+          <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground flex items-center gap-2">
+            <img src={logoImg} alt="Mirage" className="w-6 h-6 rounded" />
             mirage<span className="text-primary font-mono">_</span>
           </span>
           {["feed", "marketplace", "docs"].map((link) => (

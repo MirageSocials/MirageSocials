@@ -1,5 +1,5 @@
 import { FadeIn } from "./FadeIn";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Github } from "lucide-react";
 import { useState } from "react";
 
 const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";
@@ -29,7 +29,7 @@ const CTA = () => {
               <span>© 2026 Luna Agent</span>
               <a href="/docs" className="hover:text-foreground transition-colors">Docs</a>
               <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
-              <a href="https://github.com/MirageSocials" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
+              <a href="https://github.com/MirageSocials" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1"><Github className="h-3 w-3" />GitHub</a>
               <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a>
             </div>
           </div>

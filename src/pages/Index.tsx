@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Sun, Moon } from "lucide-react";
+import { ArrowRight, Sun, Moon, Check, X, Loader2 } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const LandingScene = lazy(() => import("@/components/LandingScene"));
 

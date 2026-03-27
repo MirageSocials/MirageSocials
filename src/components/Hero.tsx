@@ -47,7 +47,7 @@ const Hero = () => {
 
             <FadeIn delay={0.15}>
               <p className="text-sm text-muted-foreground leading-relaxed max-w-sm mb-8">
-                Autonomous AI trading infrastructure on Solana, built on Luna Agent.
+                A unique social media with limited usernames. Claim yours before it's gone.
               </p>
             </FadeIn>
 

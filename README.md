@@ -2,7 +2,7 @@
 
 **Mirage** is a social media platform where every word has a price tag. Built on Solana with 0% platform fees — posting costs money, replies pay the author, and anyone can steal any post for 2x the price. 100% of value flows to users.
 
-![image alt](https://github.com/MirageSocials/MirageSocials/blob/deb6c6fd48ab816f192b666166b6989b0e3643d4/b6d96a17-d1c3-4bd1-8de0-b05bf8852f28.png)
+[!image](https://github.com/MirageSocials/MirageSocials/blob/deb6c6fd48ab816f192b666166b6989b0e3643d4/b6d96a17-d1c3-4bd1-8de0-b05bf8852f28.png)
 
 **Live:** [MirageSocials.fun](https://MirageSocials.fun)
 

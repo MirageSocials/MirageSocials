@@ -172,9 +172,7 @@ const Index = () => {
                   <div className="divide-y divide-[hsl(220,15%,14%)]">
                     {mockPosts.map((post, i) => (
                       <div key={i} className="px-5 py-4 flex gap-3">
-                        <div className={`w-8 h-8 rounded-full ${post.color} flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0`}>
-                          {post.user[0].toUpperCase()}
-                        </div>
+                        <img src={post.avatar} alt={post.user} className="w-8 h-8 rounded-full object-cover shrink-0 border border-[hsl(220,15%,14%)]" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-sm font-semibold text-[hsl(220,10%,90%)]">@{post.user}</span>

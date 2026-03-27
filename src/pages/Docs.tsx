@@ -59,17 +59,17 @@ const sidebarNav = [
 
 /* ── Searchable text map for content matching ── */
 const sectionText: Record<string, string> = {
-  overview: "Xitter is a social media platform where every word has a price tag. Built on Solana with 0% fees. Post costs money, replies pay the author, steal any post for 2x. 100% of value flows to users. Real-time feed, explore trending posts, direct messaging, trade integration.",
-  quickstart: "Get started with Xitter in under a minute. Create an account with email. Connect your Solana wallet. Make your first post. Start earning from replies and engagement.",
-  "what-you-can-build": "Content creators monetize posts. Curators discover and steal viral content. Traders integrate market analysis. Communities form around hashtags. Developers build with the Xitter API.",
-  "feed-posts": "The Xitter feed displays posts in chronological order with real-time updates. Each post shows the author, content, price, earnings, and engagement metrics. Posts can include images and hashtags.",
+  overview: "Mirage is a social media platform where every word has a price tag. Built on Solana with 0% fees. Post costs money, replies pay the author, steal any post for 2x. 100% of value flows to users. Real-time feed, explore trending posts, direct messaging, trade integration.",
+  quickstart: "Get started with Mirage in under a minute. Create an account with email. Connect your Solana wallet. Make your first post. Start earning from replies and engagement.",
+  "what-you-can-build": "Content creators monetize posts. Curators discover and steal viral content. Traders integrate market analysis. Communities form around hashtags. Developers build with the Mirage API.",
+  "feed-posts": "The Mirage feed displays posts in chronological order with real-time updates. Each post shows the author, content, price, earnings, and engagement metrics. Posts can include images and hashtags.",
   "pricing-model": "Posts start at a base price of $0.10. The price uses a Dutch auction model that decays over time. Replies cost a fraction of the parent post price and earnings flow to the original author.",
   "steal-mechanic": "Any post can be stolen by paying 2x the current price. The original author receives the full steal price. The stealer becomes the new owner and earns from future engagement. This creates a market for viral content.",
   profiles: "Each user has a profile with a display name, username, avatar, banner, and bio. Profiles track total earnings, post count, and follower/following counts. Username reservation requires a Solana transaction.",
   messaging: "Direct messages are end-to-end between users. Conversations are created automatically when you message someone for the first time. Messages support real-time delivery.",
-  "solana-integration": "Xitter is built on Solana for fast, cheap transactions. User wallets are generated client-side using Ed25519 keypairs from @solana/web3.js. All payments settle on-chain in under 1 second.",
-  "on-chain": "Every transaction on Xitter is verifiable on any Solana block explorer. Post payments, steals, and withdrawals are all recorded on-chain with cryptographic proof.",
-  "api-overview": "The Xitter REST API lets you manage posts, users, feeds, and messaging programmatically. All endpoints return JSON with standard HTTP status codes. Base URL: https://api.xitter.io/v1",
+  "solana-integration": "Mirage is built on Solana for fast, cheap transactions. User wallets are generated client-side using Ed25519 keypairs from @solana/web3.js. All payments settle on-chain in under 1 second.",
+  "on-chain": "Every transaction on Mirage is verifiable on any Solana block explorer. Post payments, steals, and withdrawals are all recorded on-chain with cryptographic proof.",
+  "api-overview": "The Mirage REST API lets you manage posts, users, feeds, and messaging programmatically. All endpoints return JSON with standard HTTP status codes. Base URL: https://api.mirage.io/v1",
   "api-authentication": "Authenticate using Bearer tokens. API keys start with xit_sk_ for secret keys and xit_pk_ for publishable keys. Keys support read-only, write, and full-access scopes.",
   "api-posts": "Create, read, update, and delete posts. Query post pricing, steal a post, list replies. Each post has content, price, author, earnings, and engagement data.",
   "api-users": "Look up user profiles, followers, following lists. Get user earnings history and post analytics.",
@@ -120,7 +120,7 @@ const Docs = () => {
       content: (
         <div className="space-y-8">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Xitter is a social media platform where every word has a price tag. Built on Solana with 0% platform fees — posting costs money, replies pay the author, and anyone can steal any post for 2x the price. 100% of value flows to users.</H>
+            <H>Mirage is a social media platform where every word has a price tag. Built on Solana with 0% platform fees — posting costs money, replies pay the author, and anyone can steal any post for 2x the price. 100% of value flows to users.</H>
           </p>
           <div className="grid md:grid-cols-2 gap-4">
             {[
@@ -142,7 +142,7 @@ const Docs = () => {
               {[
                 { bold: "Dutch auction pricing", rest: "Post prices decay over time, creating optimal discovery windows" },
                 { bold: "Content marketplace", rest: "Every post is a tradeable asset with real monetary value" },
-                { bold: "Zero platform fees", rest: "100% of all payments flow between users — Xitter takes nothing" },
+                { bold: "Zero platform fees", rest: "100% of all payments flow between users — Mirage takes nothing" },
                 { bold: "Real-time feed", rest: "Live updates with engagement metrics, earnings tracking, and trending content" },
                 { bold: "Solana-native", rest: "All transactions are on-chain and verifiable on any block explorer" },
               ].map((item) => (
@@ -164,11 +164,11 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Get started with Xitter in under a minute.</H>
+            <H>Get started with Mirage in under a minute.</H>
           </p>
           {[
             { step: "01", title: "Create an Account", desc: "Sign up with your email. No credit card required." },
-            { step: "02", title: "Connect Your Wallet", desc: "Link your Solana wallet or let Xitter generate one for you." },
+            { step: "02", title: "Connect Your Wallet", desc: "Link your Solana wallet or let Mirage generate one for you." },
             { step: "03", title: "Make Your First Post", desc: "Write something worth reading. Set a price and publish." },
             { step: "04", title: "Start Earning", desc: "Get paid when people reply to your posts or steal them." },
           ].map((s) => (
@@ -180,7 +180,7 @@ const Docs = () => {
               </div>
             </div>
           ))}
-          <CodeBlock code={`$ xitter init\n◉ Xitter v2.0.0\nConnecting wallet...\n✓ Wallet: 7xKXt...9fQm (Solana)\n✓ Account created. Welcome to Xitter!`} language="bash" />
+          <CodeBlock code={`$ mirage init\n◉ Mirage v2.0.0\nConnecting wallet...\n✓ Wallet: 7xKXt...9fQm (Solana)\n✓ Account created. Welcome to Mirage!`} language="bash" />
         </div>
       ),
     },
@@ -190,7 +190,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Xitter supports a variety of use cases for creators, curators, and developers.</H>
+            <H>Mirage supports a variety of use cases for creators, curators, and developers.</H>
           </p>
           <div className="space-y-4">
             {[
@@ -198,7 +198,7 @@ const Docs = () => {
               { title: "Content Curation", desc: "Discover underpriced posts and steal them before they go viral. Build a portfolio of high-earning content." },
               { title: "Trading Integration", desc: "Share market analysis and trade setups. Your trading calls become priced assets with real monetary value." },
               { title: "Community Building", desc: "Form communities around hashtags. Top contributors earn the most from engagement." },
-              { title: "API Integrations", desc: "Build bots, dashboards, and tools using the Xitter API. Automate posting and content discovery." },
+              { title: "API Integrations", desc: "Build bots, dashboards, and tools using the Mirage API. Automate posting and content discovery." },
             ].map((item) => (
               <div key={item.title} className="border-l-2 border-primary/30 pl-4">
                 <h4 className="text-sm font-semibold text-[#1a1a1a] mb-1"><H>{item.title}</H></h4>
@@ -215,14 +215,14 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>The Xitter feed displays posts in real-time with live price updates, earnings tracking, and engagement metrics.</H>
+            <H>The Mirage feed displays posts in real-time with live price updates, earnings tracking, and engagement metrics.</H>
           </p>
           <CodeBlock code={`// Post structure\nPost {\n  id: string\n  content: string\n  author: User\n  price: number        // current price (Dutch auction)\n  base_price: number   // starting price\n  earnings: number     // total earned from replies & steals\n  image_url?: string\n  parent_id?: string   // if reply\n  stolen_from?: string // if stolen\n  created_at: timestamp\n}`} language="typescript" />
           <div className="space-y-3">
             {[
               { bold: "Chronological feed", rest: "Posts appear newest-first with real-time updates via WebSockets" },
               { bold: "Engagement metrics", rest: "Each post shows likes, replies, reposts, and total earnings" },
-              { bold: "Image support", rest: "Posts can include images uploaded to Xitter storage" },
+              { bold: "Image support", rest: "Posts can include images uploaded to Mirage storage" },
               { bold: "Hashtags", rest: "Tag posts with hashtags to join trending conversations" },
               { bold: "Thread support", rest: "Reply to posts to create threaded conversations" },
             ].map((item) => (
@@ -243,7 +243,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Every post on Xitter uses a Dutch auction pricing model. Posts start at a base price and decay over time, creating optimal windows for discovery and engagement.</H>
+            <H>Every post on Mirage uses a Dutch auction pricing model. Posts start at a base price and decay over time, creating optimal windows for discovery and engagement.</H>
           </p>
           <div className="space-y-4">
             {[
@@ -270,7 +270,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>The steal mechanic is Xitter's signature feature. Any post can be stolen by paying 2x the current price. This creates a speculative market for viral content.</H>
+            <H>The steal mechanic is Mirage's signature feature. Any post can be stolen by paying 2x the current price. This creates a speculative market for viral content.</H>
           </p>
           <div className="space-y-4">
             <div className="bg-white/70 border border-[#e8eaed] rounded-2xl p-5 shadow-sm">
@@ -294,7 +294,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Each Xitter user has a profile with a display name, unique username, avatar, banner image, and bio. Username reservation requires a Solana transaction for on-chain verification.</H>
+            <H>Each Mirage user has a profile with a display name, unique username, avatar, banner image, and bio. Username reservation requires a Solana transaction for on-chain verification.</H>
           </p>
           <div className="space-y-3">
             {[
@@ -322,7 +322,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Xitter supports real-time direct messaging between users. Conversations are created automatically when you message someone for the first time.</H>
+            <H>Mirage supports real-time direct messaging between users. Conversations are created automatically when you message someone for the first time.</H>
           </p>
           <div className="space-y-3">
             {[
@@ -347,7 +347,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Xitter is built natively on Solana using @solana/web3.js. All payments and transactions settle on-chain with sub-second finality.</H>
+            <H>Mirage is built natively on Solana using @solana/web3.js. All payments and transactions settle on-chain with sub-second finality.</H>
           </p>
           <CodeBlock code={`// Wallet generation\nimport { Keypair } from '@solana/web3.js'\n\nconst keypair = Keypair.generate()\nconst address = keypair.publicKey.toBase58()\n\n// Each user gets a unique keypair on signup`} language="typescript" />
         </div>
@@ -359,7 +359,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Every transaction on Xitter is verifiable on any Solana block explorer. Post payments, steals, and username reservations are all recorded on-chain.</H>
+            <H>Every transaction on Mirage is verifiable on any Solana block explorer. Post payments, steals, and username reservations are all recorded on-chain.</H>
           </p>
           <CodeBlock code={`Verify on Solscan:\nhttps://solscan.io/tx/<transaction_signature>`} language="bash" />
           <p className="text-xs text-[#999] leading-relaxed">
@@ -374,9 +374,9 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>The Xitter REST API lets you manage posts, users, feeds, and messaging programmatically. All endpoints return JSON and use standard HTTP status codes.</H>
+            <H>The Mirage REST API lets you manage posts, users, feeds, and messaging programmatically. All endpoints return JSON and use standard HTTP status codes.</H>
           </p>
-          <CodeBlock code={`// Base URL\nhttps://api.xitter.io/v1\n\n// Content-Type\napplication/json`} language="typescript" />
+          <CodeBlock code={`// Base URL\nhttps://api.mirage.io/v1\n\n// Content-Type\napplication/json`} language="typescript" />
           <div>
             <h3 className="text-base font-semibold text-[#1a1a1a] mb-3"><H>Rate Limits</H></h3>
             <div className="space-y-2 text-xs text-[#999]">
@@ -396,7 +396,7 @@ const Docs = () => {
           <p className="text-sm text-[#666] leading-relaxed">
             <H>Authenticate using a Bearer token in the Authorization header. Generate API keys from your settings page.</H>
           </p>
-          <CodeBlock code={`curl https://api.xitter.io/v1/posts \\\n  -H "Authorization: Bearer xit_sk_..."`} language="bash" />
+          <CodeBlock code={`curl https://api.mirage.io/v1/posts \\\n  -H "Authorization: Bearer xit_sk_..."`} language="bash" />
           <div className="space-y-3">
             {[
               { bold: "API Key Prefix", rest: "All keys start with xit_sk_ for secret keys and xit_pk_ for publishable keys." },
@@ -420,7 +420,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Create, read, and interact with posts on Xitter.</H>
+            <H>Create, read, and interact with posts on Mirage.</H>
           </p>
           <ApiPlayground method="GET" path="/v1/posts" desc="List posts with pagination and filters." sampleResponse={`[\n  {\n    "id": "post_01X...",\n    "content": "every word has a price tag.",\n    "author": "@satoshi",\n    "price": 2.40,\n    "earnings": 18.50,\n    "replies": 12\n  }\n]`} />
           <ApiPlayground method="POST" path="/v1/posts" desc="Create a new post with content and base price." sampleBody={`{\n  "content": "building the future of social media",\n  "base_price": 0.50,\n  "image_url": null\n}`} sampleResponse={`{\n  "id": "post_02K...",\n  "content": "building the future of social media",\n  "price": 0.50,\n  "author": "@you",\n  "tx_signature": "3xK9f..."\n}`} />
@@ -473,7 +473,7 @@ const Docs = () => {
       content: (
         <div className="space-y-6">
           <p className="text-sm text-[#666] leading-relaxed">
-            <H>Receive real-time notifications when events occur on Xitter.</H>
+            <H>Receive real-time notifications when events occur on Mirage.</H>
           </p>
           <ApiPlayground method="POST" path="/v1/webhooks" desc="Register a new webhook endpoint." sampleBody={`{\n  "url": "https://your-app.com/webhook",\n  "events": ["post.created", "post.stolen"]\n}`} sampleResponse={`{\n  "id": "wh_01X...",\n  "url": "https://your-app.com/webhook",\n  "events": ["post.created", "post.stolen"],\n  "active": true\n}`} />
           <ApiPlayground method="GET" path="/v1/webhooks" desc="List all registered webhooks." sampleResponse={`[\n  {\n    "id": "wh_01X...",\n    "url": "https://your-app.com/webhook",\n    "events": ["post.created"],\n    "active": true\n  }\n]`} />
@@ -596,7 +596,7 @@ const Docs = () => {
         <aside className="hidden md:flex w-56 border-r border-[#e8eaed] bg-white/70 backdrop-blur-xl fixed top-0 left-0 h-screen flex-col">
           <div className="p-4 border-b border-[#e8eaed] flex items-center justify-between">
             <button onClick={() => navigate("/")} className="flex items-center gap-1 text-xs font-mono text-[#1a1a1a]">
-              <span className="font-bold">xitter</span>
+              <span className="font-bold">mirage</span>
               <span className="text-primary glow-text">_</span>
               <span className="text-[#999] font-normal ml-1">docs</span>
             </button>
@@ -610,7 +610,7 @@ const Docs = () => {
         {/* Mobile header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-12 bg-white/80 backdrop-blur-xl border-b border-[#e8eaed] flex items-center justify-between px-4 shadow-sm">
           <button onClick={() => navigate("/")} className="flex items-center gap-1 text-xs font-mono text-[#1a1a1a]">
-            <span className="font-bold">xitter</span>
+            <span className="font-bold">mirage</span>
             <span className="text-primary glow-text">_</span>
             <span className="text-[#999] font-normal ml-1">docs</span>
           </button>

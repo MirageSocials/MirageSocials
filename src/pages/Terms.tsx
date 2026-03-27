@@ -21,14 +21,14 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">1. Acceptance of Terms</h2>
           <p className="text-muted-foreground leading-relaxed">
-            By accessing or using xitter ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.
+            By accessing or using Mirage ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.
           </p>
         </section>
 
         <section className="space-y-3">
           <h2 className="text-xl font-bold">2. Eligibility</h2>
           <p className="text-muted-foreground leading-relaxed">
-            You must be at least 18 years old and capable of forming a binding contract to use the Platform. By using xitter, you represent and warrant that you meet these requirements.
+            You must be at least 18 years old and capable of forming a binding contract to use the Platform. By using Mirage, you represent and warrant that you meet these requirements.
           </p>
         </section>
 
@@ -42,7 +42,7 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">4. User Content</h2>
           <p className="text-muted-foreground leading-relaxed">
-            You retain ownership of content you post. By posting, you grant xitter a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content on the Platform.
+            You retain ownership of content you post. By posting, you grant Mirage a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content on the Platform.
           </p>
         </section>
 
@@ -70,7 +70,7 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">8. Limitation of Liability</h2>
           <p className="text-muted-foreground leading-relaxed">
-            To the maximum extent permitted by law, xitter shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.
+            To the maximum extent permitted by law, Mirage shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.
           </p>
         </section>
 
@@ -85,7 +85,9 @@ const Terms = () => {
           <h2 className="text-xl font-bold">10. Contact Us</h2>
           <p className="text-muted-foreground leading-relaxed">
             If you have any questions about these Terms, please contact us at{" "}
-            <a href="mailto:support@xitter.app" className="text-primary hover:underline">support@xitter.app</a>.
+            <a href="mailto:support@mirage.app" className="text-primary hover:underline">support@mirage.app</a>{" "}
+            or visit our{" "}
+            <a href="/contact" className="text-primary hover:underline">Contact page</a>.
           </p>
         </section>
       </main>

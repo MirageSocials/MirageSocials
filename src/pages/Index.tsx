@@ -9,7 +9,7 @@ const mockPosts = [
   { user: "satoshi", time: "2m", text: "bitcoin will hit $500k this cycle. not financial advice but also financial advice.", price: "$2.40", mode: "rocket", earned: "$18.50", color: "bg-primary" },
   { user: "vitalik", time: "5m", text: "the future of social media is putting money where your mouth is. literally.", price: "$1.00", mode: "flat", earned: "$7.20", color: "bg-accent" },
   { user: "trader_joe", time: "8m", text: "just stole this post for $4.80. worth every penny.", price: "$4.80", mode: "stolen", earned: "$3.10", color: "bg-destructive" },
-  { user: "based_dev", time: "12m", text: "building on xitter rn. the api is actually clean.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
+  { user: "based_dev", time: "12m", text: "building on mirage rn. the api is actually clean.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
 ];
 
 function AnimatedNumber({ value, prefix = "", suffix = "", duration = 1.5 }: { value: number; prefix?: string; suffix?: string; duration?: number }) {
@@ -49,7 +49,7 @@ const Index = () => {
       >
         <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border rounded-full px-5 py-2.5 shadow-lg">
           <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground">
-            xitter<span className="text-primary font-mono">_</span>
+            mirage<span className="text-primary font-mono">_</span>
           </span>
           {["feed", "marketplace", "docs"].map((link) => (
             <button
@@ -147,7 +147,7 @@ const Index = () => {
               >
                 <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                   <div className="flex items-center gap-4">
-                    <span className="font-semibold text-sm text-foreground">xitter<span className="text-primary font-mono">_</span></span>
+                    <span className="font-semibold text-sm text-foreground">mirage<span className="text-primary font-mono">_</span></span>
                     <span className="text-primary text-xs font-medium border-b-2 border-primary pb-0.5">feed</span>
                     <span className="text-muted-foreground text-xs">versus</span>
                     <span className="text-muted-foreground text-xs">board</span>
@@ -193,7 +193,7 @@ const Index = () => {
         className="border-t border-border bg-card/40 backdrop-blur-sm py-8 mt-12"
       >
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-sm text-muted-foreground font-mono">© 2026 xitter</span>
+          <span className="text-sm text-muted-foreground font-mono">© 2026 mirage</span>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <button onClick={() => navigate("/docs")} className="hover:text-foreground transition-colors">Docs</button>
             <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>

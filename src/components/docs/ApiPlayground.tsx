@@ -25,7 +25,7 @@ const ApiPlayground = ({ method, path, desc, sampleBody, sampleResponse }: ApiPl
   const [copied, setCopied] = useState<"curl" | "response" | null>(null);
   const [bodyValue, setBodyValue] = useState(sampleBody || "");
 
-  const curlCommand = `curl -X ${method} https://api.xitter.io${path} \\
+  const curlCommand = `curl -X ${method} https://api.mirage.app${path} \\
   -H "Authorization: Bearer xit_sk_..." \\
   -H "Content-Type: application/json"${bodyValue ? ` \\
   -d '${bodyValue}'` : ""}`;

@@ -193,7 +193,7 @@ Subscribe to real-time events:
 | `user.followed` | New follower |
 | `message.received` | New DM received |
 
-### Error Codes
+### Errors Codes
 
 | Code | Meaning |
 |------|---------|

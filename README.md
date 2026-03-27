@@ -222,3 +222,5 @@ npm run dev
 ## 📄 License
 
 © 2025 Mirage. All rights reserved.
+
+Xai.

@@ -42,7 +42,7 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">4. User Content</h2>
           <p className="text-muted-foreground leading-relaxed">
-            You retain ownership of content you post. By posting, you grant xitter a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content on the Platform.
+            You retain ownership of content you post. By posting, you grant Mirage a non-exclusive, worldwide, royalty-free license to use, display, and distribute your content on the Platform.
           </p>
         </section>
 

@@ -80,6 +80,14 @@ const Terms = () => {
             We reserve the right to modify these Terms at any time. Continued use of the Platform after changes constitutes acceptance of the updated Terms.
           </p>
         </section>
+
+        <section className="space-y-3 border-t border-border pt-8">
+          <h2 className="text-xl font-bold">10. Contact Us</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            If you have any questions about these Terms, please contact us at{" "}
+            <a href="mailto:support@xitter.app" className="text-primary hover:underline">support@xitter.app</a>.
+          </p>
+        </section>
       </main>
     </div>
   );

@@ -98,17 +98,17 @@ const Index = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
                 >
-                  <p className="text-primary text-sm font-mono mb-6 glow-text">built on solana · 0% fees</p>
+                  <p className="text-primary text-sm font-mono mb-6 glow-text">built on solana · limited usernames</p>
 
                   <h1 className="text-[clamp(32px,4.5vw,56px)] font-bold tracking-[-0.04em] leading-[1.1] mb-6 text-[hsl(220,10%,95%)]">
-                    every word
+                    Mirage
                     <br />
-                    has a price tag<span className="text-primary glow-text-strong">.</span>
+                    Socials<span className="text-primary glow-text-strong">.</span>
                   </h1>
 
                   <p className="text-[hsl(220,10%,50%)] text-[15px] leading-relaxed mb-8 max-w-sm">
-                    posting costs money. replies pay the author. steal any
-                    post for 2x. 100% flows to users.
+                    a unique social media with limited usernames.
+                    claim yours before it's gone.
                   </p>
 
                   <div className="flex items-center gap-4 mb-10">

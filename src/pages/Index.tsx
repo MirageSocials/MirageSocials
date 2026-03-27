@@ -195,7 +195,7 @@ const Index = () => {
         className="border-t border-border bg-card/40 backdrop-blur-sm py-8 mt-12"
       >
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-sm text-muted-foreground font-mono">© 2026 mirage</span>
+          <span className="text-sm text-muted-foreground font-mono flex items-center gap-2"><img src={logoImg} alt="Mirage" className="w-5 h-5 rounded" /> © 2026 mirage</span>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <button onClick={() => navigate("/docs")} className="hover:text-foreground transition-colors">Docs</button>
             <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>

@@ -225,4 +225,4 @@ npm run dev
 
 © 2025 Mirage. All rights reserved.
 
-Xai.
+`X Corp.`

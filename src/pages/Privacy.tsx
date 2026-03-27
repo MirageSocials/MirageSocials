@@ -78,7 +78,7 @@ const Privacy = () => {
           <h2 className="text-xl font-bold">9. Contact Us</h2>
           <p className="text-muted-foreground leading-relaxed">
             If you have any questions about this Privacy Policy or your personal data, please contact us at{" "}
-            <a href="mailto:support@xitter.app" className="text-primary hover:underline">support@xitter.app</a>.
+            <a href="mailto:support@mirage.app" className="text-primary hover:underline">support@mirage.app</a>.
           </p>
         </section>
       </main>

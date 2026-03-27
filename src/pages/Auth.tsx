@@ -47,9 +47,9 @@ const Auth = () => {
           >
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
-          <div className="text-3xl font-black text-primary mb-6">𝕏itter</div>
+          <div className="text-3xl font-black text-primary mb-6">Mirage</div>
           <h1 className="text-2xl font-bold text-foreground">
-            {isLogin ? "Sign in to Xitter" : "Create your account"}
+            {isLogin ? "Sign in to Mirage" : "Create your account"}
           </h1>
         </div>
 

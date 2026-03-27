@@ -121,8 +121,8 @@ const Contact = () => {
             <p className="text-muted-foreground leading-relaxed flex items-center gap-2">
               <Mail className="w-4 h-4 text-primary" />
               Email us directly at{" "}
-              <a href="mailto:support@xitter.app" className="text-primary hover:underline">
-                support@xitter.app
+              <a href="mailto:support@mirage.app" className="text-primary hover:underline">
+                support@mirage.app
               </a>
             </p>
           </div>

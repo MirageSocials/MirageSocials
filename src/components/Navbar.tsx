@@ -83,7 +83,7 @@ const Navbar = () => {
               <Feather className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="hidden xl:inline font-bold text-lg tracking-tight text-foreground">
-              xitter<span className="text-primary font-mono">_</span>
+              mirage<span className="text-primary font-mono">_</span>
             </span>
           </div>
         </button>

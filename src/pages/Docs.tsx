@@ -1,6 +1,7 @@
 import { useState, useMemo, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight, MessageSquare, DollarSign, Shield, Zap, Users, BarChart3, Code, Rocket, ChevronRight, Search, Menu, X, Sun, Moon } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import CodeBlock from "@/components/docs/CodeBlock";
 import ApiPlayground from "@/components/docs/ApiPlayground";
 import HighlightText from "@/components/docs/HighlightText";

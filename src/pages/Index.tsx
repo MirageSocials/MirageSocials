@@ -9,7 +9,7 @@ const mockPosts = [
   { user: "satoshi", time: "2m", text: "bitcoin will hit $500k this cycle. not financial advice but also financial advice.", price: "$2.40", mode: "rocket", earned: "$18.50", color: "bg-primary" },
   { user: "vitalik", time: "5m", text: "the future of social media is putting money where your mouth is. literally.", price: "$1.00", mode: "flat", earned: "$7.20", color: "bg-accent" },
   { user: "trader_joe", time: "8m", text: "just stole this post for $4.80. worth every penny.", price: "$4.80", mode: "stolen", earned: "$3.10", color: "bg-destructive" },
-  { user: "based_dev", time: "12m", text: "building on xitter rn. the api is actually clean.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
+  { user: "based_dev", time: "12m", text: "building on mirage rn. the api is actually clean.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
 ];
 
 function AnimatedNumber({ value, prefix = "", suffix = "", duration = 1.5 }: { value: number; prefix?: string; suffix?: string; duration?: number }) {

@@ -205,8 +205,8 @@ const Index = () => {
             <span className="text-sm text-[hsl(220,10%,40%)] font-mono flex items-center gap-2"><img src={logoImg} alt="Mirage" className="w-5 h-5 rounded" /> © 2026 mirage</span>
             <div className="flex items-center gap-6 text-sm text-[hsl(220,10%,40%)]">
               <button onClick={() => navigate("/docs")} className="hover:text-[hsl(220,10%,90%)] transition-colors">Docs</button>
-              <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-[hsl(220,10%,90%)] transition-colors">Twitter</a>
-              <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-[hsl(220,10%,90%)] transition-colors">Discord</a>
+              <a href="https://x.com/MirageSocials" target="_blank" rel="noopener noreferrer" className="hover:text-[hsl(220,10%,90%)] transition-colors">Twitter</a>
+              <a href="https://github.com/MirageSocials" target="_blank" rel="noopener noreferrer" className="hover:text-[hsl(220,10%,90%)] transition-colors">GitHub</a>
               <button onClick={() => navigate("/marketplace")} className="hover:text-[hsl(220,10%,90%)] transition-colors">Marketplace</button>
               <button onClick={() => navigate("/terms")} className="hover:text-[hsl(220,10%,90%)] transition-colors">Terms</button>
               <button onClick={() => navigate("/privacy")} className="hover:text-[hsl(220,10%,90%)] transition-colors">Privacy</button>

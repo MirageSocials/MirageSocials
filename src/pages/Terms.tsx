@@ -70,7 +70,7 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">8. Limitation of Liability</h2>
           <p className="text-muted-foreground leading-relaxed">
-            To the maximum extent permitted by law, xitter shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.
+            To the maximum extent permitted by law, Mirage shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.
           </p>
         </section>
 

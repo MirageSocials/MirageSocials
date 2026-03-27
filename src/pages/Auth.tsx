@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { motion } from "framer-motion";
 import { ArrowLeft, Mail, Lock, User, Eye, EyeOff } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);

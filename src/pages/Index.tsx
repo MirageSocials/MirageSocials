@@ -147,7 +147,7 @@ const Index = () => {
               >
                 <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                   <div className="flex items-center gap-4">
-                    <span className="font-semibold text-sm text-foreground">xitter<span className="text-primary font-mono">_</span></span>
+                    <span className="font-semibold text-sm text-foreground">mirage<span className="text-primary font-mono">_</span></span>
                     <span className="text-primary text-xs font-medium border-b-2 border-primary pb-0.5">feed</span>
                     <span className="text-muted-foreground text-xs">versus</span>
                     <span className="text-muted-foreground text-xs">board</span>

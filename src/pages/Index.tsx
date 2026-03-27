@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Sun, Moon } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { useEffect, useRef, useState } from "react";
 
 const mockPosts = [

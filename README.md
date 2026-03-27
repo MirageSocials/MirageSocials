@@ -4,6 +4,8 @@
 
 **Live:** [MirageSocials.fun](https://MirageSocials.fun)
 
+**Social:** [MirageSocials](https://x.com/MirageSocials)
+
 ---
 
 ## ✨ Core Concepts

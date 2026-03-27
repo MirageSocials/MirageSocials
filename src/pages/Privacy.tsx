@@ -73,6 +73,14 @@ const Privacy = () => {
             We may update this Privacy Policy from time to time. We will notify you of material changes by posting the updated policy on the Platform.
           </p>
         </section>
+
+        <section className="space-y-3 border-t border-border pt-8">
+          <h2 className="text-xl font-bold">9. Contact Us</h2>
+          <p className="text-muted-foreground leading-relaxed">
+            If you have any questions about this Privacy Policy or your personal data, please contact us at{" "}
+            <a href="mailto:support@xitter.app" className="text-primary hover:underline">support@xitter.app</a>.
+          </p>
+        </section>
       </main>
     </div>
   );

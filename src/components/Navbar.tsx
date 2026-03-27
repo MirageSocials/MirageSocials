@@ -179,9 +179,7 @@ const Navbar = () => {
       <header className="md:hidden sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="flex items-center justify-between h-13 px-4">
           <button onClick={() => navigate("/")} className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
-              <Feather className="h-3.5 w-3.5 text-primary-foreground" />
-            </div>
+            <img src={logoImg} alt="Mirage" className="w-7 h-7 rounded-md" />
             <span className="font-bold text-sm tracking-tight text-foreground">
               mirage<span className="text-primary font-mono">_</span>
             </span>

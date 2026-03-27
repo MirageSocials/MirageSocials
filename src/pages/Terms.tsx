@@ -21,7 +21,7 @@ const Terms = () => {
         <section className="space-y-3">
           <h2 className="text-xl font-bold">1. Acceptance of Terms</h2>
           <p className="text-muted-foreground leading-relaxed">
-            By accessing or using xitter ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.
+            By accessing or using Mirage ("the Platform"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Platform.
           </p>
         </section>
 

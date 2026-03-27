@@ -23,6 +23,7 @@ import Marketplace from "./pages/Marketplace";
 import Dashboard from "./pages/Dashboard";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 

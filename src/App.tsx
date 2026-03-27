@@ -21,6 +21,8 @@ import Settings from "./pages/Settings";
 import Docs from "./pages/Docs";
 import Marketplace from "./pages/Marketplace";
 import Dashboard from "./pages/Dashboard";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 
 const queryClient = new QueryClient();
 

@@ -596,7 +596,8 @@ const Docs = () => {
         {/* Desktop Sidebar */}
         <aside className="hidden md:flex w-56 border-r border-[#e8eaed] bg-white/70 backdrop-blur-xl fixed top-0 left-0 h-screen flex-col">
           <div className="p-4 border-b border-[#e8eaed] flex items-center justify-between">
-            <button onClick={() => navigate("/")} className="flex items-center gap-1 text-xs font-mono text-[#1a1a1a]">
+            <button onClick={() => navigate("/")} className="flex items-center gap-1.5 text-xs font-mono text-[#1a1a1a]">
+              <img src={logoImg} alt="Mirage" className="w-5 h-5 rounded" />
               <span className="font-bold">mirage</span>
               <span className="text-primary glow-text">_</span>
               <span className="text-[#999] font-normal ml-1">docs</span>

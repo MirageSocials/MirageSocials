@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, Sun, Moon } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { useEffect, useRef, useState } from "react";
 
 const mockPosts = [
@@ -48,7 +49,8 @@ const Index = () => {
         className="flex justify-center pt-4 pb-2 z-50 sticky top-0"
       >
         <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border rounded-full px-5 py-2.5 shadow-lg">
-          <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground">
+          <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground flex items-center gap-2">
+            <img src={logoImg} alt="Mirage" className="w-6 h-6 rounded" />
             mirage<span className="text-primary font-mono">_</span>
           </span>
           {["feed", "marketplace", "docs"].map((link) => (
@@ -147,7 +149,7 @@ const Index = () => {
               >
                 <div className="flex items-center justify-between px-5 py-3 border-b border-border">
                   <div className="flex items-center gap-4">
-                    <span className="font-semibold text-sm text-foreground">mirage<span className="text-primary font-mono">_</span></span>
+                    <span className="font-semibold text-sm text-foreground flex items-center gap-1.5"><img src={logoImg} alt="" className="w-4 h-4 rounded" />mirage<span className="text-primary font-mono">_</span></span>
                     <span className="text-primary text-xs font-medium border-b-2 border-primary pb-0.5">feed</span>
                     <span className="text-muted-foreground text-xs">versus</span>
                     <span className="text-muted-foreground text-xs">board</span>
@@ -193,7 +195,7 @@ const Index = () => {
         className="border-t border-border bg-card/40 backdrop-blur-sm py-8 mt-12"
       >
         <div className="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-sm text-muted-foreground font-mono">© 2026 mirage</span>
+          <span className="text-sm text-muted-foreground font-mono flex items-center gap-2"><img src={logoImg} alt="Mirage" className="w-5 h-5 rounded" /> © 2026 mirage</span>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <button onClick={() => navigate("/docs")} className="hover:text-foreground transition-colors">Docs</button>
             <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>

@@ -136,7 +136,6 @@ supabase/
 ## 📡 API Reference
 
 **Base URL:** `https://api.mirage.app/v1`
-**API Premium:** `https://api.mirage.app/v2-premium`
 
 ### Authentication
 
@@ -215,7 +214,6 @@ git clone https://github.com/MirageSocials/MirageSocials.git
 cd MirageSocials
 npm install
 npm run dev
-pnpm Clone
 ```
 
 

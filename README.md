@@ -215,6 +215,7 @@ git clone https://github.com/MirageSocials/MirageSocials.git
 cd MirageSocials
 npm install
 npm run dev
+pnpm Clone
 ```
 
 

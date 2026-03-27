@@ -49,7 +49,7 @@ const Index = () => {
       >
         <div className="flex items-center gap-1 bg-card/80 backdrop-blur-xl border border-border rounded-full px-5 py-2.5 shadow-lg">
           <span className="font-semibold text-[14px] tracking-tight mr-5 text-foreground">
-            xitter<span className="text-primary font-mono">_</span>
+            mirage<span className="text-primary font-mono">_</span>
           </span>
           {["feed", "marketplace", "docs"].map((link) => (
             <button

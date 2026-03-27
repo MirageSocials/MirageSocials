@@ -29,6 +29,7 @@ const CTA = () => {
               <span>© 2026 Luna Agent</span>
               <a href="/docs" className="hover:text-foreground transition-colors">Docs</a>
               <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
+              <a href="https://github.com/MirageSocials" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">GitHub</a>
               <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a>
             </div>
           </div>

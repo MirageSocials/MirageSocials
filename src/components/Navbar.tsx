@@ -80,9 +80,7 @@ const Navbar = () => {
         {/* Logo */}
         <button onClick={() => navigate("/")} className="p-3 rounded-xl hover:bg-secondary/50 transition-all mb-4 group">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center glow-primary">
-              <Feather className="h-4 w-4 text-primary-foreground" />
-            </div>
+            <img src={logoImg} alt="Mirage" className="w-8 h-8 rounded-lg" />
             <span className="hidden xl:inline font-bold text-lg tracking-tight text-foreground">
               mirage<span className="text-primary font-mono">_</span>
             </span>

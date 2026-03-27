@@ -9,10 +9,10 @@ import { useEffect, useRef, useState, lazy, Suspense } from "react";
 const LandingScene = lazy(() => import("@/components/LandingScene"));
 
 const mockPosts = [
-  { user: "elonmusk", time: "2m", text: "mass adoption is inevitable. the question is whether you're building or watching. also, doge to mars 🚀", price: "$2.40", mode: "rocket", earned: "$18.50", color: "bg-primary" },
-  { user: "realDonaldTrump", time: "5m", text: "this platform is TREMENDOUS. maybe the best platform ever created. many people are saying it. HUGE!", price: "$1.00", mode: "flat", earned: "$7.20", color: "bg-accent" },
-  { user: "cz_binance", time: "8m", text: "funds are safu. building through the cycle. ignore the noise, focus on fundamentals. 4.", price: "$4.80", mode: "stolen", earned: "$3.10", color: "bg-destructive" },
-  { user: "solana", time: "12m", text: "400ms block times. 65k tps. sub-cent fees. the chain doesn't sleep and neither do we.", price: "$0.50", mode: "dutch", earned: "$2.30", color: "bg-secondary" },
+  { user: "elonmusk", time: "2m", text: "mass adoption is inevitable. the question is whether you're building or watching. also, doge to mars 🚀", price: "$2.40", mode: "rocket", earned: "$18.50", avatar: "https://pbs.twimg.com/profile_images/1893803697185910784/Na5lOWi5_400x400.jpg" },
+  { user: "realDonaldTrump", time: "5m", text: "this platform is TREMENDOUS. maybe the best platform ever created. many people are saying it. HUGE!", price: "$1.00", mode: "flat", earned: "$7.20", avatar: "https://pbs.twimg.com/profile_images/1929325043513528320/gS4mUGJi_400x400.jpg" },
+  { user: "cz_binance", time: "8m", text: "funds are safu. building through the cycle. ignore the noise, focus on fundamentals. 4.", price: "$4.80", mode: "stolen", earned: "$3.10", avatar: "https://pbs.twimg.com/profile_images/1917338875175485441/TjOMOOF2_400x400.jpg" },
+  { user: "solana", time: "12m", text: "400ms block times. 65k tps. sub-cent fees. the chain doesn't sleep and neither do we.", price: "$0.50", mode: "dutch", earned: "$2.30", avatar: "https://pbs.twimg.com/profile_images/1855977741537886208/cuXy3SMY_400x400.jpg" },
 ];
 
 function AnimatedNumber({ value, prefix = "", suffix = "", duration = 1.5 }: { value: number; prefix?: string; suffix?: string; duration?: number }) {
@@ -172,9 +172,7 @@ const Index = () => {
                   <div className="divide-y divide-[hsl(220,15%,14%)]">
                     {mockPosts.map((post, i) => (
                       <div key={i} className="px-5 py-4 flex gap-3">
-                        <div className={`w-8 h-8 rounded-full ${post.color} flex items-center justify-center text-primary-foreground text-xs font-bold shrink-0`}>
-                          {post.user[0].toUpperCase()}
-                        </div>
+                        <img src={post.avatar} alt={post.user} className="w-8 h-8 rounded-full object-cover shrink-0 border border-[hsl(220,15%,14%)]" />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1">
                             <span className="text-sm font-semibold text-[hsl(220,10%,90%)]">@{post.user}</span>

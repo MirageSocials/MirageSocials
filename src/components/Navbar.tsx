@@ -184,7 +184,7 @@ const Navbar = () => {
               <Feather className="h-3.5 w-3.5 text-primary-foreground" />
             </div>
             <span className="font-bold text-sm tracking-tight text-foreground">
-              xitter<span className="text-primary font-mono">_</span>
+              mirage<span className="text-primary font-mono">_</span>
             </span>
           </button>
           <div className="flex items-center gap-1">

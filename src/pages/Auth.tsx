@@ -48,7 +48,10 @@ const Auth = () => {
           >
             <ArrowLeft className="h-4 w-4" /> Back
           </button>
-          <div className="text-3xl font-black text-primary mb-6">Mirage</div>
+          <div className="flex items-center gap-3 mb-6">
+            <img src={logoImg} alt="Mirage" className="w-10 h-10 rounded-lg" />
+            <span className="text-3xl font-black text-primary">Mirage</span>
+          </div>
           <h1 className="text-2xl font-bold text-foreground">
             {isLogin ? "Sign in to Mirage" : "Create your account"}
           </h1>

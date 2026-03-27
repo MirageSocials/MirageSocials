@@ -36,12 +36,38 @@ function AnimatedNumber({ value, prefix = "", suffix = "", duration = 1.5 }: { v
   return <span ref={ref}>{prefix}{display % 1 === 0 ? display : display.toFixed(2)}{suffix}</span>;
 }
 
+const TAKEN_PREVIEW = ["satoshi", "vitalik", "sol", "mirage", "alpha", "whale", "degen", "moon", "crypto", "nft"];
+
 const Index = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const launch = () => navigate(user ? "/feed" : "/auth");
 
+  const [claimInput, setClaimInput] = useState("");
+  const [claimStatus, setClaimStatus] = useState<"idle" | "checking" | "available" | "taken">("idle");
+
+  useEffect(() => {
+    if (!claimInput || !/^[a-z]+$/.test(claimInput)) {
+      setClaimStatus("idle");
+      return;
+    }
+    const timeout = setTimeout(async () => {
+      setClaimStatus("checking");
+      // Check against taken preview list + DB
+      if (TAKEN_PREVIEW.includes(claimInput)) {
+        setClaimStatus("taken");
+        return;
+      }
+      const { data } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("username", claimInput)
+        .maybeSingle();
+      setClaimStatus(data ? "taken" : "available");
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [claimInput]);
   return (
     <div className="min-h-screen bg-[hsl(220,20%,4%)] text-[hsl(220,10%,90%)] selection:bg-primary/20 overflow-x-hidden">
       {/* 3D Background */}

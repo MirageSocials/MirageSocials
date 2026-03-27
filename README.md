@@ -2,7 +2,7 @@
 
 **Mirage** is a social media platform where every word has a price tag. Built on Solana with 0% platform fees — posting costs money, replies pay the author, and anyone can steal any post for 2x the price. 100% of value flows to users.
 
-**Live:** [perp-buddy-ai.lovable.app](https://perp-buddy-ai.lovable.app)
+**Live:** [MirageSocials.fun](https://MirageSocials.fun)
 
 ---
 
@@ -210,20 +210,12 @@ Subscribe to real-time events:
 ## 🏁 Getting Started
 
 ```sh
-git clone https://github.com/YOUR_USERNAME/MirageSocials.git
+git clone https://github.com/MirageSocials/MirageSocials.git
 cd MirageSocials
 npm install
 npm run dev
 ```
 
-## 📦 Deployment
-
-Open [Lovable](https://lovable.dev) → **Share → Publish**.
-
-### Custom Domain
-
-**Project → Settings → Domains → Connect Domain**
-[Learn more](https://docs.lovable.dev/features/custom-domain#custom-domain)
 
 ---
 

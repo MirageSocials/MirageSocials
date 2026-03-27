@@ -142,7 +142,7 @@ const Navbar = () => {
           onClick={() => navigate(user ? "/feed" : "/auth")}
           className="xl:hidden p-3 bg-primary text-primary-foreground rounded-xl hover:brightness-110 transition-all mt-3 glow-primary"
         >
-          <Feather className="h-5 w-5" />
+          <img src={logoImg} alt="Post" className="h-5 w-5" />
         </button>
 
         {/* User profile pill */}

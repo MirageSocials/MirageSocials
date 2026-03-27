@@ -174,6 +174,51 @@ const Index = () => {
                       <div className="text-[11px] text-[hsl(220,10%,40%)] mt-0.5">settlement</div>
                     </div>
                   </div>
+
+                  {/* Username Claim */}
+                  <div className="mt-10">
+                    <p className="text-[11px] text-[hsl(220,10%,40%)] font-mono tracking-wider uppercase mb-3">check username availability</p>
+                    <div className="flex items-center gap-2">
+                      <div className="relative flex-1 max-w-xs">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[hsl(220,10%,40%)] text-sm font-mono">@</span>
+                        <input
+                          type="text"
+                          value={claimInput}
+                          onChange={(e) => setClaimInput(e.target.value.toLowerCase().replace(/[^a-z]/g, ""))}
+                          placeholder="yourname"
+                          className="w-full bg-[hsl(220,20%,7%)] border border-[hsl(220,15%,14%)] rounded-xl pl-8 pr-10 py-2.5 text-sm font-mono text-[hsl(220,10%,90%)] placeholder:text-[hsl(220,10%,25%)] focus:outline-none focus:border-primary/50 transition-colors"
+                          maxLength={15}
+                        />
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                          {claimStatus === "checking" && <Loader2 className="h-4 w-4 text-[hsl(220,10%,40%)] animate-spin" />}
+                          {claimStatus === "available" && <Check className="h-4 w-4 text-[hsl(158,64%,52%)]" />}
+                          {claimStatus === "taken" && <X className="h-4 w-4 text-[hsl(0,72%,51%)]" />}
+                        </div>
+                      </div>
+                      <button
+                        onClick={launch}
+                        disabled={claimStatus !== "available"}
+                        className="bg-primary text-primary-foreground text-[13px] font-semibold px-5 py-2.5 rounded-xl hover:brightness-110 transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-primary/20"
+                      >
+                        claim
+                      </button>
+                    </div>
+                    {claimStatus === "available" && (
+                      <p className="text-[hsl(158,64%,52%)] text-xs font-mono mt-2">@{claimInput} is available — claim it now!</p>
+                    )}
+                    {claimStatus === "taken" && (
+                      <p className="text-[hsl(0,72%,51%)] text-xs font-mono mt-2">@{claimInput} is already taken</p>
+                    )}
+
+                    {/* Preview taken names */}
+                    <div className="flex flex-wrap gap-2 mt-4">
+                      {TAKEN_PREVIEW.map((name) => (
+                        <span key={name} className="text-[11px] font-mono text-[hsl(220,10%,30%)] bg-[hsl(220,20%,7%)] border border-[hsl(220,15%,12%)] rounded-full px-3 py-1 line-through">
+                          @{name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
 
                 {/* Right — Mock feed */}

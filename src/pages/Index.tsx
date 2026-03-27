@@ -59,11 +59,7 @@ const Index = () => {
         setClaimStatus("taken");
         return;
       }
-      const { data } = await supabase
-        .from("profiles")
-        .select("username")
-        .eq("username", claimInput)
-        .maybeSingle();
+      const { data } = await supabase.rpc("is_username_taken", { _username: claimInput });
       setClaimStatus(data ? "taken" : "available");
     }, 400);
     return () => clearTimeout(timeout);

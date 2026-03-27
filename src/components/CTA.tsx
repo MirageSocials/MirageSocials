@@ -1,5 +1,5 @@
 import { FadeIn } from "./FadeIn";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, Github } from "lucide-react";
 import { useState } from "react";
 
 const CA = "BrhRyjcBsTzswJ1J8NWeoz5CHHS4f6NZ6BkHA4QWpump";

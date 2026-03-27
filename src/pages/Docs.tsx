@@ -611,7 +611,8 @@ const Docs = () => {
 
         {/* Mobile header */}
         <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-12 bg-white/80 backdrop-blur-xl border-b border-[#e8eaed] flex items-center justify-between px-4 shadow-sm">
-          <button onClick={() => navigate("/")} className="flex items-center gap-1 text-xs font-mono text-[#1a1a1a]">
+          <button onClick={() => navigate("/")} className="flex items-center gap-1.5 text-xs font-mono text-[#1a1a1a]">
+            <img src={logoImg} alt="Mirage" className="w-5 h-5 rounded" />
             <span className="font-bold">mirage</span>
             <span className="text-primary glow-text">_</span>
             <span className="text-[#999] font-normal ml-1">docs</span>

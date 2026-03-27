@@ -199,6 +199,8 @@ const Index = () => {
             <a href="https://x.com/LunaAgentPerp" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Twitter</a>
             <a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">Discord</a>
             <button onClick={() => navigate("/marketplace")} className="hover:text-foreground transition-colors">Marketplace</button>
+            <button onClick={() => navigate("/terms")} className="hover:text-foreground transition-colors">Terms</button>
+            <button onClick={() => navigate("/privacy")} className="hover:text-foreground transition-colors">Privacy</button>
           </div>
         </div>
       </motion.footer>

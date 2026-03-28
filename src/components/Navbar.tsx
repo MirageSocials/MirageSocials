@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Coins } from "lucide-react";
+import { Home, Search, Bell, Mail, User, LogOut, Bookmark, Sun, Moon, Settings, Coins, Play } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";

@@ -45,6 +45,16 @@ const TrendingHashtags = () => {
     };
 
     fetchTrending();
+
+    // Real-time: refresh when new posts arrive
+    const channel = supabase
+      .channel("trending-hashtags")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "posts" }, () => {
+        fetchTrending();
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
   }, []);
 
   if (loading) return null;

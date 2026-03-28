@@ -37,6 +37,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <VideoPlayerProvider>
+          <MiniPlayer />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />

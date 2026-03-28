@@ -8,6 +8,7 @@ import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 import MarketPulse from "@/components/MarketPulse";
 import TrendingHashtags from "@/components/TrendingHashtags";
+import WhoToFollow from "@/components/WhoToFollow";
 
 const PAGE_SIZE = 20;
 
@@ -220,6 +221,7 @@ const Feed = () => {
         {/* Right sidebar — hidden on mobile */}
         <aside className="hidden xl:block w-[280px] flex-shrink-0 sticky top-4 self-start space-y-4 pt-4">
           <TrendingHashtags />
+          <WhoToFollow />
         </aside>
       </div>
 

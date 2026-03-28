@@ -8,6 +8,7 @@ import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 import MarketPulse from "@/components/MarketPulse";
 import TrendingHashtags from "@/components/TrendingHashtags";
+import WhoToFollow from "@/components/WhoToFollow";
 
 const PAGE_SIZE = 20;
 

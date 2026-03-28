@@ -57,10 +57,11 @@ const App = () => (
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contact" element={<Contact />} />
-            
+            <Route path="/watch" element={<ProtectedRoute><Watch /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </VideoPlayerProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

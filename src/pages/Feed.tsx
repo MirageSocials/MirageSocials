@@ -153,65 +153,75 @@ const Feed = () => {
   }, [hasMore, loadingMore, loading, posts, fetchPosts]);
 
   return (
-    <AppLayout>
-      {/* Sticky tabs */}
-      <div className="sticky top-0 md:top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
-        <div className="flex">
-          {(["for-you", "following"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setTab(t)}
-              className={`flex-1 py-3.5 text-[13px] font-medium transition-all relative hover:bg-secondary/30 ${
-                tab === t ? "text-foreground" : "text-muted-foreground"
-              }`}
-            >
-              {t === "for-you" ? "For you" : "Following"}
-              {tab === t && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-primary rounded-full glow-primary" />
-              )}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <MarketPulse />
-      <PostComposer onPostCreated={() => fetchPosts(false)} />
-
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
-      ) : posts.length === 0 ? (
-        <div className="text-center py-24">
-          <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
-            <span className="text-primary text-lg">✦</span>
+    <AppLayout wide>
+      <div className="flex justify-center gap-6">
+        {/* Main feed column */}
+        <div className="w-full max-w-[600px] border-x border-border min-h-screen">
+          {/* Sticky tabs */}
+          <div className="sticky top-0 md:top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border">
+            <div className="flex">
+              {(["for-you", "following"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={`flex-1 py-3.5 text-[13px] font-medium transition-all relative hover:bg-secondary/30 ${
+                    tab === t ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  {t === "for-you" ? "For you" : "Following"}
+                  {tab === t && (
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-[3px] bg-primary rounded-full glow-primary" />
+                  )}
+                </button>
+              ))}
+            </div>
           </div>
-          <p className="text-lg font-bold text-foreground mb-1">No posts yet</p>
-          <p className="text-sm text-muted-foreground">Be the first to post something!</p>
-        </div>
-      ) : (
-        <>
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              authorName={profiles[post.user_id]?.display_name || undefined}
-              authorUsername={profiles[post.user_id]?.username || undefined}
-              authorAvatar={profiles[post.user_id]?.avatar_url}
-              onRefresh={() => fetchPosts(false)}
-              onClick={() => navigate(`/post/${post.id}`)}
-            />
-          ))}
-          <div ref={sentinelRef} className="py-8 flex justify-center">
-            {loadingMore && (
+
+          <MarketPulse />
+          <PostComposer onPostCreated={() => fetchPosts(false)} />
+
+          {loading ? (
+            <div className="flex justify-center py-20">
               <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            )}
-            {!hasMore && posts.length > 0 && (
-              <p className="text-xs text-muted-foreground font-mono">— end —</p>
-            )}
-          </div>
-        </>
-      )}
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="text-center py-24">
+              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                <span className="text-primary text-lg">✦</span>
+              </div>
+              <p className="text-lg font-bold text-foreground mb-1">No posts yet</p>
+              <p className="text-sm text-muted-foreground">Be the first to post something!</p>
+            </div>
+          ) : (
+            <>
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                  authorName={profiles[post.user_id]?.display_name || undefined}
+                  authorUsername={profiles[post.user_id]?.username || undefined}
+                  authorAvatar={profiles[post.user_id]?.avatar_url}
+                  onRefresh={() => fetchPosts(false)}
+                  onClick={() => navigate(`/post/${post.id}`)}
+                />
+              ))}
+              <div ref={sentinelRef} className="py-8 flex justify-center">
+                {loadingMore && (
+                  <div className="w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                )}
+                {!hasMore && posts.length > 0 && (
+                  <p className="text-xs text-muted-foreground font-mono">— end —</p>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Right sidebar — hidden on mobile */}
+        <aside className="hidden xl:block w-[280px] flex-shrink-0 sticky top-4 self-start space-y-4 pt-4">
+          <TrendingHashtags />
+        </aside>
+      </div>
 
       {showScrollTop && (
         <button

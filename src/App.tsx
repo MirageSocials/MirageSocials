@@ -24,6 +24,9 @@ import Dashboard from "./pages/Dashboard";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
+import Watch from "./pages/Watch";
+import { VideoPlayerProvider } from "@/hooks/useVideoPlayer";
+import MiniPlayer from "@/components/MiniPlayer";
 
 const queryClient = new QueryClient();
 

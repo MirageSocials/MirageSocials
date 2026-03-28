@@ -173,6 +173,7 @@ const Feed = () => {
         </div>
       </div>
 
+      <MarketPulse />
       <PostComposer onPostCreated={() => fetchPosts(false)} />
 
       {loading ? (

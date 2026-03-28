@@ -7,6 +7,7 @@ import AppLayout from "@/components/AppLayout";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
 import MarketPulse from "@/components/MarketPulse";
+import TrendingHashtags from "@/components/TrendingHashtags";
 
 const PAGE_SIZE = 20;
 

@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import AppLayout from "@/components/AppLayout";
 import PostComposer from "@/components/PostComposer";
 import PostCard from "@/components/PostCard";
+import MarketPulse from "@/components/MarketPulse";
 
 const PAGE_SIZE = 20;
 
@@ -172,6 +173,7 @@ const Feed = () => {
         </div>
       </div>
 
+      <MarketPulse />
       <PostComposer onPostCreated={() => fetchPosts(false)} />
 
       {loading ? (

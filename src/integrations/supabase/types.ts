@@ -533,6 +533,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_platform_stats: { Args: never; Returns: Json }
       is_username_taken: { Args: { _username: string }; Returns: boolean }
     }
     Enums: {

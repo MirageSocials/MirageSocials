@@ -24,6 +24,9 @@ import Dashboard from "./pages/Dashboard";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
+import Watch from "./pages/Watch";
+import { VideoPlayerProvider } from "@/hooks/useVideoPlayer";
+import MiniPlayer from "@/components/MiniPlayer";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +37,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <AuthProvider>
+          <VideoPlayerProvider>
+          <MiniPlayer />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
@@ -52,10 +57,11 @@ const App = () => (
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/contact" element={<Contact />} />
-            
+            <Route path="/watch" element={<ProtectedRoute><Watch /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </VideoPlayerProvider>
         </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>

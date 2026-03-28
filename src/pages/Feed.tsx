@@ -221,6 +221,7 @@ const Feed = () => {
         {/* Right sidebar — hidden on mobile */}
         <aside className="hidden xl:block w-[280px] flex-shrink-0 sticky top-4 self-start space-y-4 pt-4">
           <TrendingHashtags />
+          <WhoToFollow />
         </aside>
       </div>
 

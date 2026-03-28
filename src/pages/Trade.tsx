@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   ArrowLeft, Wallet, TrendingUp, TrendingDown,
   Zap, Shield, LogOut, ExternalLink, AlertTriangle,

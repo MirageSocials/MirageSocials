@@ -19,8 +19,19 @@ const tradingPairs = [
 
 const Trade = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signOut } = useAuth();
-  const [selectedPair, setSelectedPair] = useState(tradingPairs[0]);
+
+  const getInitialPair = () => {
+    const pairParam = searchParams.get("pair");
+    if (pairParam) {
+      const found = tradingPairs.find((p) => p.label === pairParam);
+      if (found) return found;
+    }
+    return tradingPairs[0];
+  };
+
+  const [selectedPair, setSelectedPair] = useState(getInitialPair);
   const [direction, setDirection] = useState<"LONG" | "SHORT">("LONG");
   const [size, setSize] = useState("100");
   const [leverage, setLeverage] = useState("5");
